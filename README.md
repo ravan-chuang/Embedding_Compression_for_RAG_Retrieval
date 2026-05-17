@@ -1,4 +1,5 @@
 # AI Embedding Compression for Efficient Semantic Search
+**Key result:** Random Rotation + int4 achieved about **8x compression** while maintaining **Top-5 Recall above 0.90**.
 
 A benchmark project for evaluating **AI embedding compression** methods in semantic retrieval systems.  
 This project compares scalar quantization, vector quantization, product quantization, and random rotation on sentence embeddings.
