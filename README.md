@@ -25,7 +25,7 @@ This project focuses on the trade-off between:
 ## Dataset and Setup
 
 - Dataset: AG News subset
-- Samples: 4,000 texts, 1,000 per class
+- Samples: 4,0000 texts, 1,0000 per class
 - Train / Test split: 80% / 20%
 - Test set size: 800
 - Embedding model: `sentence-transformers/all-MiniLM-L6-v2`
