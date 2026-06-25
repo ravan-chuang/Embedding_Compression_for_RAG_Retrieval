@@ -53,16 +53,18 @@ These methods use Faiss GPU indexes directly:
 
 For IVF-PQ, document vectors remain encoded as PQ codes during search. Faiss uses asymmetric distance computation (ADC) rather than reconstructing every document embedding.
 
-## Main GPU ADC Results
+## Main GPU ADC Quality Results
 
-| Method | nprobe | Deployment compression | Recall@10 | nDCG@10 | P50 ms/query | P95 ms/query | QPS |
-|:--|--:|--:|--:|--:|--:|--:|--:|
-| GPU Float32 FlatIP | – | 1.00× | 0.4413 | 0.3687 | 0.0278 | 0.1039 | 32,713.8 |
-| OPQ-IVF-PQ M=96 | 16 | 13.59× | 0.4189 | 0.3441 | 0.0187 | 0.0332 | 52,309.7 |
-| IVF-PQ M=96 | 16 | 14.94× | 0.4085 | 0.3442 | 0.0189 | 0.0346 | 51,916.1 |
-| IVF-PQ M=24 | 4 | 49.83× | 0.2806 | 0.2254 | 0.0046 | 0.0162 | 208,131.0 |
+| Method | nprobe | Deployment compression | Recall@10 | nDCG@10 |
+|:--|--:|--:|--:|--:|
+| GPU Float32 FlatIP | – | 1.00× | 0.4413 | 0.3687 |
+| OPQ-IVF-PQ M=96 | 16 | 13.59× | 0.4189 | 0.3441 |
+| IVF-PQ M=96 | 16 | 14.94× | 0.4085 | 0.3442 |
+| IVF-PQ M=24 | 4 | 49.83× | 0.2806 | 0.2254 |
 
 At **13.59× deployment compression**, OPQ-IVF-PQ retained **94.9%** of Float32 Recall@10 and **93.3%** of Float32 nDCG@10.
+
+> Latency and throughput are reported only in the repeated serving benchmark below. This avoids mixing one-off microbenchmark timing with repeated-run serving measurements.
 
 ## Repeated Serving Benchmark
 
@@ -102,6 +104,10 @@ Each configuration was repeated five times. The table reports median latency and
 
 ![GPU Faiss throughput stability](figures/throughput_stability.png)
 
+## Methodology
+
+For experimental modes, storage accounting, latency protocol, and interpretation rules, see [Benchmark Methodology](docs/benchmark_methodology.md).
+
 ## Key Findings
 
 - **High-quality compression:** PQ with a large code budget preserved near-Float32 retrieval quality under substantial deployment compression.
@@ -124,6 +130,7 @@ figures/
   storage_quality_tradeoff.png
   throughput_stability.png
 docs/
+  benchmark_methodology.md
 ```
 
 ## Reproducibility
