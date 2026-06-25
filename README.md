@@ -144,6 +144,8 @@ docs/
 fiqa_rag_results/readme_artifacts/
 ```
 
+For the GPU benchmark, use Google Colab with an NVIDIA GPU runtime and install `requirements-colab.txt`.
+
 ## Limitations and Next Steps
 
 - FiQA has 57,638 documents, so it is well suited to relevance evaluation but does not fully represent million-scale ANN workloads.
