@@ -18,3 +18,4 @@ venv/
 
 # Generated experiment artifacts
 fiqa_rag_results/
+artifacts/fiqa_ivfpq_m96/documents.jsonl

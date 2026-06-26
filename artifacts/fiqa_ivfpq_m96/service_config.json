@@ -1,0 +1,9 @@
+{
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "index_type": "IndexIVFPQ",
+  "vector_count": 57638,
+  "dimension": 384,
+  "default_nprobe": 16,
+  "normalization": "L2-normalized embeddings; inner-product search",
+  "source_method": "gpu_ivfpq_adc_m96_b8_nlist256_np16"
+}
