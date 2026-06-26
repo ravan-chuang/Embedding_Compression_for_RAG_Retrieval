@@ -2,55 +2,48 @@
 
 This folder turns the benchmark into a small, CPU-portable retrieval service.
 
-## Why CPU Faiss for the first service version?
-
-The benchmark evaluates GPU Faiss IVF-PQ ADC in Colab. The API first exports a
-**CPU-serializable** version of the selected Faiss index so it can run locally
-on macOS and in a standard Docker container. The index type and compression
-design remain the same, but production GPU serving requires a Linux/NVIDIA
-deployment image and a GPU-specific Faiss runtime.
-
 ## Artifact contract
-
-The service expects this directory:
 
 ```text
 artifacts/fiqa_ivfpq_m96/
-├── index.faiss
-├── documents.jsonl
-└── service_config.json
+├── index.faiss            # tracked in Git
+├── service_config.json    # tracked in Git
+├── doc_ids.json           # tracked in Git; preserves index-row order
+└── documents.jsonl        # generated locally; ignored by Git
 ```
 
-- `index.faiss`: CPU Faiss index created with `faiss.write_index`.
-- `documents.jsonl`: one `{doc_id, title, text}` object per index row, in the
-  exact order vectors were added to the index.
-- `service_config.json`: embedding model and default query-time settings.
+`documents.jsonl` is intentionally not stored in Git because it is a 45 MB
+reconstructable copy of FiQA document metadata.
 
-## 1. Export from the notebook
+## One-time local setup
 
-Copy `scripts/export_service_artifacts.py` into the Colab runtime or add its
-contents as a notebook cell after the selected IVF-PQ index is built.
+Create the metadata file from the official FiQA / BEIR corpus:
 
-For the current FiQA notebook, export the standard `M=96, nprobe=16` IVF-PQ
-index first. The external PyTorch OPQ path needs one additional exported
-rotation transform, so it is intentionally not the first API artifact.
+```bash
+python scripts/prepare_fiqa_documents.py
+```
 
-## 2. Run locally
+The script downloads FiQA on first use, then writes
+`artifacts/fiqa_ivfpq_m96/documents.jsonl` in the exact document order used by
+the serialized Faiss index.
+
+## Run locally
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements-api.txt
+python scripts/prepare_fiqa_documents.py
 uvicorn app.main:app --reload
 ```
 
-Open interactive docs at:
+Open interactive API docs at:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-## 3. Example requests
+## Example requests
 
 ```bash
 curl http://127.0.0.1:8000/health
@@ -62,16 +55,17 @@ curl -X POST http://127.0.0.1:8000/search \
   -d '{"query":"What is a dividend stock?","top_k":5,"nprobe":16}'
 ```
 
-## 4. Docker
+## Docker
 
-After artifacts have been exported to `artifacts/fiqa_ivfpq_m96/`:
+Before building the current Docker image, generate `documents.jsonl` locally:
 
 ```bash
+python scripts/prepare_fiqa_documents.py
 docker build -t embedding-retrieval-api .
 docker run --rm -p 8000:8000 embedding-retrieval-api
 ```
 
-## Current scope
+## Scope
 
 This is a retrieval component, not a complete generative RAG application. It
 returns ranked FiQA source documents and scores. A later service layer can add
