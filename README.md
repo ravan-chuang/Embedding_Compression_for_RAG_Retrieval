@@ -217,6 +217,14 @@ endpoint. These are local CPU application measurements, including HTTP, query
 embedding, Faiss search, and response assembly; they are not directly comparable
 to the GPU-only Faiss serving benchmark above.
 
+## API Demo
+
+The Swagger UI below shows a verified `POST /search` request against the
+serialized FiQA `IndexIVFPQ` artifact. The service returns ranked passages with
+similarity scores and document IDs.
+
+![FastAPI retrieval demo](figures/api_demo.png)
+
 ### Docker deployment
 
 The service is containerized and verified with Docker Compose:
