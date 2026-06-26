@@ -1,5 +1,10 @@
 # AI Embedding Compression for RAG Retrieval
 
+[![CI](https://github.com/ravan-chuang/Embedding_Compression_for_RAG_Retrieval/actions/workflows/ci.yml/badge.svg)](https://github.com/ravan-chuang/Embedding_Compression_for_RAG_Retrieval/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Faiss](https://img.shields.io/badge/ANN-Faiss-blue)](https://github.com/facebookresearch/faiss)
+[![Docker Verified](https://img.shields.io/badge/Docker-verified-2496ED)](docs/docker_api.md)
+
 A GPU-accelerated benchmark for embedding compression and approximate nearest-neighbor retrieval in Retrieval-Augmented Generation (RAG) systems.
 
 This project separates two questions that are often conflated:
@@ -14,6 +19,7 @@ This project separates two questions that are often conflated:
 - Measures Recall@5, Recall@10, MRR@10, nDCG@10, storage cost, latency, and QPS.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Includes repeated-run serving benchmarks for batch sizes 1, 8, and 64.
+- Ships a verified FastAPI retrieval service, Docker Compose deployment, unit tests, and GitHub Actions CI.
 
 ## Benchmark Setup
 
@@ -189,9 +195,65 @@ curl -X POST http://127.0.0.1:8000/batch-search \
 
 For the full artifact contract and operational notes, see [Retrieval API](docs/retrieval_api.md).
 
+### Local API benchmark
+
+The repository includes a real HTTP benchmark for the running service. It measures
+client-visible end-to-end latency, API-reported retrieval latency, and query throughput.
+
+```bash
+python scripts/benchmark_api.py --warmup 5 --runs 30 --batch-sizes 1 8 32
+```
+
+Verified local CPU results on Apple Silicon:
+
+| Endpoint | Batch size | Client P50 | Client P95 | Query throughput |
+|:--|--:|--:|--:|--:|
+| `/search` | 1 | 6.627 ms | 7.304 ms | 149.70 q/s |
+| `/batch-search` | 8 | 9.930 ms | 11.953 ms | 797.30 q/s |
+| `/batch-search` | 32 | 21.006 ms | 21.837 ms | 1,519.05 q/s |
+
+Batch size 32 reaches about **10.1×** the query throughput of the single-query
+endpoint. These are local CPU application measurements, including HTTP, query
+embedding, Faiss search, and response assembly; they are not directly comparable
+to the GPU-only Faiss serving benchmark above.
+
+### Docker deployment
+
+The service is containerized and verified with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+The first start generates the reproducible FiQA metadata file and downloads the
+embedding model. Once ready, open:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+The Docker deployment was verified with `GET /health` and `POST /search` against
+the serialized 57,638-document `IndexIVFPQ` artifact. See [Docker API](docs/docker_api.md).
+
+### Testing and CI
+
+The repository includes **7 offline unit tests** for artifact consistency,
+retriever behavior, batch search, and endpoint logic.
+
+```bash
+pip install -r requirements-dev.txt
+pytest -q
+```
+
+GitHub Actions runs the test suite on pushes to `main` and pull requests. See
+[Testing and CI](docs/testing_ci.md).
+
 ## Repository Structure
 
 ```text
+.github/
+  workflows/
+    ci.yml
 app/
   main.py
   retriever.py
@@ -200,25 +262,37 @@ artifacts/
     index.faiss
     service_config.json
     doc_ids.json
+docker/
+  entrypoint.sh
 docs/
+  api_benchmark.md
   benchmark_methodology.md
+  docker_api.md
   retrieval_api.md
+  testing_ci.md
 figures/
   storage_quality_tradeoff.png
   throughput_stability.png
 notebooks/
   Ai_embedding_compression.ipynb
 results/
+  api_benchmark/
   fiqa_gpu_benchmark/
-    main_gpu_adc_results.csv
-    stability_batch_benchmark.csv
-    main_results_table.md
 scripts/
+  benchmark_api.py
   export_service_artifacts.py
   prepare_fiqa_documents.py
+tests/
+  test_api.py
+  test_artifact_contract.py
+  test_retriever.py
+Dockerfile
+docker-compose.yml
 environment.yml
+environment-ci.yml
 requirements-api.txt
-requirements-colab.txt
+requirements-dev.txt
+requirements-ci.txt
 ```
 
 ## Reproducibility
@@ -238,4 +312,17 @@ For the GPU benchmark, use Google Colab with an NVIDIA GPU runtime and install `
 
 - FiQA has 57,638 documents, so it is well suited to relevance evaluation but does not fully represent million-scale ANN workloads.
 - The current benchmark uses one English embedding model.
-- Future work includes a 100K–1M vector scale benchmark, Faiss `OPQMatrix` comparison, a Traditional Chinese retrieval benchmark, reranking, and a production-oriented container deployment for the retrieval API.
+- Future work includes a 100K–1M vector scale benchmark, Faiss `OPQMatrix` comparison, a Traditional Chinese retrieval benchmark, reranking, and production observability / deployment hardening.
+
+
+## Release Readiness
+
+The current repository represents a complete retrieval-engineering workflow:
+
+```text
+GPU benchmark → serialized IVF-PQ artifact → FastAPI serving
+→ local API benchmark → Docker Compose deployment → automated CI
+```
+
+The next milestone is a `v1.0.0` release after adding a short API demo recording
+or screenshot to the repository.
