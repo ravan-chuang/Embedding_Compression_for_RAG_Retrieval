@@ -116,9 +116,96 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 - **Batch size matters:** IVF-PQ and OPQ-IVF-PQ show their strongest relative advantage for online and small-batch serving. Dense GPU matrix multiplication becomes more competitive at large batches.
 - **Latency reporting is repeated:** Serving numbers are based on five repeated runs and use median statistics to reduce the effect of transient GPU-runtime variation.
 
+## Retrieval API
+
+The repository also includes a local FastAPI retrieval service backed by the exported
+FiQA `IndexIVFPQ` artifact. It exposes:
+
+- `GET /health` for service and artifact readiness.
+- `POST /search` for single-query top-k retrieval.
+- `POST /batch-search` for true micro-batched retrieval: queries are embedded together
+  and sent to Faiss in one matrix search call.
+
+The local service was verified with the FiQA artifact containing 57,638 documents.
+A representative single-query request for `What is a dividend stock?` returned relevant
+top-ranked FiQA passages with an end-to-end local latency of about 25 ms on Apple Silicon.
+This application latency includes query embedding, Faiss search, and response assembly, so
+it is intentionally reported separately from the GPU-only serving benchmark above.
+
+### Local API setup
+
+On macOS Apple Silicon, install Faiss through conda-forge to avoid mixing native Faiss and
+OpenMP runtimes from Conda and pip:
+
+```bash
+conda env create -f environment.yml
+conda activate rag-api
+pip install -r requirements-api.txt
+```
+
+If the environment already exists:
+
+```bash
+conda activate rag-api
+conda install -c conda-forge faiss-cpu
+pip install -r requirements-api.txt
+```
+
+Generate the local FiQA metadata copy (the 45 MB metadata file is intentionally ignored by Git):
+
+```bash
+python scripts/prepare_fiqa_documents.py
+```
+
+Run the service:
+
+```bash
+uvicorn app.main:app
+```
+
+Open the interactive API documentation at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Example requests:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+```bash
+curl -X POST http://127.0.0.1:8000/search \
+  -H "Content-Type: application/json" \
+  -d '{"query":"What is a dividend stock?","top_k":5,"nprobe":16}'
+```
+
+```bash
+curl -X POST http://127.0.0.1:8000/batch-search \
+  -H "Content-Type: application/json" \
+  -d '{"queries":["What is a dividend stock?","How does inflation affect bond prices?"],"top_k":3,"nprobe":16}'
+```
+
+For the full artifact contract and operational notes, see [Retrieval API](docs/retrieval_api.md).
+
 ## Repository Structure
 
 ```text
+app/
+  main.py
+  retriever.py
+artifacts/
+  fiqa_ivfpq_m96/
+    index.faiss
+    service_config.json
+    doc_ids.json
+docs/
+  benchmark_methodology.md
+  retrieval_api.md
+figures/
+  storage_quality_tradeoff.png
+  throughput_stability.png
 notebooks/
   Ai_embedding_compression.ipynb
 results/
@@ -126,11 +213,12 @@ results/
     main_gpu_adc_results.csv
     stability_batch_benchmark.csv
     main_results_table.md
-figures/
-  storage_quality_tradeoff.png
-  throughput_stability.png
-docs/
-  benchmark_methodology.md
+scripts/
+  export_service_artifacts.py
+  prepare_fiqa_documents.py
+environment.yml
+requirements-api.txt
+requirements-colab.txt
 ```
 
 ## Reproducibility
@@ -150,4 +238,4 @@ For the GPU benchmark, use Google Colab with an NVIDIA GPU runtime and install `
 
 - FiQA has 57,638 documents, so it is well suited to relevance evaluation but does not fully represent million-scale ANN workloads.
 - The current benchmark uses one English embedding model.
-- Future work includes a 100K–1M vector scale benchmark, Faiss `OPQMatrix` comparison, a Traditional Chinese retrieval benchmark, and a Dockerized retrieval API.
+- Future work includes a 100K–1M vector scale benchmark, Faiss `OPQMatrix` comparison, a Traditional Chinese retrieval benchmark, reranking, and a production-oriented container deployment for the retrieval API.
