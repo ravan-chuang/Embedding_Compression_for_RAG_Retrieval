@@ -15,10 +15,10 @@ This project separates two questions that are often conflated:
 ## Highlights
 
 - Evaluates Float32, INT8, INT4, PQ, OPQ, IVF-PQ, and OPQ-IVF-PQ.
-- Uses FiQA and SciFact / BEIR relevance benchmarks instead of document-to-document nearest-neighbor proxies.
+- Uses FiQA and SciFact / BEIR relevance benchmarks across MiniLM and BGE-small embedding models instead of document-to-document nearest-neighbor proxies.
 - Measures Recall@5, Recall@10, MRR@10, nDCG@10, storage cost, latency, and QPS.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
-- Exports a deployable OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
+- Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
 - Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
 
 ## Benchmark Setup
@@ -28,8 +28,9 @@ This project separates two questions that are often conflated:
 | Primary benchmark | FiQA / BEIR |
 | FiQA corpus / queries | 57,638 documents / 648 queries |
 | Cross-dataset validation | SciFact / BEIR: 5,183 documents / 300 queries |
-| Embedding model | `sentence-transformers/all-MiniLM-L6-v2` |
-| Embedding dimension | 384 |
+| Primary deployment model | `sentence-transformers/all-MiniLM-L6-v2` |
+| Cross-model validation | `BAAI/bge-small-en-v1.5` |
+| Embedding dimension | 384 for both evaluated models |
 | Retrieval metrics | Recall@5, Recall@10, MRR@10, nDCG@10 |
 | ANN backend | Faiss GPU IVF-PQ ADC |
 | GPU | NVIDIA Tesla T4 |
@@ -88,6 +89,39 @@ The SciFact experiment uses 5,183 documents and 300 judged queries. At `M=96, np
 
 This is evidence of **cross-dataset evaluation**, not a claim that one OPQ implementation universally wins. The relative OPQ benefit is dataset-dependent, and SciFact is too small to support a million-scale ANN speed claim.
 
+## Cross-Model Validation: MiniLM × BGE-small
+
+The same `M=96`, `nlist=256`, `nprobe=16` protocol was also evaluated with
+`BAAI/bge-small-en-v1.5`. The table below reports the quality trade-off across
+two datasets and two embedding models. Compression ratios are serialized deployment
+ratios, including the external FP32 OPQ rotation when required.
+
+| Dataset | Model | Method | Recall@10 | nDCG@10 | Serialized compression |
+|:--|:--|:--|--:|--:|--:|
+| FiQA | MiniLM | Float32 FlatIP | 0.4413 | 0.3687 | 1.00× |
+| FiQA | MiniLM | IVF-PQ M=96 | 0.4085 | 0.3442 | 13.05× |
+| FiQA | MiniLM | PyTorch OPQ-IVF-PQ M=96 | 0.4081 | 0.3462 | 12.01× |
+| FiQA | MiniLM | Native Faiss OPQMatrix-IVF-PQ M=96 | 0.4157 | 0.3470 | 12.01× |
+| SciFact | MiniLM | Float32 FlatIP | 0.7833 | 0.6451 | 1.00× |
+| SciFact | MiniLM | IVF-PQ M=96 | 0.7206 | 0.5975 | 6.00× |
+| SciFact | MiniLM | PyTorch OPQ-IVF-PQ M=96 | 0.7056 | 0.5906 | 4.15× |
+| SciFact | MiniLM | Native Faiss OPQMatrix-IVF-PQ M=96 | 0.7156 | 0.5969 | 4.15× |
+| FiQA | BGE-small | Float32 FlatIP | 0.4396 | 0.3848 | 1.00× |
+| FiQA | BGE-small | IVF-PQ M=96 | 0.3966 | 0.3453 | 13.05× |
+| FiQA | BGE-small | PyTorch OPQ-IVF-PQ M=96 | 0.4048 | 0.3545 | 12.01× |
+| FiQA | BGE-small | Native Faiss OPQMatrix-IVF-PQ M=96 | 0.4067 | 0.3555 | 12.01× |
+| SciFact | BGE-small | Float32 FlatIP | 0.8452 | 0.7200 | 1.00× |
+| SciFact | BGE-small | IVF-PQ M=96 | 0.7991 | 0.6861 | 6.00× |
+| SciFact | BGE-small | PyTorch OPQ-IVF-PQ M=96 | 0.8012 | 0.6863 | 4.15× |
+| SciFact | BGE-small | Native Faiss OPQMatrix-IVF-PQ M=96 | 0.8108 | 0.6881 | 4.15× |
+
+### Interpretation
+
+- **PyTorch OPQ helps on both BGE-small experiments:** it improves over plain IVF-PQ on FiQA (`+0.0082` Recall@10, `+0.0092` nDCG@10) and SciFact (`+0.0021` Recall@10, `+0.0002` nDCG@10).
+- **MiniLM behavior is dataset-dependent:** PyTorch OPQ improves FiQA nDCG@10 slightly but underperforms plain IVF-PQ on SciFact.
+- **Native Faiss `OPQMatrix` is the strongest and most stable OPQ baseline** among the evaluated configurations. The custom PyTorch implementation is retained as a reproducible learned-rotation and serving pipeline, not claimed as a universal replacement for Faiss OPQ.
+- **BGE-small is stronger on SciFact:** its Float32 baseline reaches `0.8452` Recall@10 and `0.7200` nDCG@10, compared with MiniLM's `0.7833` and `0.6451`.
+
 ## Corrected GPU Faiss Search Timing
 
 The following values measure **GPU Faiss search only**. Quality uses all 648 FiQA queries, while latency and QPS use the 640 full-size queries from 10 batches of 64; the final 8-query tail is excluded from latency percentiles to avoid distortion.
@@ -117,9 +151,10 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 ## Key Findings
 
-- **Deployment-aware compression accounting matters:** the OPQ query rotation is required at serving time, so serialized deployment storage is lower than the analytical index-only compression ratio.
-- **FiQA and SciFact both retain useful ranking quality after IVF-PQ compression:** the selected `M=96, nprobe=16` configuration is evaluated on two BEIR datasets rather than one.
-- **OPQ is dataset-dependent:** PyTorch OPQ slightly improves the selected FiQA nDCG result, while SciFact favors native Faiss `OPQMatrix` among the evaluated OPQ variants and plain IVF-PQ remains competitive.
+- **Deployment-aware compression accounting matters:** the external OPQ query rotation is required at serving time, so serialized deployment storage is lower than the analytical index-only compression ratio.
+- **The benchmark now covers two datasets × two embedding models:** FiQA and SciFact are evaluated with MiniLM and BGE-small under the same IVF-PQ / OPQ protocol.
+- **PyTorch OPQ is cross-model but not universally dominant:** it improves both BGE-small experiments, while its MiniLM behavior is dataset-dependent.
+- **Native Faiss `OPQMatrix` remains the strongest OPQ baseline:** it is the most stable quality performer across all evaluated dataset-model pairs.
 - **Higher `nprobe` improves quality at a throughput cost:** `nprobe=64` recovers more retrieval quality but increases search latency.
 - **ANN speedup requires candidate pruning:** full-scan PQ is not automatically faster than dense GPU retrieval at this corpus scale; IVF candidate pruning creates the main ANN throughput benefit.
 - **Small corpora are not a scale benchmark:** SciFact validates ranking behavior in another domain, but its 5,183-document corpus is not evidence of million-scale ANN performance.
@@ -321,10 +356,14 @@ figures/
 notebooks/
   Ai_embedding_compression.ipynb
   SciFact_OPQ_IVFPQ_Benchmark.ipynb
+  FiQA_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
+  SciFact_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
 results/
   api_benchmark/
   fiqa_gpu_benchmark/
   scifact_gpu_benchmark/
+  fiqa_bge_small_gpu_benchmark/
+  scifact_bge_small_gpu_benchmark/
 scripts/
   benchmark_api.py
   export_service_artifacts.py
@@ -344,38 +383,44 @@ requirements-ci.txt
 
 ## Reproducibility
 
-### FiQA serving and benchmark workflow
+### FiQA serving and primary MiniLM benchmark
 
 1. Open `notebooks/Ai_embedding_compression.ipynb` in Google Colab.
 2. Enable an NVIDIA GPU runtime.
 3. Run all cells from top to bottom.
-4. The notebook exports FiQA GPU benchmark artifacts and the OPQ-IVF-PQ service artifact.
+4. The notebook exports FiQA GPU benchmark artifacts and the deployed MiniLM OPQ-IVF-PQ service artifact.
 
-### SciFact cross-dataset validation
+### MiniLM cross-dataset validation
 
-1. Open `notebooks/SciFact_OPQ_IVFPQ_Benchmark.ipynb` in Google Colab.
-2. Enable an NVIDIA GPU runtime.
-3. Run all cells from top to bottom.
-4. The notebook writes independent outputs under `scifact_rag_results/`; it does not overwrite the deployed FiQA API artifact.
+1. Open `notebooks/SciFact_OPQ_IVFPQ_Benchmark.ipynb`.
+2. Enable an NVIDIA GPU runtime and run all cells.
+3. The notebook writes independent outputs under `scifact_rag_results/`; it does not overwrite the deployed FiQA API artifact.
 
-For both GPU experiments, use Google Colab with an NVIDIA GPU runtime and install `requirements-colab.txt`.
+### BGE-small cross-model validation
+
+1. Open `notebooks/FiQA_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb` and run all cells.
+2. Open `notebooks/SciFact_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb` and run all cells.
+3. These notebooks write independent outputs under `fiqa_bge_small_rag_results/` and `scifact_bge_small_rag_results/`.
+4. They are benchmark-only and do not overwrite the deployed MiniLM FiQA artifact.
+
+For all GPU experiments, use Google Colab with an NVIDIA GPU runtime and install `requirements-colab.txt`.
 
 ## Limitations and Next Steps
 
-- FiQA has 57,638 documents and SciFact has 5,183 documents. Together they improve domain coverage, but neither benchmark establishes million-scale ANN behavior.
-- The current cross-dataset experiment uses one English embedding model.
+- FiQA has 57,638 documents and SciFact has 5,183 documents. The two datasets and two models improve generalization evidence, but they do not establish million-scale ANN behavior.
+- The benchmark currently uses two English embedding models; it does not yet validate multilingual or Traditional Chinese retrieval.
 - The deployment uses a learned external OPQ transform; any compatible serving implementation must apply the same query rotation before Faiss search.
-- Future work includes a second embedding model, a 100K–1M vector scale benchmark, a Traditional Chinese retrieval benchmark, reranking, query-aware retrieval routing, and production observability / deployment hardening.
+- Future work includes a 100K–1M vector scale benchmark, a Traditional Chinese retrieval benchmark, reranking, query-aware retrieval routing, model-specific deployment selection, and production observability / deployment hardening.
 
 ## Release Readiness
 
-The repository now represents a retrieval-engineering workflow with an initial two-dataset validation layer:
+The repository now represents a retrieval-engineering workflow with initial cross-dataset and cross-model validation:
 
 ```text
-FiQA GPU benchmark → serialized OPQ-IVF-PQ artifact + query rotation
+FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → FastAPI serving → Docker metadata regeneration
 → Docker end-to-end verification → automated CI
-→ SciFact cross-dataset evaluation
+→ FiQA + SciFact × MiniLM + BGE-small validation
 ```
 
-The next milestone is a `v1.2.0` cross-dataset validation release after committing the SciFact notebook and its README-ready result artifacts.
+The next milestone is a `v1.3.0` cross-model validation release. It should include the two BGE-small notebooks and this README summary, while retaining the verified MiniLM FiQA artifact as the deployed service baseline.
