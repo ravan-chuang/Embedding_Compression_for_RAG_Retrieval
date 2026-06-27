@@ -5,7 +5,7 @@
 [![Faiss](https://img.shields.io/badge/ANN-Faiss-blue)](https://github.com/facebookresearch/faiss)
 [![Docker Verified](https://img.shields.io/badge/Docker-verified-2496ED)](docs/docker_api.md)
 
-A GPU-accelerated benchmark for embedding compression and approximate nearest-neighbor retrieval in Retrieval-Augmented Generation (RAG) systems.
+A GPU benchmark and deployable retrieval system for embedding compression and approximate nearest-neighbor search in Retrieval-Augmented Generation (RAG).
 
 This project separates two questions that are often conflated:
 
@@ -18,8 +18,8 @@ This project separates two questions that are often conflated:
 - Uses the FiQA / BEIR relevance benchmark instead of document-to-document nearest-neighbor proxies.
 - Measures Recall@5, Recall@10, MRR@10, nDCG@10, storage cost, latency, and QPS.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
-- Includes repeated-run serving benchmarks for batch sizes 1, 8, and 64.
-- Ships a verified FastAPI retrieval service, Docker Compose deployment, unit tests, and GitHub Actions CI.
+- Exports a deployable OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
+- Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
 
 ## Benchmark Setup
 
@@ -56,49 +56,35 @@ These methods use Faiss GPU indexes directly:
 - `GpuIndexFlatIP`: exact Float32 dense retrieval baseline
 - `GpuIndexIVFPQ`: compressed-domain IVF-PQ ADC retrieval
 - PyTorch-learned OPQ rotation + `GpuIndexIVFPQ`
+- Native Faiss `OPQMatrix` + `GpuIndexIVFPQ` comparison
 
 For IVF-PQ, document vectors remain encoded as PQ codes during search. Faiss uses asymmetric distance computation (ADC) rather than reconstructing every document embedding.
 
 ## Main GPU ADC Quality Results
 
-| Method | nprobe | Deployment compression | Recall@10 | nDCG@10 |
-|:--|--:|--:|--:|--:|
-| GPU Float32 FlatIP | – | 1.00× | 0.4413 | 0.3687 |
-| OPQ-IVF-PQ M=96 | 16 | 13.59× | 0.4189 | 0.3441 |
-| IVF-PQ M=96 | 16 | 14.94× | 0.4085 | 0.3442 |
-| IVF-PQ M=24 | 4 | 49.83× | 0.2806 | 0.2254 |
+| Method | nprobe | Analytical compression | Serialized deployment compression | Recall@10 | nDCG@10 |
+|:--|--:|--:|--:|--:|--:|
+| GPU Float32 FlatIP | – | 1.00× | 1.00× | 0.4413 | 0.3687 |
+| PyTorch OPQ-IVF-PQ M=96 | 16 | 13.59× | 12.01× | 0.4081 | 0.3462 |
+| IVF-PQ M=96 | 16 | 14.94× | 13.05× | 0.4085 | 0.3442 |
+| PyTorch OPQ-IVF-PQ M=96 | 64 | 13.59× | 12.01× | 0.4216 | 0.3548 |
 
-At **13.59× deployment compression**, OPQ-IVF-PQ retained **94.9%** of Float32 Recall@10 and **93.3%** of Float32 nDCG@10.
+At the deployed `M=96, nprobe=16` configuration, PyTorch OPQ-IVF-PQ retains about **92.5%** of Float32 Recall@10 and **93.9%** of Float32 nDCG@10 while reducing serialized deployment storage by about **12.01×**.
 
-> Latency and throughput are reported only in the repeated serving benchmark below. This avoids mixing one-off microbenchmark timing with repeated-run serving measurements.
+The serialized deployment figure includes the external `384 × 384` FP32 query-side OPQ rotation matrix. The analytical compression figure describes the index coding budget only.
 
-## Repeated Serving Benchmark
+## Corrected GPU Faiss Search Timing
 
-Each configuration was repeated five times. The table reports median latency and median QPS.
+The following values measure **GPU Faiss search only**. Quality uses all 648 FiQA queries, while latency and QPS use the 640 full-size queries from 10 batches of 64; the final 8-query tail is excluded from latency percentiles to avoid distortion.
 
-### Batch size = 1
-
-| Method | P50 latency | P95 latency | Median QPS |
+| Method | Batch size | P95 per-query search latency | Search throughput |
 |:--|--:|--:|--:|
-| GPU Float32 FlatIP | 0.663 ms | 0.724 ms | 1,490 |
-| IVF-PQ M=96, nprobe=16 | 0.240 ms | 0.313 ms | 4,030 |
-| OPQ-IVF-PQ M=96, nprobe=16 | 0.236 ms | 0.283 ms | 4,115 |
+| GPU Float32 FlatIP | 64 | 0.028350 ms | 35,553.88 q/s |
+| IVF-PQ M=96, nprobe=16 | 64 | 0.018839 ms | 53,983.10 q/s |
+| PyTorch OPQ-IVF-PQ M=96, nprobe=16 | 64 | 0.019044 ms | 54,260.55 q/s |
+| PyTorch OPQ-IVF-PQ M=96, nprobe=64 | 64 | 0.065608 ms | 15,401.17 q/s |
 
-### Batch size = 8
-
-| Method | P50 latency | P95 latency | Median QPS |
-|:--|--:|--:|--:|
-| GPU Float32 FlatIP | 0.133 ms | 0.140 ms | 7,471 |
-| IVF-PQ M=96, nprobe=16 | 0.046 ms | 0.050 ms | 21,657 |
-| OPQ-IVF-PQ M=96, nprobe=16 | 0.046 ms | 0.049 ms | 21,901 |
-
-### Batch size = 64
-
-| Method | P50 latency | P95 latency | Median QPS |
-|:--|--:|--:|--:|
-| GPU Float32 FlatIP | 0.021 ms | 0.083 ms | 44,672 |
-| IVF-PQ M=96, nprobe=16 | 0.021 ms | 0.035 ms | 47,884 |
-| OPQ-IVF-PQ M=96, nprobe=16 | 0.020 ms | 0.036 ms | 48,635 |
+These numbers exclude embedding generation, HTTP transport, artifact loading, and response serialization. They must not be compared directly with the Docker API latency below.
 
 ## Figures
 
@@ -116,32 +102,50 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 ## Key Findings
 
-- **High-quality compression:** PQ with a large code budget preserved near-Float32 retrieval quality under substantial deployment compression.
-- **OPQ helps most at constrained code budgets:** OPQ improved ranking quality most clearly when the PQ code budget was low or medium.
-- **ANN speedup requires candidate pruning:** Full-scan PQ was not automatically faster than dense GPU retrieval at this corpus scale; IVF candidate pruning created the main ANN throughput benefit.
-- **Batch size matters:** IVF-PQ and OPQ-IVF-PQ show their strongest relative advantage for online and small-batch serving. Dense GPU matrix multiplication becomes more competitive at large batches.
-- **Latency reporting is repeated:** Serving numbers are based on five repeated runs and use median statistics to reduce the effect of transient GPU-runtime variation.
+- **Deployment-aware compression accounting matters:** the OPQ query rotation is required at serving time, so serialized deployment storage is lower than the analytical index-only compression ratio.
+- **OPQ improves the selected M=96 configuration slightly:** at `nprobe=16`, PyTorch OPQ-IVF-PQ achieves a small nDCG gain over plain IVF-PQ at a similar search throughput.
+- **Higher `nprobe` improves quality at a throughput cost:** `nprobe=64` recovers more retrieval quality but substantially increases search latency.
+- **ANN speedup requires candidate pruning:** full-scan PQ is not automatically faster than dense GPU retrieval at this corpus scale; IVF candidate pruning creates the main ANN throughput benefit.
+- **Batching matters:** benchmark timing is measured over true matrix search calls, not repeated single-query calls.
 
 ## Retrieval API
 
-The repository also includes a local FastAPI retrieval service backed by the exported
-FiQA `IndexIVFPQ` artifact. It exposes:
+The repository includes a local FastAPI retrieval service backed by the exported FiQA **OPQ-IVF-PQ** artifact.
+
+The deployed artifact contains:
+
+```text
+artifacts/fiqa_opq_ivfpq_m96/
+├── index.faiss
+├── query_opq_rotation.npy
+├── doc_ids.json
+└── service_config.json
+```
+
+`documents.jsonl` is intentionally ignored by Git because it is reproducible metadata derived from FiQA / BEIR. The Docker entrypoint recreates it automatically when missing.
+
+The serving path is:
+
+```text
+query
+→ sentence-transformers embedding
+→ L2 normalization
+→ query @ OPQ rotation
+→ Faiss IndexIVFPQ search
+→ document metadata lookup
+```
+
+The API exposes:
 
 - `GET /health` for service and artifact readiness.
 - `POST /search` for single-query top-k retrieval.
-- `POST /batch-search` for true micro-batched retrieval: queries are embedded together
-  and sent to Faiss in one matrix search call.
+- `POST /batch-search` for true micro-batched retrieval: queries are embedded together and sent to Faiss in one matrix search call.
 
-The local service was verified with the FiQA artifact containing 57,638 documents.
-A representative single-query request for `What is a dividend stock?` returned relevant
-top-ranked FiQA passages with an end-to-end local latency of about 25 ms on Apple Silicon.
-This application latency includes query embedding, Faiss search, and response assembly, so
-it is intentionally reported separately from the GPU-only serving benchmark above.
+The OPQ contract is validated by the service configuration. When `query_transform.enabled` is true, the retriever loads `query_opq_rotation.npy` and applies it before Faiss search.
 
 ### Local API setup
 
-On macOS Apple Silicon, install Faiss through conda-forge to avoid mixing native Faiss and
-OpenMP runtimes from Conda and pip:
+On macOS Apple Silicon, install Faiss through conda-forge to avoid mixing native Faiss and OpenMP runtimes from Conda and pip:
 
 ```bash
 conda env create -f environment.yml
@@ -157,9 +161,10 @@ conda install -c conda-forge faiss-cpu
 pip install -r requirements-api.txt
 ```
 
-Generate the local FiQA metadata copy (the 45 MB metadata file is intentionally ignored by Git):
+Generate the local FiQA metadata copy:
 
 ```bash
+ARTIFACT_DIR=artifacts/fiqa_opq_ivfpq_m96 \
 python scripts/prepare_fiqa_documents.py
 ```
 
@@ -193,35 +198,23 @@ curl -X POST http://127.0.0.1:8000/batch-search \
   -d '{"queries":["What is a dividend stock?","How does inflation affect bond prices?"],"top_k":3,"nprobe":16}'
 ```
 
+A verified Docker `POST /search` request returned `query_transform_enabled: true` and relevant dividend-related FiQA passages, confirming that the deployed API uses the OPQ query transform.
+
 For the full artifact contract and operational notes, see [Retrieval API](docs/retrieval_api.md).
 
 ### Local API benchmark
 
-The repository includes a real HTTP benchmark for the running service. It measures
-client-visible end-to-end latency, API-reported retrieval latency, and query throughput.
+The repository includes a real HTTP benchmark for the running service. It measures client-visible end-to-end latency, API-reported retrieval latency, and query throughput.
 
 ```bash
 python scripts/benchmark_api.py --warmup 5 --runs 30 --batch-sizes 1 8 32
 ```
 
-Verified local CPU results on Apple Silicon:
-
-| Endpoint | Batch size | Client P50 | Client P95 | Query throughput |
-|:--|--:|--:|--:|--:|
-| `/search` | 1 | 6.627 ms | 7.304 ms | 149.70 q/s |
-| `/batch-search` | 8 | 9.930 ms | 11.953 ms | 797.30 q/s |
-| `/batch-search` | 32 | 21.006 ms | 21.837 ms | 1,519.05 q/s |
-
-Batch size 32 reaches about **10.1×** the query throughput of the single-query
-endpoint. These are local CPU application measurements, including HTTP, query
-embedding, Faiss search, and response assembly; they are not directly comparable
-to the GPU-only Faiss serving benchmark above.
+Run this benchmark after changing the artifact, model, hardware, or serving configuration. Its results are CPU application measurements, including HTTP, query embedding, OPQ rotation, Faiss search, and response assembly; they are not directly comparable to the GPU-only Faiss search benchmark above.
 
 ## API Demo
 
-The Swagger UI below shows a verified `POST /search` request against the
-serialized FiQA `IndexIVFPQ` artifact. The service returns ranked passages with
-similarity scores and document IDs.
+The Swagger UI below shows a verified `POST /search` request against the serialized FiQA `IndexIVFPQ` artifact.
 
 ![FastAPI retrieval demo](figures/api_demo.png)
 
@@ -233,28 +226,54 @@ The service is containerized and verified with Docker Compose:
 docker compose up --build
 ```
 
-The first start generates the reproducible FiQA metadata file and downloads the
-embedding model. Once ready, open:
+The first start generates the reproducible FiQA metadata file and downloads the embedding model. Once ready, open:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-The Docker deployment was verified with `GET /health` and `POST /search` against
-the serialized 57,638-document `IndexIVFPQ` artifact. See [Docker API](docs/docker_api.md).
+Verify the deployed artifact:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Expected fields include:
+
+```json
+{
+  "artifact_dir": "artifacts/fiqa_opq_ivfpq_m96",
+  "index_type": "IndexIVFPQ",
+  "document_count": 57638
+}
+```
+
+Then verify the OPQ query transform:
+
+```bash
+curl -X POST http://127.0.0.1:8000/search \
+  -H "Content-Type: application/json" \
+  -d '{"query":"What is a dividend stock?","top_k":3}'
+```
+
+The response should contain:
+
+```json
+"query_transform_enabled": true
+```
+
+See [Docker API](docs/docker_api.md).
 
 ### Testing and CI
 
-The repository includes **7 offline unit tests** for artifact consistency,
-retriever behavior, batch search, and endpoint logic.
+The repository includes **7 offline unit tests** for artifact consistency, retriever behavior, batch search, and endpoint logic.
 
 ```bash
 pip install -r requirements-dev.txt
 pytest -q
 ```
 
-GitHub Actions runs the test suite on pushes to `main` and pull requests. See
-[Testing and CI](docs/testing_ci.md).
+GitHub Actions runs the test suite on pushes to `main` and pull requests. See [Testing and CI](docs/testing_ci.md).
 
 ## Repository Structure
 
@@ -266,8 +285,9 @@ app/
   main.py
   retriever.py
 artifacts/
-  fiqa_ivfpq_m96/
+  fiqa_opq_ivfpq_m96/
     index.faiss
+    query_opq_rotation.npy
     service_config.json
     doc_ids.json
 docker/
@@ -308,11 +328,7 @@ requirements-ci.txt
 1. Open `notebooks/Ai_embedding_compression.ipynb` in Google Colab.
 2. Enable an NVIDIA GPU runtime.
 3. Run all cells from top to bottom.
-4. The notebook installs the CUDA-compatible Faiss GPU package and exports benchmark artifacts under:
-
-```text
-fiqa_rag_results/readme_artifacts/
-```
+4. The notebook exports GPU benchmark artifacts and the OPQ-IVF-PQ service artifact.
 
 For the GPU benchmark, use Google Colab with an NVIDIA GPU runtime and install `requirements-colab.txt`.
 
@@ -320,17 +336,17 @@ For the GPU benchmark, use Google Colab with an NVIDIA GPU runtime and install `
 
 - FiQA has 57,638 documents, so it is well suited to relevance evaluation but does not fully represent million-scale ANN workloads.
 - The current benchmark uses one English embedding model.
-- Future work includes a 100K–1M vector scale benchmark, Faiss `OPQMatrix` comparison, a Traditional Chinese retrieval benchmark, reranking, and production observability / deployment hardening.
-
+- The deployment uses a learned external OPQ transform; any compatible serving implementation must apply the same query rotation before Faiss search.
+- Future work includes multi-dataset and multi-model evaluation, a 100K–1M vector scale benchmark, a Traditional Chinese retrieval benchmark, reranking, query-aware retrieval routing, and production observability / deployment hardening.
 
 ## Release Readiness
 
 The current repository represents a complete retrieval-engineering workflow:
 
 ```text
-GPU benchmark → serialized IVF-PQ artifact → FastAPI serving
-→ local API benchmark → Docker Compose deployment → automated CI
+GPU benchmark → serialized OPQ-IVF-PQ artifact + query rotation
+→ FastAPI serving → Docker metadata regeneration
+→ Docker end-to-end verification → automated CI
 ```
 
-The next milestone is a `v1.0.0` release after adding a short API demo recording
-or screenshot to the repository.
+The next milestone is a `v1.1.0` release titled **OPQ-IVF-PQ Serving Release**.
