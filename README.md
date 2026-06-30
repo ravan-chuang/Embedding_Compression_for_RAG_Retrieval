@@ -420,7 +420,8 @@ notebooks/
   Ai_embedding_compression.ipynb
   SciFact_OPQ_IVFPQ_Benchmark.ipynb
   FiQA_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
-  SciFact_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb\n  MSMARCO_1M_OPQ_Metrics_Sweep_v1_1.ipynb
+  SciFact_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
+  MSMARCO_1M_OPQ_Metrics_Sweep_v1_1.ipynb
 results/
   api_benchmark/
   fiqa_gpu_benchmark/
