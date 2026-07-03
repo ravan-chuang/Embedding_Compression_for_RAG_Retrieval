@@ -1,0 +1,23 @@
+# MS MARCO 1M Low-Rate PQ / OPQ Pareto Sweep
+
+Timing is GPU Faiss search only. OPQ query transformation is precomputed outside the timed region. Storage includes document IDs and, for OPQ, the external FP32 query rotation artifact.
+
+| method                              |   M |   nprobe |   recall_at_10 |   mrr_at_10 |   ndcg_at_10 |   p95_ms_per_query |       qps |   serialized_compression_x |   build_seconds | pareto_quality_storage   | pareto_quality_qps   |
+|:------------------------------------|----:|---------:|---------------:|------------:|-------------:|-------------------:|----------:|---------------------------:|----------------:|:-------------------------|:---------------------|
+| GPU FlatIP                          | nan |      nan |         0.8563 |      0.637  |       0.687  |           0.429832 |   2413.23 |                       1    |            2.77 | False                    | False                |
+| GPU IVF-PQ                          |  24 |        4 |         0.5434 |      0.3722 |       0.4097 |           0.011425 |  56068.7  |                      33.05 |            9.88 | False                    | False                |
+| GPU IVF-PQ                          |  24 |       16 |         0.6176 |      0.4183 |       0.4623 |           0.01578  |  71360.2  |                      33.05 |            9.88 | False                    | False                |
+| GPU IVF-PQ                          |  24 |       32 |         0.6372 |      0.4288 |       0.4749 |           0.032149 |  46386.1  |                      33.05 |            9.88 | False                    | False                |
+| GPU IVF-PQ                          |  24 |       64 |         0.6494 |      0.4353 |       0.4827 |           0.034183 |  32170    |                      33.05 |            9.88 | True                     | False                |
+| GPU IVF-PQ                          |  48 |        4 |         0.5874 |      0.4296 |       0.4639 |           0.010994 | 131838    |                      21.83 |           12.56 | False                    | False                |
+| GPU IVF-PQ                          |  48 |       16 |         0.6907 |      0.4976 |       0.5405 |           0.01584  |  70851.1  |                      21.83 |           12.56 | False                    | True                 |
+| GPU IVF-PQ                          |  48 |       32 |         0.7249 |      0.5184 |       0.5647 |           0.024829 |  43904.5  |                      21.83 |           12.56 | False                    | True                 |
+| GPU IVF-PQ                          |  48 |       64 |         0.7489 |      0.5337 |       0.582  |           0.045769 |  23750.5  |                      21.83 |           12.56 | True                     | False                |
+| Native Faiss OPQMatrix + GPU IVF-PQ |  24 |        4 |         0.5573 |      0.3884 |       0.4255 |           0.008119 | 145264    |                      32.64 |          550.85 | False                    | False                |
+| Native Faiss OPQMatrix + GPU IVF-PQ |  24 |       16 |         0.6448 |      0.4436 |       0.4884 |           0.014777 |  84410.4  |                      32.64 |          550.85 | False                    | True                 |
+| Native Faiss OPQMatrix + GPU IVF-PQ |  24 |       32 |         0.6709 |      0.4585 |       0.506  |           0.020883 |  56783.2  |                      32.64 |          550.85 | False                    | False                |
+| Native Faiss OPQMatrix + GPU IVF-PQ |  24 |       64 |         0.688  |      0.4683 |       0.5175 |           0.028861 |  35608.3  |                      32.64 |          550.85 | True                     | False                |
+| Native Faiss OPQMatrix + GPU IVF-PQ |  48 |        4 |         0.5909 |      0.436  |       0.4695 |           0.007996 | 147352    |                      21.65 |         1162.66 | False                    | True                 |
+| Native Faiss OPQMatrix + GPU IVF-PQ |  48 |       16 |         0.6981 |      0.5087 |       0.5508 |           0.033483 |  60641.3  |                      21.65 |         1162.66 | False                    | True                 |
+| Native Faiss OPQMatrix + GPU IVF-PQ |  48 |       32 |         0.7339 |      0.5308 |       0.5762 |           0.031549 |  41289.2  |                      21.65 |         1162.66 | False                    | True                 |
+| Native Faiss OPQMatrix + GPU IVF-PQ |  48 |       64 |         0.7609 |      0.5482 |       0.5958 |           0.044394 |  24087.9  |                      21.65 |         1162.66 | True                     | True                 |

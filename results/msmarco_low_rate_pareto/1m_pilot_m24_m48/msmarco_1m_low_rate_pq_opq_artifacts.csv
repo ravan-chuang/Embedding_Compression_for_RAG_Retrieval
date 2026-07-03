@@ -1,0 +1,5 @@
+method,method_key,M,serialized_index_bytes,external_transform_bytes,serialized_total_bytes,serialized_compression_x,analytical_code_bytes,analytical_code_compression_x
+GPU IVF-PQ,ivfpq,24,38717620,0,46717620,33.04962881242666,24000000,64.0
+GPU IVF-PQ,ivfpq,48,62717620,0,70717620,21.833313960509418,48000000,32.0
+Native Faiss OPQMatrix + GPU IVF-PQ,native_opq_ivfpq,24,38717620,589952,47307572,32.637481374017675,24000000,64.0
+Native Faiss OPQMatrix + GPU IVF-PQ,native_opq_ivfpq,48,62717620,589952,71307572,21.652679465793618,48000000,32.0
