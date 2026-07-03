@@ -154,6 +154,45 @@ The practical default at this scale is therefore plain IVF-PQ at `M=96, nprobe=3
 
 > Timing measures GPU Faiss search only. It excludes embedding generation, HTTP transport, artifact loading, and response serialization.
 
+## Low-Rate PQ / OPQ Pilot: MS MARCO 1M
+
+A deployment-aware low-rate pilot evaluates plain GPU IVF-PQ against native
+Faiss `OPQMatrix` + GPU IVF-PQ on the 1,000,000-passage MS MARCO subset.
+The pilot covers `M = 24, 48` and `nprobe = 4, 16, 32, 64`.
+
+| Configuration at `nprobe=64` | Recall@10 | Recall gain vs. plain IVF-PQ | Serialized deployment compression | Build time |
+|:--|--:|--:|--:|--:|
+| IVF-PQ `M=24` | 0.6494 | – | 33.05× | 9.88 s |
+| Native OPQ-IVF-PQ `M=24` | 0.6880 | +0.0386 | 32.64× | 550.85 s |
+| IVF-PQ `M=48` | 0.7489 | – | 21.83× | 12.56 s |
+| Native OPQ-IVF-PQ `M=48` | 0.7609 | +0.0120 | 21.65× | 1,162.66 s |
+
+The results show that native OPQ provides its strongest quality recovery in the
+lower-rate `M=24` regime, where each PQ subvector contains 16 dimensions and
+quantization distortion is larger. At `M=48`, OPQ still improves retrieval
+quality, but its marginal gain narrows.
+
+At this 1M scale, the external FP32 OPQ rotation matrix has only a small effect
+on serialized deployment compression. The primary trade-off is instead offline
+build cost: OPQ takes roughly 56× longer than plain IVF-PQ at `M=24` and about
+93× longer at `M=48` in this Tesla T4 benchmark.
+
+This is a pilot rather than a complete sweep. It establishes the expected
+low-rate pattern and motivates broader `M`-value evaluation before claiming a
+universal OPQ recommendation.
+
+Detailed outputs: [summary CSV](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/msmarco_1m_low_rate_pq_opq_pareto_summary.csv),
+[artifact accounting](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/msmarco_1m_low_rate_pq_opq_artifacts.csv),
+and [full pilot report](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/msmarco_1m_low_rate_pq_opq_pareto_report.md).
+
+### Low-rate quality-storage Pareto frontier
+
+![MS MARCO 1M low-rate quality-storage Pareto](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/quality_storage_pareto.png)
+
+### Low-rate quality-throughput Pareto frontier
+
+![MS MARCO 1M low-rate quality-throughput Pareto](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/quality_qps_pareto.png)
+
 ## Cross-Model Validation: MiniLM × BGE-small
 
 The same `M=96`, `nlist=256`, `nprobe=16` protocol was also evaluated with
