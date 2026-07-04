@@ -1,0 +1,64 @@
+{
+  "dataset": "MS MARCO passage ranking",
+  "target_passages": 1000000,
+  "sampling": "qrels-preserving random distractor subset",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "embedding_dimension": 384,
+  "embedding_storage_dtype": "float16 memmap; converted to float32 for Faiss train/add",
+  "nlist": 4096,
+  "M_values": [
+    24,
+    32,
+    48,
+    64,
+    96
+  ],
+  "nbits": 8,
+  "nprobe_values": [
+    4,
+    16,
+    32,
+    64
+  ],
+  "top_k": 10,
+  "search_batch_size": 64,
+  "timing_scope": "GPU Faiss search only; OPQ query transform is precomputed outside timed search",
+  "storage_accounting": "serialized Faiss index + int64 document IDs + external FP32 OPQ rotation where required",
+  "temporary_artifacts": "temporary serialized index and rotation files are measured then removed",
+  "metric_definitions": {
+    "recall_at_10": "retrieved judged-relevant passages / all judged-relevant passages",
+    "success_at_10": "fraction of queries with at least one judged-relevant passage in top 10",
+    "mrr_at_10": "mean reciprocal rank truncated at 10",
+    "ndcg_at_10": "binary relevance nDCG truncated at 10"
+  },
+  "opq": {
+    "implementation": "Faiss OPQMatrix",
+    "niter": 50,
+    "niter_pq": 4,
+    "rotation_storage": "384x384 float32 .npy"
+  },
+  "gpu": "Tesla T4",
+  "ram_gb": 12.67,
+  "result_scope": "Merged M=24/32/48/64/96 IVF-PQ and OPQ IVF-PQ study",
+  "source_runs": {
+    "pilot_m24_m48": {
+      "M_values": [
+        24,
+        48
+      ],
+      "metadata_path": "results/msmarco_low_rate_pareto/1m_pilot_m24_m48/msmarco_1m_low_rate_pq_opq_pareto_metadata.json"
+    },
+    "full_m32_m64_m96": {
+      "M_values": [
+        32,
+        64,
+        96
+      ],
+      "metadata_path": "results/msmarco_low_rate_pareto_results_full_m32_m64_m96/msmarco_1m_low_rate_pq_opq_pareto_metadata.json"
+    }
+  },
+  "merged_at_utc": "2026-07-04T11:45:54.959972+00:00",
+  "summary_rows": 40,
+  "artifact_rows": 10,
+  "metadata_consistency_check": "passed"
+}

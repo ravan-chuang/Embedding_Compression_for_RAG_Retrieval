@@ -154,44 +154,59 @@ The practical default at this scale is therefore plain IVF-PQ at `M=96, nprobe=3
 
 > Timing measures GPU Faiss search only. It excludes embedding generation, HTTP transport, artifact loading, and response serialization.
 
-## Low-Rate PQ / OPQ Pilot: MS MARCO 1M
+## Low-Rate PQ / OPQ Full Sweep: MS MARCO 1M
 
-A deployment-aware low-rate pilot evaluates plain GPU IVF-PQ against native
-Faiss `OPQMatrix` + GPU IVF-PQ on the 1,000,000-passage MS MARCO subset.
-The pilot covers `M = 24, 48` and `nprobe = 4, 16, 32, 64`.
+A deployment-aware full sweep evaluates plain GPU IVF-PQ against native Faiss
+`OPQMatrix` + GPU IVF-PQ on the deterministic 1,000,000-passage MS MARCO subset.
 
-| Configuration at `nprobe=64` | Recall@10 | Recall gain vs. plain IVF-PQ | Serialized deployment compression | Build time |
-|:--|--:|--:|--:|--:|
-| IVF-PQ `M=24` | 0.6494 | – | 33.05× | 9.88 s |
-| Native OPQ-IVF-PQ `M=24` | 0.6880 | +0.0386 | 32.64× | 550.85 s |
-| IVF-PQ `M=48` | 0.7489 | – | 21.83× | 12.56 s |
-| Native OPQ-IVF-PQ `M=48` | 0.7609 | +0.0120 | 21.65× | 1,162.66 s |
+| Setting | Value |
+|---|---|
+| Embedding model | `BAAI/bge-small-en-v1.5` |
+| Embedding dimension | 384 |
+| IVF `nlist` | 4096 |
+| PQ `nbits` | 8 |
+| `M` values | 24, 32, 48, 64, 96 |
+| `nprobe` values | 4, 16, 32, 64 |
+| Total benchmark points | 40 |
 
-The results show that native OPQ provides its strongest quality recovery in the
-lower-rate `M=24` regime, where each PQ subvector contains 16 dimensions and
-quantization distortion is larger. At `M=48`, OPQ still improves retrieval
-quality, but its marginal gain narrows.
+The merged result set combines the `M=24/48` run and the `M=32/64/96`
+continuation. The available recorded metadata was checked for consistency before
+merging.
 
-At this 1M scale, the external FP32 OPQ rotation matrix has only a small effect
-on serialized deployment compression. The primary trade-off is instead offline
-build cost: OPQ takes roughly 56× longer than plain IVF-PQ at `M=24` and about
-93× longer at `M=48` in this Tesla T4 benchmark.
+### OPQ incremental value at `nprobe=64`
 
-This is a pilot rather than a complete sweep. It establishes the expected
-low-rate pattern and motivates broader `M`-value evaluation before claiming a
-universal OPQ recommendation.
+| M | Plain Recall@10 | OPQ Recall@10 | Δ Recall@10 | Plain build | OPQ build | Build multiplier |
+|---:|---:|---:|---:|---:|---:|---:|
+| 24 | 0.6494 | 0.6880 | **+0.0386** | 9.9 s | 550.9 s | 55.8× |
+| 32 | 0.6957 | 0.7226 | **+0.0269** | 10.3 s | 863.0 s | 83.6× |
+| 48 | 0.7489 | 0.7609 | **+0.0120** | 12.6 s | 1162.7 s | 92.6× |
+| 64 | 0.7729 | 0.7752 | **+0.0023** | 12.9 s | 1575.3 s | 122.2× |
+| 96 | 0.7887 | 0.7895 | **+0.0008** | 17.8 s | 2168.7 s | 122.1× |
 
-Detailed outputs: [summary CSV](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/msmarco_1m_low_rate_pq_opq_pareto_summary.csv),
-[artifact accounting](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/msmarco_1m_low_rate_pq_opq_artifacts.csv),
-and [full pilot report](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/msmarco_1m_low_rate_pq_opq_pareto_report.md).
+The sweep shows a clear rate-dependent transition: native OPQ provides its
+largest retrieval-quality recovery at lower code rates (`M=24–32`), the gain
+contracts at `M=48`, and it becomes practically negligible by `M=64–96`.
+The OPQ transform adds little serialized storage at this corpus size, but its
+offline training and index-build cost rises sharply.
+
+This is a configuration-specific result for this corpus, model, IVF setting,
+GPU environment, and evaluation workload. It is not a universal recommendation
+to use or avoid OPQ.
+
+Detailed outputs:
+[full summary CSV](results/msmarco_low_rate_pareto/1m_full_m24_m96/msmarco_1m_low_rate_pq_opq_full_summary.csv),
+[artifact accounting](results/msmarco_low_rate_pareto/1m_full_m24_m96/msmarco_1m_low_rate_pq_opq_full_artifacts.csv),
+[merged metadata](results/msmarco_low_rate_pareto/1m_full_m24_m96/msmarco_1m_low_rate_pq_opq_full_metadata.json),
+and [full report](results/msmarco_low_rate_pareto/1m_full_m24_m96/msmarco_1m_low_rate_pq_opq_full_report.md).
 
 ### Low-rate quality-storage Pareto frontier
 
-![MS MARCO 1M low-rate quality-storage Pareto](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/quality_storage_pareto.png)
+![MS MARCO 1M full-sweep quality-storage Pareto](results/msmarco_low_rate_pareto/1m_full_m24_m96/quality_storage_pareto.png)
 
 ### Low-rate quality-throughput Pareto frontier
 
-![MS MARCO 1M low-rate quality-throughput Pareto](results/msmarco_low_rate_pareto/1m_pilot_m24_m48/quality_qps_pareto.png)
+![MS MARCO 1M full-sweep quality-throughput Pareto](results/msmarco_low_rate_pareto/1m_full_m24_m96/quality_qps_pareto.png)
+
 
 ## Cross-Model Validation: MiniLM × BGE-small
 
@@ -600,7 +615,7 @@ For all GPU experiments, use Google Colab with an NVIDIA GPU runtime and install
 - The benchmark currently uses two English embedding models; it does not yet validate multilingual or Traditional Chinese retrieval.
 - The deployment uses a learned external OPQ transform; any compatible serving implementation must apply the same query rotation before Faiss search.
 - The current BGE CPU reranker configuration is experimental: it did not improve the recorded 100-query FiQA subset and adds substantial local latency. Future reranking work should compare domain-appropriate models, title-aware / truncated document formatting, and throughput under realistic batch loads before making a production-default claim.
-- Future work includes lower-rate `M=24/32/48` Pareto sweeps, a Traditional Chinese retrieval benchmark, query-aware retrieval routing, model-specific deployment selection, and production observability / deployment hardening.
+- Future work includes hybrid sparse-dense retrieval, a Traditional Chinese retrieval benchmark, rank-aware residual allocation, query-aware retrieval routing, model-specific deployment selection, and production observability / deployment hardening.
 
 ## Release Readiness
 
@@ -616,4 +631,4 @@ FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → true multi-query cross-encoder batching for `/batch-search`
 ```
 
-Release `v1.4.0` captures the million-scale validation milestone while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next technical milestone is a lower-rate PQ Pareto sweep and an original compression-method comparison.
+Release `v1.4.0` captures the million-scale validation milestone while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next technical milestone is hybrid sparse-dense retrieval and an original compression-method comparison.
