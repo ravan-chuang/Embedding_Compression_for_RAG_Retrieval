@@ -36,7 +36,7 @@ This project separates two questions that are often conflated:
 | Retrieval metrics | Recall@5, Recall@10, MRR@10, nDCG@10 |
 | ANN backend | Faiss GPU IVF-PQ ADC |
 | GPU | NVIDIA Tesla T4 |
-| IVF configuration | `nlist=256`; representative ANN setting: `nprobe=16` |
+| IVF configuration | FiQA / SciFact: `nlist=256`, representative `nprobe=16`; MS MARCO 1M: `nlist=4096` |
 
 ## Methods
 
@@ -133,10 +133,10 @@ To test whether the observed compression and ANN trade-offs remain useful beyond
 | Method | `nprobe` | Recall@10 | MRR@10 | nDCG@10 | P95 search latency | QPS | Serialized deployment compression |
 |:--|--:|--:|--:|--:|--:|--:|--:|
 | GPU FlatIP exact | – | 0.8563 | 0.6370 | 0.6870 | 0.428 ms | 2,418 | 1.00× |
-| IVF-PQ M=96 | 16 | 0.7195 | 0.5361 | 0.5770 | 0.021 ms | 53,644 | 13.01× |
-| IVF-PQ M=96 | 32 | 0.7596 | 0.5619 | 0.6064 | 0.043 ms | 25,557 | 13.01× |
-| IVF-PQ M=96 | 64 | 0.7887 | 0.5834 | 0.6297 | 0.078 ms | 13,607 | 13.01× |
-| Native Faiss OPQMatrix + IVF-PQ M=96 | 64 | 0.7895 | 0.5842 | 0.6304 | 0.076 ms | 13,815 | 12.94× |
+| IVF-PQ M=96 | 16 | 0.7195 | 0.5361 | 0.5770 | 0.024 ms | 47,147 | 13.01× |
+| IVF-PQ M=96 | 32 | 0.7596 | 0.5619 | 0.6064 | 0.039 ms | 27,328 | 13.01× |
+| IVF-PQ M=96 | 64 | 0.7887 | 0.5834 | 0.6297 | 0.072 ms | 14,619 | 13.01× |
+| Native Faiss OPQMatrix + IVF-PQ M=96 | 64 | 0.7895 | 0.5842 | 0.6304 | 0.072 ms | 14,712 | 12.94× |
 
 ### Deployment-Aware Interpretation
 
@@ -146,13 +146,13 @@ Native Faiss OPQ produces only a marginal gain at this high-rate configuration:
 
 - Recall@10: `0.7887 → 0.7895` (`+0.0008`)
 - nDCG@10: `0.6297 → 0.6304` (`+0.0008`)
-- Build time: `16.0 s → 2,094.4 s` (`~130.6×` longer)
+- Build time: `17.8 s → 2,168.7 s` (`~122.1×` longer)
 
 This suggests that when 384-dimensional embeddings are split into 96 PQ subvectors of only 4 dimensions each, plain IVF-PQ is already highly expressive and OPQ has limited remaining quantization error to remove.
 
 The practical default at this scale is therefore plain IVF-PQ at `M=96, nprobe=32`, while `nprobe=64` is the higher-recall serving mode. Native OPQ remains an important baseline, especially for lower-rate PQ settings where rotation may provide more value.
 
-> Timing measures GPU Faiss search only. It excludes embedding generation, HTTP transport, artifact loading, and response serialization.
+> The table above is the `M=96` reference operating point from the completed low-rate sweep. Timing measures GPU Faiss search only and excludes embedding generation, HTTP transport, artifact loading, and response serialization.
 
 ## Low-Rate PQ / OPQ Full Sweep: MS MARCO 1M
 
@@ -270,7 +270,8 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 ## Key Findings
 
-- **Million-scale MS MARCO validation:** on 1M BGE-small passages, plain IVF-PQ at `M=96, nprobe=64` retains 92.1% of exact Recall@10 with 13.01× serialized deployment compression; native OPQ adds only marginal quality at substantially higher offline build cost.
+- **Million-scale MS MARCO full sweep:** across `M=24/32/48/64/96` and `nprobe=4/16/32/64` (40 benchmark points), OPQ Recall@10 gain at `nprobe=64` contracts from `+0.0386` at `M=24` to `+0.0008` at `M=96`, while its build multiplier rises from `55.8×` to about `122×`.
+- **High-rate reference point:** on 1M BGE-small passages, plain IVF-PQ at `M=96, nprobe=64` retains 92.1% of exact Recall@10 with 13.01× serialized deployment compression; native OPQ adds only marginal quality at substantially higher offline build cost.
 - **Deployment-aware compression accounting matters:** the external OPQ query rotation is required at serving time. Its fixed storage overhead is negligible for larger corpora such as FiQA but material for smaller corpora such as SciFact, so serialized deployment compression must be interpreted separately from index-only compression.
 - **The benchmark now covers two datasets × two embedding models:** FiQA and SciFact are evaluated with MiniLM and BGE-small under the same IVF-PQ / OPQ protocol.
 - **PyTorch OPQ is cross-model but not universally dominant:** it improves both BGE-small experiments, while its MiniLM behavior is dataset-dependent.
@@ -548,19 +549,23 @@ notebooks/
   SciFact_OPQ_IVFPQ_Benchmark.ipynb
   FiQA_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
   SciFact_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
-  MSMARCO_1M_OPQ_Metrics_Sweep_v1_1.ipynb
+  MSMARCO_1M_Low_Rate_PQ_OPQ_Pareto.ipynb
 results/
   api_benchmark/
   fiqa_gpu_benchmark/
   scifact_gpu_benchmark/
   fiqa_bge_small_gpu_benchmark/
   scifact_bge_small_gpu_benchmark/
-  msmarco_scale_results/
+  msmarco_low_rate_pareto/
+    1m_pilot_m24_m48/
+    1m_full_m24_m96/
+  msmarco_low_rate_pareto_results_full_m32_m64_m96/
   rerank_fiqa_benchmark/
 scripts/
   benchmark_api.py
   benchmark_reranker.py
   export_service_artifacts.py
+  merge_msmarco_low_rate_results.py
   prepare_fiqa_documents.py
 tests/
   test_api.py
@@ -599,13 +604,20 @@ requirements-ci.txt
 4. They are benchmark-only and do not overwrite the deployed MiniLM FiQA artifact.
 
 
-### Million-scale MS MARCO validation
+### Million-scale MS MARCO low-rate PQ / OPQ full sweep
 
-1. Open `notebooks/MSMARCO_1M_OPQ_Metrics_Sweep_v1_1.ipynb` in Google Colab.
-2. Enable an NVIDIA GPU runtime.
-3. Run all cells from top to bottom.
-4. The notebook downloads MS MARCO source files, creates a deterministic 1M-passage subset, writes FP16 embedding memmaps, and exports benchmark summaries under `msmarco_scale_results/`.
-5. Large source data and serialized indexes are intentionally excluded from Git history; commit reproducible code, summaries, metadata, and figures only.
+1. Open `notebooks/MSMARCO_1M_Low_Rate_PQ_OPQ_Pareto.ipynb` in Google Colab.
+2. Enable an NVIDIA GPU runtime and install `requirements-colab.txt`.
+3. Run the notebook from top to bottom. The configured full continuation evaluates `M=32/64/96` over `nprobe=4/16/32/64`; the resumable runner can store completed-`M` checkpoints in Google Drive.
+4. Copy the generated summaries, metadata, reports, and figures into `results/msmarco_low_rate_pareto_results_full_m32_m64_m96/`.
+5. Keep the committed `M=24/48` pilot artifacts under `results/msmarco_low_rate_pareto/1m_pilot_m24_m48/`, then regenerate the unified full-sweep artifacts locally:
+
+```bash
+conda activate rag-api
+python scripts/merge_msmarco_low_rate_results.py
+```
+
+6. The merged `M=24/32/48/64/96` outputs are written to `results/msmarco_low_rate_pareto/1m_full_m24_m96/`. Large source data, serialized indexes, and resumable checkpoints are intentionally excluded from Git history; commit reproducible code, summaries, metadata, reports, and figures only.
 
 For all GPU experiments, use Google Colab with an NVIDIA GPU runtime and install `requirements-colab.txt`.
 
@@ -631,4 +643,4 @@ FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → true multi-query cross-encoder batching for `/batch-search`
 ```
 
-Release `v1.4.0` captures the million-scale validation milestone while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next technical milestone is hybrid sparse-dense retrieval and an original compression-method comparison.
+The current `main` branch captures the million-scale low-rate PQ / OPQ full-sweep milestone while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next technical milestone is hybrid sparse-dense retrieval and an original compression-method comparison.
