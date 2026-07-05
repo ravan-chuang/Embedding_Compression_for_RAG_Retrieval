@@ -8,3 +8,4 @@ transformers
 datasets
 beir
 faiss-gpu-cu12
+rank-bm25==0.2.2
