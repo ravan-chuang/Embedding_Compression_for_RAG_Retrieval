@@ -17,6 +17,7 @@ This project separates two questions that are often conflated:
 - Evaluates Float32, INT8, INT4, PQ, OPQ, IVF-PQ, and OPQ-IVF-PQ.
 - Uses FiQA and SciFact / BEIR relevance benchmarks across MiniLM and BGE-small embedding models, plus a deterministic 1M-passage MS MARCO scale validation, instead of document-to-document nearest-neighbor proxies.
 - Measures Recall@5, Recall@10, MRR@10, nDCG@10, storage cost, latency, and QPS.
+- Includes a fixed-budget Residual-PQ refinement study with oracle ceilings, sidecar storage accounting, and paired-bootstrap significance tests.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
 - Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
@@ -208,6 +209,104 @@ and [full report](results/msmarco_low_rate_pareto/1m_full_m24_m96/msmarco_1m_low
 ![MS MARCO 1M full-sweep quality-throughput Pareto](results/msmarco_low_rate_pareto/1m_full_m24_m96/quality_qps_pareto.png)
 
 
+## Fixed-Budget Residual-PQ Refinement
+
+Beyond standard PQ / OPQ benchmarking, this project evaluates whether a
+candidate-side Residual-PQ sidecar can recover low-rate IVF-PQ ranking loss
+under a strict storage budget.
+
+### Protocol
+
+| Item | Configuration |
+|---|---|
+| Dataset | FiQA / BEIR held-out split |
+| Held-out queries | 528 |
+| Base ANN index | GPU IVF-PQ ADC, `M=32`, `nlist=256`, `nprobe=16` |
+| Final cutoff | Top-10 |
+| Candidate refinement depths | Top-20 and Top-50 |
+| Storage target | At most `48 bytes/vector` |
+| Statistical test | Paired bootstrap, 10,000 resamples |
+
+Storage accounting includes all deployable components:
+
+```text
+base PQ code
++ residual-PQ code payload for selected documents
++ 4-byte document-ID metadata per selected document
++ amortized shared residual-PQ codebook storage
+```
+
+The experiment compares random, reconstruction-error, calibration
+relevant-drop-risk, and calibration candidate-distortion allocation policies.
+The current best policy is reconstruction-error allocation.
+
+### Main Results
+
+| Method | Recall@10 | MRR@10 | nDCG@10 | Interpretation |
+|:--|--:|--:|--:|:--|
+| Base IVF-PQ `M=32` | 0.2907 | 0.3032 | 0.2395 | Low-rate baseline |
+| Residual-PQ 8B + reconstruction-error + Top-50 | 0.3169 | 0.3314 | 0.2646 | Higher sidecar coverage |
+| **Residual-PQ 16B + reconstruction-error + Top-50** | **0.3195** | **0.3314** | **0.2678** | Best selective configuration |
+| Residual-PQ 32B + reconstruction-error + Top-50 | 0.2983 | 0.3159 | 0.2506 | Higher per-vector precision, lower coverage |
+| Uniform IVF-PQ `M=48` | **0.3455** | **0.3631** | **0.2942** | Strongest equal-budget baseline |
+
+The best Residual-PQ configuration improves over base `M=32` by:
+
+- Recall@10: `+0.0288`
+- MRR@10: `+0.0282`
+- nDCG@10: `+0.0282`
+
+For these three metrics, paired-bootstrap 95% confidence intervals exclude
+zero on the held-out FiQA split.
+
+### Coverage-versus-Precision Trade-off
+
+The result is not monotonic in residual code length:
+
+- Shorter residual codes allow more documents to receive a sidecar.
+- Longer residual codes improve residual reconstruction for each selected
+  document, but reduce sidecar coverage under the same global budget.
+- The observed best balance is the 16-byte Residual-PQ configuration, rather
+  than the largest 32-byte code.
+
+This establishes a storage-constrained coverage-versus-precision trade-off for
+candidate-side residual refinement.
+
+### Oracle Candidate-Rescoring Ceiling
+
+To distinguish sidecar limitations from candidate-pool limitations, the project
+also performs an oracle experiment: all documents already present in the
+compressed `M=32` Top-L candidate pool are rescored with exact Float32 inner
+products.
+
+| Method | Candidate depth | Recall@10 | MRR@10 | nDCG@10 |
+|:--|--:|--:|--:|--:|
+| Base IVF-PQ `M=32` | – | 0.2907 | 0.3032 | 0.2395 |
+| Oracle exact candidate rescoring | Top-20 | 0.3424 | 0.3927 | 0.3132 |
+| Oracle exact candidate rescoring | Top-50 | 0.3810 | 0.4155 | 0.3386 |
+| Oracle exact candidate rescoring | Top-100 | 0.3964 | 0.4198 | 0.3465 |
+| Uniform IVF-PQ `M=48` | – | 0.3455 | 0.3631 | 0.2942 |
+
+The oracle Top-50 and Top-100 results exceed uniform `M=48`, showing that
+the compressed `M=32` candidate pool retains substantial recoverable ranking
+signal. The current gap is therefore attributed to practical sidecar coverage
+and residual-code efficiency, not to a lack of candidate-side refinement
+headroom.
+
+### Interpretation
+
+Residual-PQ sidecars significantly recover low-rate IVF-PQ retrieval loss
+under a fixed storage budget. However, uniform `M=48` IVF-PQ remains the
+strongest overall equal-budget baseline in the current FiQA experiment.
+
+This is reported as a statistically supported recovery method, not as a
+replacement for uniform higher-rate PQ.
+
+The full protocol is documented in
+[`docs/selective_residual_pq_protocol.md`](docs/selective_residual_pq_protocol.md),
+and the reproducible experiment is implemented in
+[`notebooks/FiQA_BM25_Hybrid_RRF_Benchmark.ipynb`](notebooks/FiQA_BM25_Hybrid_RRF_Benchmark.ipynb).
+
 ## Cross-Model Validation: MiniLM × BGE-small
 
 The same `M=96`, `nlist=256`, `nprobe=16` protocol was also evaluated with
@@ -269,6 +368,9 @@ These numbers exclude embedding generation, HTTP transport, artifact loading, an
 For experimental modes, storage accounting, latency protocol, and interpretation rules, see [Benchmark Methodology](docs/benchmark_methodology.md).
 
 ## Key Findings
+
+- **Fixed-budget Residual-PQ refinement:** on held-out FiQA, 16-byte Residual-PQ with reconstruction-error allocation and Top-50 refinement significantly improves low-rate `M=32` IVF-PQ, but uniform `M=48` remains the stronger equal-budget baseline.
+- **Candidate-side refinement ceiling:** oracle exact rescoring of compressed `M=32` Top-50 candidates reaches Recall@10 `0.3810`, exceeding uniform `M=48` at `0.3455`; practical sidecar coverage and code efficiency are the current bottlenecks.
 
 - **Million-scale MS MARCO full sweep:** across `M=24/32/48/64/96` and `nprobe=4/16/32/64` (40 benchmark points), OPQ Recall@10 gain at `nprobe=64` contracts from `+0.0386` at `M=24` to `+0.0008` at `M=96`, while its build multiplier rises from `55.8×` to about `122×`.
 - **High-rate reference point:** on 1M BGE-small passages, plain IVF-PQ at `M=96, nprobe=64` retains 92.1% of exact Recall@10 with 13.01× serialized deployment compression; native OPQ adds only marginal quality at substantially higher offline build cost.
@@ -539,7 +641,9 @@ docs/
   api_benchmark.md
   benchmark_methodology.md
   docker_api.md
+  residual_pq_scale_limitations.md
   retrieval_api.md
+  selective_residual_pq_protocol.md
   testing_ci.md
 figures/
   storage_quality_tradeoff.png
@@ -550,6 +654,8 @@ notebooks/
   FiQA_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
   SciFact_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
   MSMARCO_1M_Low_Rate_PQ_OPQ_Pareto.ipynb
+  FiQA_BM25_Hybrid_RRF_Benchmark.ipynb
+  SciFact_BM25_Hybrid_RRF_Transfer.ipynb
 results/
   api_benchmark/
   fiqa_gpu_benchmark/
@@ -604,6 +710,17 @@ requirements-ci.txt
 4. They are benchmark-only and do not overwrite the deployed MiniLM FiQA artifact.
 
 
+### Fixed-budget Residual-PQ refinement
+
+1. Open `notebooks/FiQA_BM25_Hybrid_RRF_Benchmark.ipynb` in Google Colab.
+2. Enable an NVIDIA GPU runtime and run the notebook from top to bottom.
+3. The notebook records rank-flip audits, candidate recoverability, sparse
+   FP16 sidecar baselines, oracle exact candidate rescoring, Residual-PQ
+   code-size sweeps, fixed-budget Residual-PQ allocation, and paired-bootstrap
+   confidence intervals.
+4. The fixed-budget experiment includes base PQ codes, residual code payload,
+   document-ID metadata, and amortized residual-PQ codebook storage.
+
 ### Million-scale MS MARCO low-rate PQ / OPQ full sweep
 
 1. Open `notebooks/MSMARCO_1M_Low_Rate_PQ_OPQ_Pareto.ipynb` in Google Colab.
@@ -627,7 +744,8 @@ For all GPU experiments, use Google Colab with an NVIDIA GPU runtime and install
 - The benchmark currently uses two English embedding models; it does not yet validate multilingual or Traditional Chinese retrieval.
 - The deployment uses a learned external OPQ transform; any compatible serving implementation must apply the same query rotation before Faiss search.
 - The current BGE CPU reranker configuration is experimental: it did not improve the recorded 100-query FiQA subset and adds substantial local latency. Future reranking work should compare domain-appropriate models, title-aware / truncated document formatting, and throughput under realistic batch loads before making a production-default claim.
-- Future work includes hybrid sparse-dense retrieval, a Traditional Chinese retrieval benchmark, rank-aware residual allocation, query-aware retrieval routing, model-specific deployment selection, and production observability / deployment hardening.
+- Future work includes hybrid sparse-dense retrieval, a Traditional Chinese retrieval benchmark, query-aware retrieval routing, model-specific deployment selection, and production observability / deployment hardening.
+- Fixed-budget Residual-PQ transfer requires a larger corpus than SciFact when using an 8-bit residual codebook, because amortized shared-codebook storage becomes prohibitive on small corpora. Future transfer experiments should use a sufficiently large corpus or lower-bit residual codebooks.
 
 ## Release Readiness
 
@@ -643,4 +761,4 @@ FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → true multi-query cross-encoder batching for `/batch-search`
 ```
 
-The current `main` branch captures the million-scale low-rate PQ / OPQ full-sweep milestone while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next technical milestone is hybrid sparse-dense retrieval and an original compression-method comparison.
+The current `main` branch captures the million-scale low-rate PQ / OPQ full-sweep milestone while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is validating fixed-budget Residual-PQ behavior on a larger transfer corpus where shared codebook amortization remains storage-feasible, alongside hybrid sparse-dense retrieval and production-oriented residual-sidecar serving.
