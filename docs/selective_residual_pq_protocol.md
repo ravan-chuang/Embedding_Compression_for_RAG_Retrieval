@@ -62,3 +62,19 @@ Residual refinement is applied only when d is:
 Candidate-side residual refinement cannot recover a relevant document
 that is absent from the compressed Top-L candidate pool. Results must
 therefore be interpreted alongside the recoverability audit.
+
+## Residual-PQ storage accounting
+Residual-PQ experiments must report both:
+- residual code payload bytes;
+- amortized shared PQ codebook bytes.
+
+For a residual PQ stage with `M_r` subquantizers and 8-bit codes:
+- residual code payload per encoded document: `M_r` bytes;
+- codebook storage: `D * 256 * 4` bytes;
+- amortized codebook cost: codebook storage / N documents.
+
+Sparse sidecars must additionally include document-ID metadata.
+Diagnostic code-size sweeps may vary code size with a fixed selected set,
+but they must not be interpreted as fixed-budget comparisons.
+Fixed-budget experiments must include code payload, metadata, and
+amortized codebook cost.
