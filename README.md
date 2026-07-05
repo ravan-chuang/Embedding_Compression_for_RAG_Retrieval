@@ -307,6 +307,18 @@ The full protocol is documented in
 and the reproducible experiment is implemented in
 [`notebooks/FiQA_BM25_Hybrid_RRF_Benchmark.ipynb`](notebooks/FiQA_BM25_Hybrid_RRF_Benchmark.ipynb).
 
+### Fixed-Budget Residual-PQ Figures
+
+![Fixed-budget Residual-PQ quality trade-off](figures/fixed_budget_residual_pq_quality.png)
+
+![Residual-PQ precision versus coverage](figures/residual_pq_coverage_tradeoff.png)
+
+The figures are generated from the committed result CSVs:
+
+    conda run -n rag-api python scripts/plot_fixed_budget_residual_pq.py
+
+See the [fixed-budget Residual-PQ result package](results/fixed_budget_residual_pq/README.md) for storage accounting, held-out results, paired-bootstrap statistics, oracle ceilings, and the diagnostic code-size sweep.
+
 ## Cross-Model Validation: MiniLM × BGE-small
 
 The same `M=96`, `nlist=256`, `nprobe=16` protocol was also evaluated with
