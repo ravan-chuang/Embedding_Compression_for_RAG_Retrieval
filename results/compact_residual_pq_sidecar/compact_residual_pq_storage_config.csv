@@ -1,0 +1,3 @@
+﻿layout_name,residual_pq_m,residual_pq_nbits,selected_document_count,selected_fraction,base_pq_total_bytes,residual_codebook_raw_bytes,residual_codebook_serialized_bytes,selection_bitmap_bytes,selection_rank_prefix_bytes,selection_index_serialized_bytes,residual_code_payload_bytes_per_selected_doc,residual_code_payload_bytes,total_bytes_per_vector,storage_budget_target_bytes_per_vector
+compact_4bit_m32_fp16_codebook,32,4,56354,0.9777230299455221,1844416,12288,12352,7205,908,8192,16,901664,48.0,48.0
+compact_8bit_m16_fp16_codebook,16,8,44834,0.7778548874006732,1844416,196608,196672,7205,908,8192,16,717344,48.0,48.0
