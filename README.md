@@ -17,7 +17,7 @@ This project separates two questions that are often conflated:
 - Evaluates Float32, INT8, INT4, PQ, OPQ, IVF-PQ, and OPQ-IVF-PQ.
 - Uses FiQA and SciFact / BEIR relevance benchmarks across MiniLM and BGE-small embedding models, plus a deterministic 1M-passage MS MARCO scale validation, instead of document-to-document nearest-neighbor proxies.
 - Measures Recall@5, Recall@10, MRR@10, nDCG@10, storage cost, latency, and QPS.
-- Includes a fixed-budget Residual-PQ refinement study with oracle ceilings, sidecar storage accounting, and paired-bootstrap significance tests.
+- Includes fixed-budget Residual-PQ refinement with oracle ceilings, compact bitmap/rank-prefix sidecars, FP16 residual codebooks, strict storage accounting, and paired-bootstrap significance tests.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
 - Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
@@ -223,54 +223,71 @@ under a strict storage budget.
 | Held-out queries | 528 |
 | Base ANN index | GPU IVF-PQ ADC, `M=32`, `nlist=256`, `nprobe=16` |
 | Final cutoff | Top-10 |
-| Candidate refinement depths | Top-20 and Top-50 |
+| Candidate refinement depth | Top-50 for compact-sidecar comparisons |
 | Storage target | At most `48 bytes/vector` |
 | Statistical test | Paired bootstrap, 10,000 resamples |
 
-Storage accounting includes all deployable components:
+The original fixed-budget study accounts for:
 
 ```text
 base PQ code
 + residual-PQ code payload for selected documents
-+ 4-byte document-ID metadata per selected document
++ per-selected-document ID metadata
 + amortized shared residual-PQ codebook storage
 ```
 
-The experiment compares random, reconstruction-error, calibration
-relevant-drop-risk, and calibration candidate-distortion allocation policies.
-The current best policy is reconstruction-error allocation.
+The compact-sidecar extension removes the per-selected-document ID field. It
+uses Faiss / corpus internal row IDs with:
+
+```text
+1-bit selection bitmap
++ block-level uint32 rank-prefix index
++ residual codes ordered by internal document ID
++ FP16 residual-PQ codebook
+```
+
+The recorded compact-sidecar latency uses an evaluation-only dense
+document-index-to-slot accelerator. That accelerator is not included in the
+deployable storage budget; bitmap/rank-prefix lookup equivalence is validated
+separately.
 
 ### Main Results
 
-| Method | Recall@10 | MRR@10 | nDCG@10 | Interpretation |
-|:--|--:|--:|--:|:--|
-| Base IVF-PQ `M=32` | 0.2907 | 0.3032 | 0.2395 | Low-rate baseline |
-| Residual-PQ 8B + reconstruction-error + Top-50 | 0.3169 | 0.3314 | 0.2646 | Higher sidecar coverage |
-| **Residual-PQ 16B + reconstruction-error + Top-50** | **0.3195** | **0.3314** | **0.2678** | Best selective configuration |
-| Residual-PQ 32B + reconstruction-error + Top-50 | 0.2983 | 0.3159 | 0.2506 | Higher per-vector precision, lower coverage |
-| Uniform IVF-PQ `M=48` | **0.3455** | **0.3631** | **0.2942** | Strongest equal-budget baseline |
+| Method | Sidecar coverage | Recall@10 | MRR@10 | nDCG@10 | Interpretation |
+|:--|--:|--:|--:|--:|:--|
+| Base IVF-PQ `M=32` | – | 0.2907 | 0.3032 | 0.2395 | Low-rate baseline |
+| Legacy Residual-PQ 16B + reconstruction-error + Top-50 | 45.9% | 0.3195 | 0.3314 | 0.2678 | Original best sparse sidecar |
+| **Compact Residual-PQ 8-bit, `M_r=16` + Top-50** | **77.8%** | **0.3355** | 0.3478 | **0.2835** | Best compact Recall / nDCG point estimate |
+| **Compact Residual-PQ 4-bit, `M_r=32` + Top-50** | **97.8%** | 0.3327 | **0.3531** | 0.2804 | Near-full coverage; best compact MRR point estimate |
+| Uniform IVF-PQ `M=48` | 100% | 0.3455 | 0.3631 | 0.2942 | Higher point estimates on this split |
 
-The best Residual-PQ configuration improves over base `M=32` by:
+Both compact layouts significantly improve Recall@10, MRR@10, and nDCG@10
+over base `M=32` on the held-out FiQA split. Compact-8bit also significantly
+improves Recall@10 and nDCG@10 over the legacy 16B Residual-PQ sidecar.
 
-- Recall@10: `+0.0288`
-- MRR@10: `+0.0282`
-- nDCG@10: `+0.0282`
-
-For these three metrics, paired-bootstrap 95% confidence intervals exclude
-zero on the held-out FiQA split.
+Uniform `M=48` has higher point estimates, but paired-bootstrap 95% confidence
+intervals for Uniform-versus-Compact differences cross zero for Recall@10,
+MRR@10, and nDCG@10 on this held-out split. This does **not** establish
+equivalence or superiority of the compact layouts; it means the experiment
+does not establish a statistically significant directional difference here.
 
 ### Coverage-versus-Precision Trade-off
 
-The result is not monotonic in residual code length:
+The compact layout makes the original coverage-versus-precision effect more
+useful:
 
-- Shorter residual codes allow more documents to receive a sidecar.
-- Longer residual codes improve residual reconstruction for each selected
-  document, but reduce sidecar coverage under the same global budget.
-- The observed best balance is the 16-byte Residual-PQ configuration, rather
-  than the largest 32-byte code.
+- Compact-8bit (`M_r=16`, 8-bit codes) assigns a higher-fidelity residual
+  representation to 77.8% of documents.
+- Compact-4bit (`M_r=32`, 4-bit codes) uses the same 16-byte residual payload
+  per selected document but much smaller shared codebook storage, reaching
+  97.8% coverage.
+- Compact-8bit has the strongest compact Recall@10 and nDCG@10 point estimates.
+- Compact-4bit has the strongest compact MRR@10 point estimate.
+- The paired-bootstrap comparison between the two compact variants does not
+  establish a significant difference on this split.
 
-This establishes a storage-constrained coverage-versus-precision trade-off for
-candidate-side residual refinement.
+This supports a storage-constrained coverage-versus-precision trade-off rather
+than a monotonic rule that longer or lower-bit residual codes always win.
 
 ### Oracle Candidate-Rescoring Ceiling
 
@@ -285,22 +302,31 @@ products.
 | Oracle exact candidate rescoring | Top-20 | 0.3424 | 0.3927 | 0.3132 |
 | Oracle exact candidate rescoring | Top-50 | 0.3810 | 0.4155 | 0.3386 |
 | Oracle exact candidate rescoring | Top-100 | 0.3964 | 0.4198 | 0.3465 |
+| Compact Residual-PQ 8-bit, `M_r=16` | Top-50 | 0.3355 | 0.3478 | 0.2835 |
 | Uniform IVF-PQ `M=48` | – | 0.3455 | 0.3631 | 0.2942 |
 
-The oracle Top-50 and Top-100 results exceed uniform `M=48`, showing that
-the compressed `M=32` candidate pool retains substantial recoverable ranking
-signal. The current gap is therefore attributed to practical sidecar coverage
-and residual-code efficiency, not to a lack of candidate-side refinement
-headroom.
+The oracle Top-50 and Top-100 results exceed uniform `M=48`, showing that the
+compressed `M=32` candidate pool retains substantial recoverable ranking
+signal. Compact storage substantially narrows the practical gap by improving
+sidecar coverage, but the oracle ceiling still leaves room for better
+residual-code efficiency and candidate-side refinement.
 
 ### Interpretation
 
-Residual-PQ sidecars significantly recover low-rate IVF-PQ retrieval loss
-under a fixed storage budget. However, uniform `M=48` IVF-PQ remains the
-strongest overall equal-budget baseline in the current FiQA experiment.
+Compact Residual-PQ sidecars significantly recover low-rate IVF-PQ retrieval
+loss under a strict 48 bytes/vector budget. The compact bitmap/rank-prefix
+layout and FP16 codebook make the sidecar substantially more storage-efficient
+than the legacy per-document-ID layout.
 
-This is reported as a statistically supported recovery method, not as a
-replacement for uniform higher-rate PQ.
+On held-out FiQA, both compact variants significantly outperform base `M=32`;
+their differences from Uniform `M=48` are not statistically established by the
+paired bootstrap used here. This is reported as a single-split, statistically
+disciplined result—not a claim of universal equivalence to uniform higher-rate
+PQ.
+
+The reproducible compact result package includes [held-out results](results/compact_residual_pq_sidecar/compact_residual_pq_heldout_results.csv),
+[strict storage accounting](results/compact_residual_pq_sidecar/compact_residual_pq_storage_config.csv),
+and [paired-bootstrap results](results/compact_residual_pq_sidecar/bootstrap_significance/compact_residual_pq_bootstrap.md).
 
 The full protocol is documented in
 [`docs/selective_residual_pq_protocol.md`](docs/selective_residual_pq_protocol.md),
@@ -313,11 +339,14 @@ and the reproducible experiment is implemented in
 
 ![Residual-PQ precision versus coverage](figures/residual_pq_coverage_tradeoff.png)
 
-The figures are generated from the committed result CSVs:
+The legacy figures are regenerated from the committed baseline CSVs:
 
     conda run -n rag-api python scripts/plot_fixed_budget_residual_pq.py
 
-See the [fixed-budget Residual-PQ result package](results/fixed_budget_residual_pq/README.md) for storage accounting, held-out results, paired-bootstrap statistics, oracle ceilings, and the diagnostic code-size sweep.
+See the [legacy fixed-budget result package](results/fixed_budget_residual_pq/README.md)
+and the [compact sidecar result package](results/compact_residual_pq_sidecar/)
+for reproducible result artifacts.
+
 
 ## Cross-Model Validation: MiniLM × BGE-small
 
@@ -381,7 +410,7 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 ## Key Findings
 
-- **Fixed-budget Residual-PQ refinement:** on held-out FiQA, 16-byte Residual-PQ with reconstruction-error allocation and Top-50 refinement significantly improves low-rate `M=32` IVF-PQ, but uniform `M=48` remains the stronger equal-budget baseline.
+- **Compact fixed-budget Residual-PQ refinement:** bitmap/rank-prefix metadata and FP16 residual codebooks raise sidecar coverage to 77.8% (Compact-8bit) or 97.8% (Compact-4bit). Both compact layouts significantly improve low-rate `M=32` IVF-PQ; their differences from Uniform `M=48` are not statistically established on the held-out FiQA split.
 - **Candidate-side refinement ceiling:** oracle exact rescoring of compressed `M=32` Top-50 candidates reaches Recall@10 `0.3810`, exceeding uniform `M=48` at `0.3455`; practical sidecar coverage and code efficiency are the current bottlenecks.
 
 - **Million-scale MS MARCO full sweep:** across `M=24/32/48/64/96` and `nprobe=4/16/32/64` (40 benchmark points), OPQ Recall@10 gain at `nprobe=64` contracts from `+0.0386` at `M=24` to `+0.0008` at `M=96`, while its build multiplier rises from `55.8×` to about `122×`.
@@ -660,6 +689,8 @@ docs/
 figures/
   storage_quality_tradeoff.png
   throughput_stability.png
+  fixed_budget_residual_pq_quality.png
+  residual_pq_coverage_tradeoff.png
 notebooks/
   Ai_embedding_compression.ipynb
   SciFact_OPQ_IVFPQ_Benchmark.ipynb
@@ -679,12 +710,17 @@ results/
     1m_full_m24_m96/
   msmarco_low_rate_pareto_results_full_m32_m64_m96/
   rerank_fiqa_benchmark/
+  fixed_budget_residual_pq/
+  compact_residual_pq_sidecar/
+    bootstrap_significance/
 scripts/
   benchmark_api.py
   benchmark_reranker.py
   export_service_artifacts.py
   merge_msmarco_low_rate_results.py
   prepare_fiqa_documents.py
+  plot_fixed_budget_residual_pq.py
+  compact_sidecar_layout.py
 tests/
   test_api.py
   test_artifact_contract.py
@@ -730,8 +766,14 @@ requirements-ci.txt
    FP16 sidecar baselines, oracle exact candidate rescoring, Residual-PQ
    code-size sweeps, fixed-budget Residual-PQ allocation, and paired-bootstrap
    confidence intervals.
-4. The fixed-budget experiment includes base PQ codes, residual code payload,
-   document-ID metadata, and amortized residual-PQ codebook storage.
+4. Cells 16–17 reproduce the legacy fixed-budget experiment and bootstrap analysis.
+5. Cell 18 evaluates compact bitmap/rank-prefix Residual-PQ sidecars with FP16
+   codebooks under the same strict 48 bytes/vector target.
+6. Cell 19 runs paired-bootstrap comparisons among base `M=32`, legacy
+   Residual-PQ, Compact-4bit, Compact-8bit, and Uniform `M=48`.
+7. The compact layout counts the bitmap, rank-prefix index, serialized FP16
+   codebook, residual-code payload, alignment, and metadata headers in its
+   deployable storage accounting.
 
 ### Million-scale MS MARCO low-rate PQ / OPQ full sweep
 
@@ -757,7 +799,7 @@ For all GPU experiments, use Google Colab with an NVIDIA GPU runtime and install
 - The deployment uses a learned external OPQ transform; any compatible serving implementation must apply the same query rotation before Faiss search.
 - The current BGE CPU reranker configuration is experimental: it did not improve the recorded 100-query FiQA subset and adds substantial local latency. Future reranking work should compare domain-appropriate models, title-aware / truncated document formatting, and throughput under realistic batch loads before making a production-default claim.
 - Future work includes hybrid sparse-dense retrieval, a Traditional Chinese retrieval benchmark, query-aware retrieval routing, model-specific deployment selection, and production observability / deployment hardening.
-- Fixed-budget Residual-PQ transfer requires a larger corpus than SciFact when using an 8-bit residual codebook, because amortized shared-codebook storage becomes prohibitive on small corpora. Future transfer experiments should use a sufficiently large corpus or lower-bit residual codebooks.
+- Fixed-budget Residual-PQ transfer requires a larger corpus than SciFact for an 8-bit residual codebook, because amortized shared-codebook storage becomes prohibitive on small corpora. Future transfer experiments should test compact sidecars on a sufficiently large corpus and preserve identical storage accounting without re-tuning the allocation policy.
 
 ## Release Readiness
 
@@ -773,4 +815,4 @@ FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → true multi-query cross-encoder batching for `/batch-search`
 ```
 
-The current `main` branch captures the million-scale low-rate PQ / OPQ full-sweep milestone while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is validating fixed-budget Residual-PQ behavior on a larger transfer corpus where shared codebook amortization remains storage-feasible, alongside hybrid sparse-dense retrieval and production-oriented residual-sidecar serving.
+The current `main` branch captures the million-scale low-rate PQ / OPQ full-sweep milestone and the compact fixed-budget Residual-PQ extension, while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is zero-retuning validation of compact Residual-PQ sidecars on a larger transfer corpus where shared codebook amortization remains storage-feasible, followed by deployable sidecar serving and hybrid sparse-dense retrieval.
