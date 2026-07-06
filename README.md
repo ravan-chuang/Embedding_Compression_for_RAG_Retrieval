@@ -289,6 +289,16 @@ useful:
 This supports a storage-constrained coverage-versus-precision trade-off rather
 than a monotonic rule that longer or lower-bit residual codes always win.
 
+### Compact Sidecar Figures
+
+![Compact Residual-PQ fixed-budget quality comparison](figures/compact_residual_pq_quality.png)
+
+![Compact Residual-PQ coverage versus quality](figures/compact_residual_pq_coverage.png)
+
+These figures are generated from committed result artifacts:
+
+    conda run -n rag-api python scripts/plot_compact_residual_pq.py
+
 ### Oracle Candidate-Rescoring Ceiling
 
 To distinguish sidecar limitations from candidate-pool limitations, the project
