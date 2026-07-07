@@ -1,0 +1,40 @@
+{
+  "package": "pq_residual_sidecar_cross_setting",
+  "files": [
+    {
+      "path": "cross_setting_summary.csv",
+      "bytes": 1897,
+      "sha256": "4161b656b34fcd5b0a80fa16972f5193fce88872891e383d00c73ec21f0b5006"
+    },
+    {
+      "path": "cross_setting_summary.json",
+      "bytes": 3758,
+      "sha256": "0f3baee8fc905765d78d6e3feb92212f95708847a1679ebd7dfc7445d50d71c4"
+    },
+    {
+      "path": "figures/recall_cross_setting.png",
+      "bytes": 141232,
+      "sha256": "223a6f83497a64ebc3a39a14957423db5cd847724807fe242b9e0f81ad2a8081"
+    },
+    {
+      "path": "figures/sidecar_gain_bootstrap.png",
+      "bytes": 118767,
+      "sha256": "23021caff25586a12287c703565cd8bd6a59b523d1ece7ddf851d53de4a28738"
+    },
+    {
+      "path": "setting_details/fiqa_bge_small.json",
+      "bytes": 1190,
+      "sha256": "0c1719feff5f61ea038cdbd7ba1fd94be2fae9d49fa0881be3f7419ca674ed15"
+    },
+    {
+      "path": "setting_details/fiqa_minilm.json",
+      "bytes": 1192,
+      "sha256": "8d9b21dcd3f519098f4c0bdbc87e721f1fa4415a8fd52a545da8562c1cb702de"
+    },
+    {
+      "path": "setting_details/msmarco_1m_bge_small.json",
+      "bytes": 1152,
+      "sha256": "638bbe93d0034fb8eb35b0d1b6c2528a8367da43c66f679a1c671350f41fc585"
+    }
+  ]
+}
