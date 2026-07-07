@@ -964,10 +964,16 @@ results/
   msmarco_low_rate_pareto_results_full_m32_m64_m96/
   msmarco_1m_pq_residual_gate3/
   pq_residual_sidecar_cross_setting/
+    README.md
     cross_setting_summary.csv
     cross_setting_summary.json
     figures/
+      recall_cross_setting.png
+      sidecar_gain_bootstrap.png
     setting_details/
+      fiqa_bge_small.json
+      fiqa_minilm.json
+      msmarco_1m_bge_small.json
     manifest.json
   rerank_fiqa_benchmark/
   fixed_budget_residual_pq/
@@ -1044,9 +1050,9 @@ requirements-ci.txt
    protocol without FiQA-specific hyperparameter retuning.
 4. Run `notebooks/FiQA_MiniLM_PQ_Residual_Sidecar_Transfer.ipynb` with the
    same fixed protocol for `sentence-transformers/all-MiniLM-L6-v2`.
-5. Export the result tables, figures, and metadata into
-   `results/pq_residual_sidecar_cross_setting/`, then regenerate the package
-   manifest after finalizing the files.
+5. Export the result tables, figures, per-setting metadata, and package
+   README into `results/pq_residual_sidecar_cross_setting/`, then regenerate
+   the SHA-256 manifest after finalizing the files.
 
 
 
