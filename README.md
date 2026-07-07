@@ -18,6 +18,7 @@ This project separates two questions that are often conflated:
 - Uses FiQA and SciFact / BEIR relevance benchmarks across MiniLM and BGE-small embedding models, plus a deterministic 1M-passage MS MARCO scale validation, instead of document-to-document nearest-neighbor proxies.
 - Measures Recall@5, Recall@10, MRR@10, nDCG@10, storage cost, latency, and QPS.
 - Includes fixed-budget Residual-PQ refinement with oracle ceilings, compact bitmap/rank-prefix sidecars, FP16 residual codebooks, strict storage accounting, and paired-bootstrap significance tests.
+- Adds a frozen-index **PQ-residual sidecar** study on 1M MS MARCO passages: a rank-16, per-dimension int8 correction layer that reranks only the top ANN candidates without retraining or rewriting the original IVF-PQ index.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
 - Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
@@ -207,6 +208,161 @@ and [full report](results/msmarco_low_rate_pareto/1m_full_m24_m96/msmarco_1m_low
 ### Low-rate quality-throughput Pareto frontier
 
 ![MS MARCO 1M full-sweep quality-throughput Pareto](results/msmarco_low_rate_pareto/1m_full_m24_m96/quality_qps_pareto.png)
+
+
+
+## Frozen IVF-PQ PQ-Residual Sidecar: 1M Retrofit Study
+
+This study evaluates a separate **frozen-index retrofit** mechanism. It is distinct
+from the fixed-budget Residual-PQ experiments below: the original IVF-PQ index,
+coarse quantizer, and PQ codes are left unchanged. A compact sidecar stores an
+approximation of the error between the original embedding and the vector
+reconstructed from that fixed IVF-PQ index.
+
+### Motivation
+
+A deployed ANN index may be expensive or operationally risky to rebuild. The
+sidecar asks a narrower systems question:
+
+> Can a frozen IVF-PQ index recover part of its ranking loss by attaching a
+> small, separately stored correction payload, without retraining the index or
+> rewriting its existing PQ codes?
+
+For document embedding \(x\) and the reconstruction \(\hat{x}_{\mathrm{PQ}}\)
+returned by the frozen IVF-PQ representation, the sidecar models:
+
+```text
+r_PQ(x) = x - x_hat_PQ
+```
+
+A shared rank-16 PCA basis is fit to these residuals. Each document stores only
+16 per-dimension int8 coefficients. At query time, the system computes a
+low-rank correction for only the highest-ranked ANN candidates:
+
+```text
+corrected_score(q, x)
+= IVF-PQ_score(q, x)
++ alpha · q · r_hat_PQ(x)
+```
+
+The full-1M experiment freezes `alpha=1.0` and corrects only the top-40
+documents from a Top-100 IVF-PQ candidate pool.
+
+### Full 1M protocol
+
+| Item | Configuration |
+|---|---|
+| Corpus | 1,000,000 deterministic MS MARCO passages |
+| Evaluation queries | 1,000 frozen MS MARCO dev-query split |
+| Embedding model | `BAAI/bge-small-en-v1.5` |
+| Embedding dimension | 384 |
+| Base index | IVF-PQ, `nlist=512`, `M=32`, `nbits=8`, `nprobe=16` |
+| Candidate pool | Top-100 |
+| Final cutoff | Top-10 |
+| Sidecar | Rank-16 PCA residual basis + per-dimension int8 coefficients |
+| Sidecar payload | 16 bytes/document |
+| Activated candidates | Top-40 ANN candidates |
+| Statistical test | Paired bootstrap, 20,000 resamples |
+| GPU | NVIDIA Tesla T4 |
+
+The `nlist=512`, `M=32` configuration is a deliberate low-rate retrofit
+operating point. It is separate from the `M=96`, `nlist=4096` quality-throughput
+reference sweep reported earlier.
+
+### Main full-1M retrieval result
+
+| Method | Recall@10 | Success@10 |
+|:--|--:|--:|
+| Frozen IVF-PQ `M=32` | 0.6628 | 0.6740 |
+| **Frozen IVF-PQ `M=32` + rank-16 int8 PQ-residual sidecar** | **0.6914** | **0.7010** |
+| Oracle exact rerank within the same IVF-PQ Top-100 candidate pool | 0.7792 | 0.7870 |
+
+The sidecar improves Recall@10 by **+0.0287**. A paired bootstrap over the
+1,000 frozen evaluation queries gives a 95% confidence interval of
+**[+0.0147, +0.0430]**; none of 20,000 bootstrap resamples has a non-positive
+mean gain.
+
+The oracle row is a **candidate-pool ceiling** only: it rescored the 100
+documents already returned by IVF-PQ with exact Float32 inner products. It is
+not a full-corpus exact-search result.
+
+Per-query Recall@10 changes were concentrated near ranking cutoffs:
+
+```text
+positive-gain queries: 44
+unchanged queries:     941
+negative-gain queries: 15
+```
+
+### Storage and retrofit properties
+
+| Artifact | Size / requirement |
+|---|---:|
+| Frozen IVF-PQ `M=32` serialized index | 39.276 MB |
+| Int8 sidecar codes for 1M documents | 15.259 MB |
+| Shared rank-16 FP32 basis | 24.125 KB |
+| Per-dimension scales | 192 bytes on disk |
+| Added payload | 16 bytes/document |
+| IVF-PQ retraining required for upgrade | No |
+| Re-encoding existing PQ codes required | No |
+| Original embeddings required to build the sidecar | Yes |
+
+The retrofit computes residuals from the original embeddings and the frozen
+index reconstruction, then writes a separate sidecar. It does not modify the
+existing IVF coarse quantizer, codebooks, inverted lists, or PQ codes.
+
+### Quality-storage comparison
+
+| Method | PQ bytes/doc | Sidecar bytes/doc | Total representation bytes/doc | Recall@10 | Success@10 |
+|:--|--:|--:|--:|--:|--:|
+| IVF-PQ `M=16` | 16 | 0 | 16 | 0.5423 | 0.5540 |
+| IVF-PQ `M=16` + rank-16 sidecar | 16 | 16 | 32 | 0.5799 | 0.5920 |
+| IVF-PQ `M=32` | 32 | 0 | 32 | 0.6628 | 0.6740 |
+| IVF-PQ `M=32` + rank-16 sidecar | 32 | 16 | 48 | 0.6914 | 0.7010 |
+| IVF-PQ `M=48` | 48 | 0 | 48 | 0.7311 | 0.7410 |
+
+The sidecar substantially improves a fixed base index, but it does **not**
+outperform simply increasing the PQ code rate under an equal total
+representation-byte budget. For example, `M=32 + 16B sidecar` remains below
+the 48-byte `M=48` baseline.
+
+The appropriate claim is therefore a **frozen-index enhancement / retrofit**
+path, not a replacement for larger PQ codes when a full index rebuild is
+acceptable.
+
+### GPU-resident correction latency
+
+The sidecar was moved to GPU memory and evaluated with a batch size of 64 on a
+Tesla T4. The GPU implementation matched the CPU prototype exactly
+(maximum correction difference `9.31e-09`; Top-10 row agreement `100%`).
+
+| Stage | P50 ms/query | P95 ms/query |
+|:--|--:|--:|
+| IVF-PQ search | 0.0545 | 0.0885 |
+| GPU sidecar correction + Top-40 rerank | 0.0168 | 0.0413 |
+| Combined retrieval pipeline | 0.0797 | 0.1174 |
+
+These timings exclude embedding generation, HTTP transport, artifact loading,
+and response serialization. The current implementation uses Python
+orchestration: Faiss returns candidate arrays to Python before PyTorch performs
+GPU-side correction and reranking. It is therefore a batched GPU prototype,
+not a fused CUDA serving kernel or a single-query production tail-latency claim.
+
+### Interpretation
+
+The result establishes that a compact low-rank sidecar can recover a
+statistically significant portion of the ranking loss of a frozen low-rate
+IVF-PQ index:
+
+- **Recall gain:** `0.6628 → 0.6914` on the frozen 1M evaluation split.
+- **Candidate-pool oracle-gap recovery:** `24.62%`.
+- **Storage overhead:** 16 bytes/document.
+- **Correction scope:** only Top-40 retrieved candidates.
+- **Upgrade path:** no IVF-PQ retraining and no PQ code rewrite.
+
+It does not establish that the sidecar is globally storage-optimal versus a
+newly trained, higher-rate IVF-PQ index. That negative result is retained as
+an important deployment-aware limitation.
 
 
 ## Fixed-Budget Residual-PQ Refinement
@@ -420,6 +576,7 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 ## Key Findings
 
+- **Frozen IVF-PQ retrofit sidecar (MS MARCO 1M):** a rank-16 int8 PQ-residual sidecar improves the fixed `M=32` IVF-PQ operating point from Recall@10 `0.6628` to `0.6914` (`+0.0287`; paired-bootstrap 95% CI `[+0.0147, +0.0430]`) while adding 16 bytes/document and correcting only Top-40 candidates. It is a frozen-index enhancement, not a same-byte replacement for a higher-rate PQ index.
 - **Compact fixed-budget Residual-PQ refinement:** bitmap/rank-prefix metadata and FP16 residual codebooks raise sidecar coverage to 77.8% (Compact-8bit) or 97.8% (Compact-4bit). Both compact layouts significantly improve low-rate `M=32` IVF-PQ; their differences from Uniform `M=48` are not statistically established on the held-out FiQA split.
 - **Candidate-side refinement ceiling:** oracle exact rescoring of compressed `M=32` Top-50 candidates reaches Recall@10 `0.3810`, exceeding uniform `M=48` at `0.3455`; practical sidecar coverage and code efficiency are the current bottlenecks.
 
@@ -707,6 +864,7 @@ notebooks/
   FiQA_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
   SciFact_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
   MSMARCO_1M_Low_Rate_PQ_OPQ_Pareto.ipynb
+  MSMARCO_1M_PQ_Residual_Sidecar_Gate3.ipynb
   FiQA_BM25_Hybrid_RRF_Benchmark.ipynb
   SciFact_BM25_Hybrid_RRF_Transfer.ipynb
 results/
@@ -719,6 +877,7 @@ results/
     1m_pilot_m24_m48/
     1m_full_m24_m96/
   msmarco_low_rate_pareto_results_full_m32_m64_m96/
+  msmarco_1m_pq_residual_gate3/
   rerank_fiqa_benchmark/
   fixed_budget_residual_pq/
   compact_residual_pq_sidecar/
@@ -768,6 +927,23 @@ requirements-ci.txt
 4. They are benchmark-only and do not overwrite the deployed MiniLM FiQA artifact.
 
 
+
+### Frozen IVF-PQ PQ-residual sidecar: MS MARCO 1M
+
+1. Open `notebooks/MSMARCO_1M_PQ_Residual_Sidecar_Gate3.ipynb` in Google Colab.
+2. Enable an NVIDIA GPU runtime and mount the Google Drive cache containing the
+   1M BGE-small document embedding memmap, document IDs, query vectors, qids,
+   and qrels.
+3. Build or load the frozen `M=32`, `nlist=512`, `nprobe=16` IVF-PQ index.
+4. Reconstruct the frozen PQ representation, train the rank-16 residual basis,
+   and emit the 16-byte/document int8 sidecar.
+5. Evaluate the frozen Top-40 correction protocol on the saved 1,000-query
+   split, then save recall, storage, latency, and paired-bootstrap artifacts.
+6. Treat the `M=16/32/48` quality-storage table as a deployment comparison:
+   the sidecar improves a fixed base index but does not replace a rebuilt
+   higher-rate PQ index at an equal byte budget.
+
+
 ### Fixed-budget Residual-PQ refinement
 
 1. Open `notebooks/FiQA_BM25_Hybrid_RRF_Benchmark.ipynb` in Google Colab.
@@ -810,6 +986,7 @@ For all GPU experiments, use Google Colab with an NVIDIA GPU runtime and install
 - The current BGE CPU reranker configuration is experimental: it did not improve the recorded 100-query FiQA subset and adds substantial local latency. Future reranking work should compare domain-appropriate models, title-aware / truncated document formatting, and throughput under realistic batch loads before making a production-default claim.
 - Future work includes hybrid sparse-dense retrieval, a Traditional Chinese retrieval benchmark, query-aware retrieval routing, model-specific deployment selection, and production observability / deployment hardening.
 - Fixed-budget Residual-PQ transfer requires a larger corpus than SciFact for an 8-bit residual codebook, because amortized shared-codebook storage becomes prohibitive on small corpora. Future transfer experiments should test compact sidecars on a sufficiently large corpus and preserve identical storage accounting without re-tuning the allocation policy.
+- The frozen IVF-PQ PQ-residual sidecar is currently validated on one 1M-passage MS MARCO configuration. Its GPU timing is a batched Python-orchestrated prototype, not a fused serving kernel, and its storage-quality comparison shows that higher-rate PQ remains stronger when a full index rebuild is permitted.
 
 ## Release Readiness
 
@@ -825,4 +1002,4 @@ FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → true multi-query cross-encoder batching for `/batch-search`
 ```
 
-The current `main` branch captures the million-scale low-rate PQ / OPQ full-sweep milestone and the compact fixed-budget Residual-PQ extension, while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is zero-retuning validation of compact Residual-PQ sidecars on a larger transfer corpus where shared codebook amortization remains storage-feasible, followed by deployable sidecar serving and hybrid sparse-dense retrieval.
+The current `main` branch captures the million-scale low-rate PQ / OPQ full-sweep milestone, the compact fixed-budget Residual-PQ extension, and the frozen IVF-PQ PQ-residual sidecar retrofit study, while retaining the verified MiniLM FiQA artifact as the deployed service baseline. The optional reranker is intentionally disabled in that default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is zero-retuning validation of compact Residual-PQ sidecars on a larger transfer corpus where shared codebook amortization remains storage-feasible, followed by deployable sidecar serving and hybrid sparse-dense retrieval.
