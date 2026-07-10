@@ -1,6 +1,6 @@
 {
   "package": "retrieval_aware_residual_basis_msmarco_1m",
-  "description": "Retrieval-aware residual basis evaluation for frozen IVF-PQ sidecar, including RARS-Score alpha and Top-B ablations.",
+  "description": "Retrieval-aware residual basis evaluation for frozen IVF-PQ sidecar, including RARS-Score ablations and query-adaptive correction diagnostics.",
   "files": [
     {
       "path": "basis_alpha_sweep_proxy.csv",
@@ -138,9 +138,69 @@
       "sha256": "f0194d8a531a68c39b8f43751d28cdea8b363c085d174e5eb8b001517fc9db2d"
     },
     {
+      "path": "gate1_binary_threshold_train_sweep.csv",
+      "bytes": 146203,
+      "sha256": "eda2f198e5755c08c1e8fe676ed32bb70ccb383df31493e9a7e6271b1c37555e"
+    },
+    {
+      "path": "gate1_binary_threshold_train_test_eval.csv",
+      "bytes": 1578,
+      "sha256": "e74d631a76866a1521a23fb0921a94f3459e4f363a68466589cd2e8005212704"
+    },
+    {
       "path": "gate1_query_indices_in_query_vectors.npy",
       "bytes": 8128,
       "sha256": "b49bf1d44a9469413daa0f4327b40953f3e78cf63eff2298652a02970b197144"
+    },
+    {
+      "path": "gate1_test_oracle_router_per_query.csv",
+      "bytes": 18273,
+      "sha256": "35722a65c5eacac71977420771294bc8e5d7c8a8633d9cc64b64d5b8222f39c9"
+    },
+    {
+      "path": "gate1_test_oracle_router_summary.csv",
+      "bytes": 357,
+      "sha256": "065600a536f2921a4c31c38592ac7150cf8ddedbe221de2f687f23ef708ac661"
+    },
+    {
+      "path": "gate1_train_test_summary.csv",
+      "bytes": 1041,
+      "sha256": "14765d3381cb8ce7bfff7475026992122df1b6036783210fa05e2e10707832ac"
+    },
+    {
+      "path": "gate1b_5fold_cv_summary.csv",
+      "bytes": 5434,
+      "sha256": "7c21f06b9c48fa2bc857fa5e1bc240a528571f9c046f7e1019b1739682a9f987"
+    },
+    {
+      "path": "gate1b_5fold_oracle_router.csv",
+      "bytes": 1345,
+      "sha256": "794447a4d0e17692a91d82fcf3109289017f48921b3532ec5f5684ea236329a6"
+    },
+    {
+      "path": "gate1b_5fold_oracle_router_summary.csv",
+      "bytes": 840,
+      "sha256": "b010452f5f7283d8d833d194e0fa7bb6449adb9600a38adb04243030e34d0061"
+    },
+    {
+      "path": "gate1b_5fold_quality_cost_pareto.csv",
+      "bytes": 1635,
+      "sha256": "c77b6289fecf592b37296e634c9623606e12f86b3c183f36252a5b5bcdfc5b47"
+    },
+    {
+      "path": "gate1b_5fold_strategy_summary.csv",
+      "bytes": 6104,
+      "sha256": "2d2a34f49029945003fbc2056a2b073865f5eb97f57772011651d574f7c41d95"
+    },
+    {
+      "path": "gate1b_5fold_train_sweep.csv",
+      "bytes": 1669759,
+      "sha256": "8f0f5053336920a3b126fe764bf7da8f1a505e953c768e0d65233c9074ea23af"
+    },
+    {
+      "path": "gate1b_5fold_train_test_eval.csv",
+      "bytes": 15772,
+      "sha256": "7222884740cbe721f3c495c34ad5f107c7ccb5008ec88c94e8d2050bb5061b29"
     },
     {
       "path": "paired_bootstrap_best_rars_score_vs_pca.json",
@@ -156,6 +216,46 @@
       "path": "paper_style_qrels_result_table.csv",
       "bytes": 768,
       "sha256": "c16d869856ce012a9dd1578ce05d0aa369fb2443ab77d2c5eb9761f3e5b4a937"
+    },
+    {
+      "path": "query_adaptive_gate0_summary.csv",
+      "bytes": 827,
+      "sha256": "c5bf7ff1afbefdab8ff449ef361e7992974df8843fea3782c30c0300d049a068"
+    },
+    {
+      "path": "query_adaptive_margin_gate_sweep.csv",
+      "bytes": 2616,
+      "sha256": "60c31e93aa50f537fbe34bc509566c5ca80b1765227195caee61d2f81acc4f20"
+    },
+    {
+      "path": "query_adaptive_oracle_router_per_query.csv",
+      "bytes": 36545,
+      "sha256": "bf8e3dc0e260b83f2f4aeca3b4851e7bfd5c24883f1f3f9f85fa2bf11ca03acf"
+    },
+    {
+      "path": "query_adaptive_oracle_router_summary.csv",
+      "bytes": 332,
+      "sha256": "270d882f695974dfbea44a86eb6659c54267939847e81acd71772d940f5021e2"
+    },
+    {
+      "path": "query_adaptive_rars_gate_diagnostics.md",
+      "bytes": 5572,
+      "sha256": "2c7848a9f88b513a1184313c23ee2b5f2fab5fd71a3a8165005f79302cf5bac8"
+    },
+    {
+      "path": "query_adaptive_single_feature_gate_sweep.csv",
+      "bytes": 20332,
+      "sha256": "211152fd7de72264843a0267b79d01707ac5790f2b28317e8751df900b822f2a"
+    },
+    {
+      "path": "query_feature_gain_analysis.csv",
+      "bytes": 408784,
+      "sha256": "b19ae5f07cca8e2df8702e0b44804bf9d7fd5204a74d75f8cd2e03076e24c325"
+    },
+    {
+      "path": "query_uncertainty_features.csv",
+      "bytes": 311931,
+      "sha256": "253ed5013a7ccbb646922f026beea8dcb3977eea1d6c85ddc42b161ed67fd867"
     },
     {
       "path": "rars_final_comparison_qrels.csv",

@@ -1,0 +1,3 @@
+router,n_eval,recall_at_10,success_at_10,mrr_at_10,ndcg_at_10,top0_rate,top20_rate,top40_rate,avg_corrected_candidates
+oracle_by_recall_at_10,1000,0.71025,0.72,0.5112924603174603,0.5550536713740808,0.82,0.175,0.005,3.7
+oracle_by_ndcg_at_10,1000,0.70975,0.72,0.5117924603174604,0.555095390062832,0.821,0.174,0.005,3.6799999999999997
