@@ -134,6 +134,73 @@ alpha
 sidecar_enabled
 ```
 
+## FastAPI integration
+
+The retrieval API exposes optional RARS sidecar correction through `/search`
+and `/batch-search` when a compatible sidecar artifact is configured.
+
+Example request:
+
+```bash
+curl -X POST http://127.0.0.1:8000/search \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "What is a dividend stock?",
+    "top_k": 5,
+    "candidate_k": 100,
+    "nprobe": 16,
+    "sidecar": true,
+    "sidecar_top_b": 20
+  }'
+```
+
+The request fields are:
+
+| Field | Description |
+|---|---|
+| `sidecar` | Enable optional RARS sidecar correction |
+| `sidecar_top_b` | Number of ANN candidates to correct before reranking |
+| `candidate_k` | Number of ANN candidates retrieved before sidecar correction |
+
+When `sidecar=true`, `candidate_k` must be greater than or equal to
+`sidecar_top_b`. If `candidate_k` is omitted, the service uses a sidecar-aware
+default candidate pool.
+
+The response exposes sidecar metadata:
+
+```text
+sidecar_enabled
+sidecar_top_b
+sidecar_actual_top_b
+sidecar_alpha
+sidecar_latency_ms
+```
+
+Each corrected result can include:
+
+```text
+score
+ann_score
+sidecar_correction
+corrected_score
+```
+
+If `sidecar=true` is requested but no sidecar artifact is configured or loaded,
+the service returns a clear runtime error instead of silently falling back to
+uncorrected retrieval.
+
+The `/health` endpoint also reports:
+
+```text
+sidecar_enabled
+sidecar_artifact_dir
+sidecar_default_top_b
+sidecar_max_top_b
+```
+
+This integration is an API path and contract milestone. It does not yet include
+a committed production MS MARCO sidecar artifact or a full serving benchmark.
+
 ## Candidate id contract
 
 `RARSSidecar.rerank()` expects `candidate_rows`, meaning corpus-internal row ids.
