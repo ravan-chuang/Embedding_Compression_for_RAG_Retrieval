@@ -3,3 +3,4 @@
 # pip's Linux wheel avoids the missing-MKL shared library observed with the
 # conda-forge Faiss package in GitHub Actions.
 faiss-cpu>=1.9,<2.0
+httpx2
