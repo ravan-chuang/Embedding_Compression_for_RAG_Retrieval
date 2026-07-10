@@ -21,7 +21,7 @@ This project separates two questions that are often conflated:
 - Adds a frozen-index **PQ-residual sidecar** study: a rank-16, per-dimension int8 correction layer that reranks only top ANN candidates without retraining or rewriting the original IVF-PQ index; evaluated on MS MARCO 1M × BGE-small and zero-retuning FiQA transfers with BGE-small and MiniLM.
 - Adds **Retrieval-Aware Residual Subspace (RARS)**: a score-error weighted residual basis that improves the frozen MS MARCO 1M sidecar result from Recall@10 `0.6914` with a PCA basis to `0.6999` under the same rank-16 int8 Top-40 correction budget.
 - Adds **query-adaptive RARS gate diagnostics**: fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving correction depth; oracle Top0/Top20/Top40 routing reaches Recall@10 `0.7103` with only `3.7` corrected candidates/query on average.
-- Adds **FiQA BGE-small RARS cross-setting validation**: score-error weighted RARS Top40 improves frozen IVF-PQ from Recall@10 `0.2935` to `0.3235`, MRR@10 `0.2964` to `0.3220`, and nDCG@10 `0.2373` to `0.2587`; current-setting PCA remains a strong baseline and slightly leads Recall@10 / nDCG@10.
+- Adds **FiQA RARS cross-setting validation** across BGE-small and MiniLM: BGE-small shows clear qrels gains for score-error RARS Top40, while MiniLM shows strong proxy score-error alignment but smaller, alpha-sensitive qrels gains, making the transfer result deliberately conservative rather than overclaimed.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
 - Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
@@ -568,28 +568,28 @@ The correct interpretation is conservative: fixed Top20 is the strongest current
 
 See [`query_adaptive_rars_gate_diagnostics.md`](results/retrieval_aware_residual_basis/query_adaptive_rars_gate_diagnostics.md).
 
-### Cross-setting validation: FiQA BGE-small
+### Cross-setting validation: FiQA BGE-small and MiniLM
 
-To check whether the retrieval-aware residual correction transfers beyond the
-MS MARCO 1M setting, the same RARS transfer notebook was run on FiQA / BEIR with
-`BAAI/bge-small-en-v1.5`.
+To check whether retrieval-aware residual correction transfers beyond the
+MS MARCO 1M setting, the RARS transfer notebooks were run on FiQA / BEIR with
+both `BAAI/bge-small-en-v1.5` and `sentence-transformers/all-MiniLM-L6-v2`.
 
-This experiment builds a FiQA-specific frozen IVF-PQ index and candidate cache,
-then compares current-setting PCA and score-error weighted RARS under the same
-rank-16 int8 sidecar form.
+Each transfer experiment builds a FiQA-specific frozen IVF-PQ index and Top-100
+candidate cache, then compares current-setting PCA, score-error weighted RARS,
+and top-k-boundary weighted RARS under the same rank-16 int8 sidecar form.
 
 | Item | Configuration |
 |---|---|
 | Dataset | FiQA / BEIR |
 | Documents | 57,638 |
 | Evaluation queries | 648 |
-| Embedding model | `BAAI/bge-small-en-v1.5` |
+| Embedding models | `BAAI/bge-small-en-v1.5`, `sentence-transformers/all-MiniLM-L6-v2` |
 | Base index | Frozen IVF-PQ `M=32`, `nbits=8`, `nlist=256`, `nprobe=16` |
 | Candidate pool | Top-100 |
 | Sidecar rank | 16 |
 | Final cutoff | Top-10 |
 
-#### FiQA qrels-based final metrics
+#### FiQA BGE-small qrels-based final metrics
 
 | Method | Recall@10 | Success@10 | MRR@10 | nDCG@10 |
 |:--|--:|--:|--:|--:|
@@ -601,7 +601,8 @@ rank-16 int8 sidecar form.
 | PCA-current Top20 | 0.3203 | 0.5123 | 0.3137 | 0.2557 |
 | **PCA-current Top40** | **0.3282** | **0.5231** | 0.3181 | **0.2600** |
 
-Score-error weighted RARS Top40 improves over the frozen IVF-PQ baseline:
+On FiQA BGE-small, score-error weighted RARS Top40 improves over the frozen
+IVF-PQ baseline:
 
 - Recall@10: `0.2935 → 0.3235`
 - Success@10: `0.4784 → 0.5201`
@@ -611,15 +612,44 @@ Score-error weighted RARS Top40 improves over the frozen IVF-PQ baseline:
 The proxy diagnostics also support the intended mechanism: score-error weighted
 RARS has the highest correlation with the exact-minus-ANN score error
 (`0.5209`) and the best Top-10 overlap gain among the evaluated bases
-(`0.4676 → 0.5290`).
+(`0.4676 → 0.5290`). Current-setting PCA remains highly competitive and slightly
+leads Recall@10, Success@10, and nDCG@10 in this setting.
 
-The interpretation is intentionally conservative. On FiQA BGE-small, residual
-sidecar correction improves frozen IVF-PQ retrieval, and score-error weighted
-RARS gives the strongest MRR@10 and proxy score-error alignment. However,
-current-setting PCA remains highly competitive and slightly leads Recall@10,
-Success@10, and nDCG@10 in this setting. This is therefore reported as
-cross-setting validation of the residual-correction mechanism, not as a claim
-that RARS universally dominates PCA.
+#### FiQA MiniLM qrels-based final metrics
+
+MiniLM is a more mixed transfer setting. With fixed `alpha=1.0`, most qrels
+metrics do not improve over the frozen IVF-PQ baseline, even though proxy
+score-error alignment improves clearly.
+
+| Method | Recall@10 | Success@10 | MRR@10 | nDCG@10 |
+|:--|--:|--:|--:|--:|
+| Frozen IVF-PQ `M=32` | 0.3446 | 0.5494 | **0.3603** | 0.2862 |
+| Score-error RARS Top10, alpha=1.0 | 0.3333 | 0.5386 | 0.3495 | 0.2757 |
+| Score-error RARS Top20, alpha=1.0 | 0.3428 | 0.5478 | 0.3490 | 0.2789 |
+| Score-error RARS Top40, alpha=1.0 | 0.3440 | 0.5494 | 0.3489 | 0.2795 |
+| Score-error RARS Top100, alpha=1.0 | 0.3500 | **0.5586** | 0.3513 | 0.2822 |
+| PCA-current Top40, alpha=1.0 | 0.3389 | 0.5432 | 0.3469 | 0.2795 |
+
+The proxy-selected `alpha=0.75` gives a stronger MiniLM transfer point:
+
+| Method | Recall@10 | Success@10 | MRR@10 | nDCG@10 |
+|:--|--:|--:|--:|--:|
+| Frozen IVF-PQ `M=32` | 0.3446 | 0.5494 | **0.3603** | 0.2862 |
+| PCA-current Top40, alpha=0.75 | 0.3484 | 0.5525 | 0.3550 | 0.2857 |
+| Score-error RARS Top40, alpha=0.75 | 0.3502 | 0.5540 | 0.3577 | 0.2857 |
+| **Top10-boundary RARS Top40, alpha=0.75** | **0.3506** | **0.5540** | 0.3595 | **0.2880** |
+
+MiniLM proxy diagnostics still favor retrieval-aware bases: score-error weighted
+RARS has the highest exact-minus-ANN correlation (`0.5342`) and sign agreement
+(`0.7054`). However, qrels gains are small and alpha-sensitive. The best
+proxy-selected boundary basis improves Recall@10, Success@10, and nDCG@10
+slightly, while MRR@10 remains essentially flat/slightly below the frozen base.
+
+The cross-setting interpretation is intentionally conservative. BGE-small
+provides a clear positive qrels transfer point; MiniLM shows strong proxy
+alignment but only modest, alpha-sensitive qrels gains. This supports the
+residual-correction mechanism while showing that RARS transfer depends on the
+embedding model and score geometry, rather than universally dominating PCA.
 
 ### Reproducible result package
 
@@ -631,6 +661,7 @@ The committed RARS package contains qrels summaries, proxy diagnostics, alpha an
 - [RARS-Score Top-B ablation](results/retrieval_aware_residual_basis/score_error_weighted_topb_qrels_ablation.csv)
 - [query-adaptive gate diagnostics](results/retrieval_aware_residual_basis/query_adaptive_rars_gate_diagnostics.md)
 - [FiQA BGE-small RARS transfer validation](results/retrieval_aware_residual_basis/fiqa_bge_small_transfer/README.md)
+- [FiQA MiniLM RARS transfer validation](results/retrieval_aware_residual_basis/fiqa_minilm_transfer/README.md)
 - [Gate 1b 5-fold strategy summary](results/retrieval_aware_residual_basis/gate1b_5fold_strategy_summary.csv)
 - [Gate 1b 5-fold oracle summary](results/retrieval_aware_residual_basis/gate1b_5fold_oracle_router_summary.csv)
 - [final comparison table](results/retrieval_aware_residual_basis/rars_final_comparison_qrels.csv)
@@ -852,7 +883,7 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 - **Frozen IVF-PQ retrofit sidecar (MS MARCO 1M):** a rank-16 int8 PQ-residual sidecar improves the fixed `M=32` IVF-PQ operating point from Recall@10 `0.6628` to `0.6914` (`+0.0287`; paired-bootstrap 95% CI `[+0.0147, +0.0430]`) while adding 16 bytes/document and correcting only Top-40 candidates. It is a frozen-index enhancement, not a same-byte replacement for a higher-rate PQ index.
 - **Retrieval-Aware Residual Subspace (RARS):** replacing the PCA residual basis with a score-error weighted basis improves the same frozen `M=32` sidecar setting from Recall@10 `0.6914` to `0.6999` under the same rank-16 int8 Top-40 correction budget. The paired-bootstrap difference over PCA is positive but narrowly crosses zero at the 95% level.
-- **FiQA BGE-small RARS transfer:** on FiQA / BEIR with BGE-small, score-error weighted RARS Top40 improves frozen IVF-PQ from Recall@10 `0.2935` to `0.3235`, MRR@10 `0.2964` to `0.3220`, and nDCG@10 `0.2373` to `0.2587`. PCA-current Top40 remains a strong baseline and slightly leads Recall@10 / nDCG@10, so the result is framed as cross-setting validation rather than universal RARS superiority.
+- **FiQA RARS transfer:** on FiQA / BEIR with BGE-small, score-error weighted RARS Top40 improves frozen IVF-PQ from Recall@10 `0.2935` to `0.3235`, MRR@10 `0.2964` to `0.3220`, and nDCG@10 `0.2373` to `0.2587`. On MiniLM, proxy score-error alignment improves strongly, while qrels gains are smaller and alpha-sensitive: the best proxy-selected boundary basis improves Recall@10 `0.3446 → 0.3506` and nDCG@10 `0.2862 → 0.2880`, with MRR@10 essentially flat. The transfer result is therefore framed as model-sensitive validation rather than universal RARS superiority.
 - **Query-adaptive RARS diagnostics:** fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving the correction depth. Random 5-fold threshold routing shows simple single-feature gates do not robustly outperform fixed-depth activation, but oracle Top0/Top20/Top40 routing reaches Recall@10 `0.7103` with only `3.7` corrected candidates/query on average.
 - **Cross-setting frozen-sidecar transfer:** the same rank-16 int8 Top-40 protocol produces positive Recall@10 point estimates on FiQA × BGE-small (`0.3287 → 0.3418`) and FiQA × MiniLM (`0.3358 → 0.3454`) without retuning. Their 95% paired-bootstrap intervals cross zero, so the transfer result is directional consistency rather than a universal significance claim.
 - **Compact fixed-budget Residual-PQ refinement:** bitmap/rank-prefix metadata and FP16 residual codebooks raise sidecar coverage to 77.8% (Compact-8bit) or 97.8% (Compact-4bit). Both compact layouts significantly improve low-rate `M=32` IVF-PQ; their differences from Uniform `M=48` are not statistically established on the held-out FiQA split.
@@ -1146,6 +1177,8 @@ notebooks/
   MSMARCO_1M_Retrieval_Aware_Residual_Basis.ipynb
   FiQA_BGE_Small_PQ_Residual_Sidecar_Transfer.ipynb
   FiQA_MiniLM_PQ_Residual_Sidecar_Transfer.ipynb
+  FiQA_BGE_Small_RARS_Transfer.ipynb
+  FiQA_MiniLM_RARS_Transfer.ipynb
   FiQA_BM25_Hybrid_RRF_Benchmark.ipynb
   SciFact_BM25_Hybrid_RRF_Transfer.ipynb
 results/
@@ -1186,6 +1219,13 @@ results/
     fiqa_bge_small_transfer/
       README.md
       qrels_final_metrics.csv
+      proxy_diagnostics_summary.csv
+      alpha_best_summary.csv
+      topb_ablation_score_error_weighted.csv
+    fiqa_minilm_transfer/
+      README.md
+      qrels_final_metrics.csv
+      qrels_final_metrics_extended.csv
       proxy_diagnostics_summary.csv
       alpha_best_summary.csv
       topb_ablation_score_error_weighted.csv
@@ -1268,15 +1308,17 @@ requirements-ci.txt
 8. Export the summary artifacts into `results/retrieval_aware_residual_basis/` and regenerate the package manifest after removing large memmaps, sidecar code arrays, residual caches, and candidate caches.
 
 
-### Retrieval-Aware Residual Subspace: FiQA BGE-small transfer
+### Retrieval-Aware Residual Subspace: FiQA transfer
 
-1. Open `notebooks/FiQA_BGE_Small_RARS_Transfer.ipynb` in Google Colab.
+1. Open `notebooks/FiQA_BGE_Small_RARS_Transfer.ipynb` or `notebooks/FiQA_MiniLM_RARS_Transfer.ipynb` in Google Colab.
 2. Enable an NVIDIA GPU runtime and mount Google Drive.
-3. Download / load FiQA, encode BGE-small document and query embeddings, and build the frozen `M=32`, `nlist=256`, `nprobe=16` IVF-PQ index.
+3. Download / load FiQA, encode document and query embeddings with the selected model, and build the frozen `M=32`, `nlist=256`, `nprobe=16` IVF-PQ index.
 4. Build the Top-100 candidate cache from the current FiQA index.
 5. Reconstruct residuals, train `pca_current`, `score_error_weighted`, and `top10_boundary_weighted` bases under the same rank-16 int8 sidecar form.
-6. Run proxy diagnostics, alpha sweep, Top-B ablation, and qrels-based final retrieval metrics.
-7. Export the compact CSV summaries into `results/retrieval_aware_residual_basis/fiqa_bge_small_transfer/`.
+6. Run proxy diagnostics, alpha sweep, Top-B ablation, fixed-alpha qrels metrics, and extended proxy-selected-alpha qrels metrics.
+7. Export compact CSV summaries into:
+   - `results/retrieval_aware_residual_basis/fiqa_bge_small_transfer/`
+   - `results/retrieval_aware_residual_basis/fiqa_minilm_transfer/`
 
 
 ### Frozen IVF-PQ PQ-residual sidecar: cross-setting transfer
@@ -1355,4 +1397,4 @@ FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → true multi-query cross-encoder batching for `/batch-search`
 ```
 
-The current `main` branch captures the million-scale low-rate PQ / OPQ full-sweep milestone, the compact fixed-budget Residual-PQ extension, the frozen IVF-PQ PQ-residual sidecar retrofit study with cross-setting results for MS MARCO 1M × BGE-small, FiQA × BGE-small, and FiQA × MiniLM, and the RARS retrieval-aware residual basis evaluation on MS MARCO 1M. The optional reranker is intentionally disabled in the default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is to complete the remaining RARS cross-setting runs, especially FiQA × MiniLM, add stronger learned query-adaptive sidecar activation, then move toward deployable sidecar serving and hybrid sparse-dense retrieval.
+The current branch captures the million-scale low-rate PQ / OPQ full-sweep milestone, the compact fixed-budget Residual-PQ extension, the frozen IVF-PQ PQ-residual sidecar retrofit study with cross-setting results for MS MARCO 1M × BGE-small, FiQA × BGE-small, and FiQA × MiniLM, the RARS retrieval-aware residual basis evaluation on MS MARCO 1M, and FiQA RARS transfer validation for both BGE-small and MiniLM. The optional reranker is intentionally disabled in the default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is stronger learned query-adaptive sidecar activation, followed by deployable sidecar serving and hybrid sparse-dense retrieval.
