@@ -25,9 +25,10 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title="RAG Embedding Compression Retrieval API",
-    version="0.3.0",
+    version="0.4.0",
     description=(
-        "Faiss IVF-PQ retrieval with optional cross-encoder reranking."
+        "Faiss IVF-PQ retrieval with optional cross-encoder reranking "
+        "and optional RARS sidecar correction."
     ),
     lifespan=lifespan,
 )
@@ -43,6 +44,8 @@ class SearchRequest(BaseModel):
     nprobe: int | None = Field(default=None, ge=1, le=256)
     rerank: bool = False
     candidate_k: int | None = Field(default=None, ge=1, le=100)
+    sidecar: bool = False
+    sidecar_top_b: int | None = Field(default=None, ge=0, le=100)
 
 
 class BatchSearchRequest(BaseModel):
@@ -51,6 +54,8 @@ class BatchSearchRequest(BaseModel):
     nprobe: int | None = Field(default=None, ge=1, le=256)
     rerank: bool = False
     candidate_k: int | None = Field(default=None, ge=1, le=100)
+    sidecar: bool = False
+    sidecar_top_b: int | None = Field(default=None, ge=0, le=100)
 
 
 @app.get("/health")
@@ -67,6 +72,22 @@ def health() -> dict:
             if retriever.reranker is not None
             else None
         ),
+        "sidecar_enabled": retriever.sidecar is not None,
+        "sidecar_artifact_dir": (
+            str(retriever.sidecar_artifact_dir)
+            if retriever.sidecar_artifact_dir is not None
+            else None
+        ),
+        "sidecar_default_top_b": (
+            retriever.sidecar.config.default_top_b
+            if retriever.sidecar is not None
+            else None
+        ),
+        "sidecar_max_top_b": (
+            retriever.sidecar.config.max_top_b
+            if retriever.sidecar is not None
+            else None
+        ),
     }
 
 
@@ -79,6 +100,8 @@ def search(payload: SearchRequest) -> dict:
             nprobe=payload.nprobe,
             rerank=payload.rerank,
             candidate_k=payload.candidate_k,
+            sidecar=payload.sidecar,
+            sidecar_top_b=payload.sidecar_top_b,
         )
     except (RuntimeError, ValueError, FileNotFoundError) as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
@@ -93,6 +116,8 @@ def batch_search(payload: BatchSearchRequest) -> dict:
             nprobe=payload.nprobe,
             rerank=payload.rerank,
             candidate_k=payload.candidate_k,
+            sidecar=payload.sidecar,
+            sidecar_top_b=payload.sidecar_top_b,
         )
     except (RuntimeError, ValueError, FileNotFoundError) as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc

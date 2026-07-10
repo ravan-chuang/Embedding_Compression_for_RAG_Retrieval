@@ -1,7 +1,9 @@
 """Faiss-backed retrieval service primitives."""
 
 from __future__ import annotations
+
 from app.reranker import CrossEncoderReranker
+from app.sidecar import RARSSidecar
 
 import json
 import time
@@ -14,7 +16,7 @@ from sentence_transformers import SentenceTransformer
 
 
 class RetrievalService:
-    """Load a serialized Faiss index and optional OPQ query transform."""
+    """Load a serialized Faiss index and optional retrieval components."""
 
     def __init__(self, artifact_dir: str | Path) -> None:
         self.artifact_dir = Path(artifact_dir)
@@ -25,6 +27,8 @@ class RetrievalService:
         self.config: dict[str, Any] = {}
         self.query_rotation: np.ndarray | None = None
         self.reranker: CrossEncoderReranker | None = None
+        self.sidecar: RARSSidecar | None = None
+        self.sidecar_artifact_dir: Path | None = None
 
     @property
     def is_ready(self) -> bool:
@@ -88,18 +92,8 @@ class RetrievalService:
         if default_nprobe is not None:
             self.set_nprobe(int(default_nprobe))
 
-        reranker_config = self.config.get("reranker", {})
-
-        if reranker_config.get("enabled", False):
-            self.reranker = CrossEncoderReranker(
-                model_name=reranker_config.get(
-                    "model_name",
-                    "BAAI/bge-reranker-base",
-                    ),
-                    device=reranker_config.get("device", "cpu"),
-                    batch_size=int(reranker_config.get("batch_size", 16)),
-                    )
-            self.reranker.load()
+        self._load_reranker()
+        self._load_sidecar()
 
     def _load_query_transform(self) -> None:
         """Load the query-side OPQ rotation when configured."""
@@ -138,6 +132,83 @@ class RetrievalService:
             )
 
         self.query_rotation = np.ascontiguousarray(rotation)
+
+    def _load_reranker(self) -> None:
+        reranker_config = self.config.get("reranker", {})
+
+        if not reranker_config.get("enabled", False):
+            self.reranker = None
+            return
+
+        self.reranker = CrossEncoderReranker(
+            model_name=reranker_config.get(
+                "model_name",
+                "BAAI/bge-reranker-base",
+            ),
+            device=reranker_config.get("device", "cpu"),
+            batch_size=int(reranker_config.get("batch_size", 16)),
+        )
+        self.reranker.load()
+
+    def _load_sidecar(self) -> None:
+        """Load optional RARS / residual sidecar artifact.
+
+        Expected service_config block:
+
+        {
+          "sidecar": {
+            "enabled": true,
+            "artifact_dir": "../msmarco_rars_sidecar_m32_rank16",
+            "config_file": "sidecar_config.json"
+          }
+        }
+
+        Relative artifact paths are resolved relative to the retrieval artifact
+        directory.
+        """
+
+        sidecar_config = self.config.get("sidecar", {})
+
+        if not sidecar_config.get("enabled", False):
+            self.sidecar = None
+            self.sidecar_artifact_dir = None
+            return
+
+        artifact_dir_value = sidecar_config.get("artifact_dir")
+
+        if not artifact_dir_value:
+            raise ValueError(
+                "sidecar.enabled is true but no artifact_dir is configured."
+            )
+
+        sidecar_artifact_dir = Path(artifact_dir_value)
+
+        if not sidecar_artifact_dir.is_absolute():
+            sidecar_artifact_dir = self.artifact_dir / sidecar_artifact_dir
+
+        config_name = sidecar_config.get(
+            "config_file",
+            "sidecar_config.json",
+        )
+
+        self.sidecar = RARSSidecar(
+            sidecar_artifact_dir,
+            config_name=config_name,
+        )
+        self.sidecar_artifact_dir = sidecar_artifact_dir
+
+        if self.index is not None and self.sidecar.dim != self.index.d:
+            raise ValueError(
+                "Sidecar/index dimension mismatch: "
+                f"sidecar dim={self.sidecar.dim}, index dim={self.index.d}."
+            )
+
+        if self.sidecar.num_docs != len(self.documents):
+            raise ValueError(
+                "Sidecar/document count mismatch: "
+                f"sidecar docs={self.sidecar.num_docs}, "
+                f"documents={len(self.documents)}."
+            )
 
     def set_nprobe(self, nprobe: int) -> None:
         """Set IVF probing depth when the loaded index supports it."""
@@ -209,6 +280,62 @@ class RetrievalService:
             "results": results,
         }
 
+    def _format_sidecar_results(
+        self,
+        query: str,
+        sidecar_result: dict[str, Any],
+        top_k: int,
+        nprobe: int | None,
+    ) -> dict[str, Any]:
+        results: list[dict[str, Any]] = []
+
+        rows = sidecar_result["candidate_rows"]
+        ann_scores = sidecar_result["ann_scores"]
+        corrected_scores = sidecar_result["corrected_scores"]
+        corrections = sidecar_result["corrections"]
+
+        for rank, (idx, ann_score, corrected_score, correction) in enumerate(
+            zip(rows, ann_scores, corrected_scores, corrections),
+            start=1,
+        ):
+            if idx < 0:
+                continue
+
+            document = self.documents[int(idx)]
+
+            results.append(
+                {
+                    "rank": rank,
+                    "score": float(corrected_score),
+                    "ann_score": float(ann_score),
+                    "sidecar_correction": float(correction),
+                    "corrected_score": float(corrected_score),
+                    "doc_id": document["doc_id"],
+                    "title": document.get("title", ""),
+                    "text": document.get("text", ""),
+                }
+            )
+
+        return {
+            "query": query,
+            "top_k": top_k,
+            "nprobe": (
+                nprobe
+                if nprobe is not None
+                else self.config.get("default_nprobe")
+            ),
+            "index_type": self.config.get(
+                "index_type",
+                type(self.index).__name__,
+            ),
+            "query_transform_enabled": self.query_rotation is not None,
+            "results": results,
+            "sidecar_enabled": True,
+            "sidecar_top_b": sidecar_result["top_b"],
+            "sidecar_actual_top_b": sidecar_result["actual_top_b"],
+            "sidecar_alpha": sidecar_result["alpha"],
+        }
+
     def search(
         self,
         query: str,
@@ -216,6 +343,8 @@ class RetrievalService:
         nprobe: int | None = None,
         rerank: bool = False,
         candidate_k: int | None = None,
+        sidecar: bool = False,
+        sidecar_top_b: int | None = None,
     ) -> dict[str, Any]:
         batch = self.search_many(
             queries=[query],
@@ -223,6 +352,8 @@ class RetrievalService:
             nprobe=nprobe,
             rerank=rerank,
             candidate_k=candidate_k,
+            sidecar=sidecar,
+            sidecar_top_b=sidecar_top_b,
         )
 
         item = batch["items"][0]
@@ -237,6 +368,8 @@ class RetrievalService:
         nprobe: int | None = None,
         rerank: bool = False,
         candidate_k: int | None = None,
+        sidecar: bool = False,
+        sidecar_top_b: int | None = None,
     ) -> dict[str, Any]:
         """Embed queries, search ANN candidates, and optionally rerank in batch."""
 
@@ -251,13 +384,45 @@ class RetrievalService:
                 "Reranking was requested but no reranker is configured."
             )
 
+        if sidecar and self.sidecar is None:
+            raise RuntimeError(
+                "RARS sidecar correction was requested but no sidecar "
+                "artifact is configured or loaded."
+            )
+
+        requested_sidecar_top_b = sidecar_top_b
+
+        if sidecar:
+            assert self.sidecar is not None
+
+            if requested_sidecar_top_b is None:
+                requested_sidecar_top_b = self.sidecar.config.default_top_b
+
+            if requested_sidecar_top_b > self.sidecar.config.max_top_b:
+                raise ValueError(
+                    "sidecar_top_b exceeds configured sidecar max_top_b: "
+                    f"{requested_sidecar_top_b} > "
+                    f"{self.sidecar.config.max_top_b}"
+                )
+
         if candidate_k is None:
-            candidate_k = max(top_k, 50 if rerank else top_k)
+            candidate_k = max(
+                top_k,
+                50 if rerank else top_k,
+                100 if sidecar else top_k,
+            )
 
         if candidate_k < top_k:
             raise ValueError(
                 "candidate_k must be greater than or equal to top_k."
             )
+
+        if sidecar and requested_sidecar_top_b is not None:
+            if candidate_k < requested_sidecar_top_b:
+                raise ValueError(
+                    "candidate_k must be greater than or equal to "
+                    "sidecar_top_b when sidecar correction is enabled."
+                )
 
         if nprobe is not None:
             self.set_nprobe(nprobe)
@@ -276,20 +441,56 @@ class RetrievalService:
             time.perf_counter() - retrieval_start
         ) * 1000.0
 
-        items = [
-            self._format_results(
-                query=query,
-                scores=query_scores,
-                indices=query_indices,
+        sidecar_latency_ms = 0.0
+
+        if sidecar:
+            assert self.sidecar is not None
+            assert requested_sidecar_top_b is not None
+
+            sidecar_start = time.perf_counter()
+
+            sidecar_results = self.sidecar.rerank_batch(
+                query_embeddings=vectors,
+                candidate_rows=indices,
+                ann_scores=scores,
                 top_k=candidate_k,
-                nprobe=nprobe,
+                top_b=requested_sidecar_top_b,
             )
-            for query, query_scores, query_indices in zip(
-                queries,
-                scores,
-                indices,
-            )
-        ]
+
+            sidecar_latency_ms = (
+                time.perf_counter() - sidecar_start
+            ) * 1000.0
+
+            items = [
+                self._format_sidecar_results(
+                    query=query,
+                    sidecar_result=sidecar_result,
+                    top_k=candidate_k,
+                    nprobe=nprobe,
+                )
+                for query, sidecar_result in zip(queries, sidecar_results)
+            ]
+        else:
+            items = [
+                self._format_results(
+                    query=query,
+                    scores=query_scores,
+                    indices=query_indices,
+                    top_k=candidate_k,
+                    nprobe=nprobe,
+                )
+                for query, query_scores, query_indices in zip(
+                    queries,
+                    scores,
+                    indices,
+                )
+            ]
+
+            for item in items:
+                item["sidecar_enabled"] = False
+                item["sidecar_top_b"] = None
+                item["sidecar_actual_top_b"] = 0
+                item["sidecar_alpha"] = None
 
         rerank_latency_ms = 0.0
 
@@ -337,9 +538,12 @@ class RetrievalService:
             ),
             "query_transform_enabled": self.query_rotation is not None,
             "rerank_enabled": rerank,
+            "sidecar_enabled": sidecar,
+            "sidecar_top_b": requested_sidecar_top_b if sidecar else None,
             "latency_ms_total": round(latency_ms_total, 3),
             "embedding_latency_ms": round(embedding_latency_ms, 3),
             "ann_search_latency_ms": round(ann_search_latency_ms, 3),
+            "sidecar_latency_ms": round(sidecar_latency_ms, 3),
             "rerank_latency_ms": round(rerank_latency_ms, 3),
             "latency_ms_per_query": round(
                 latency_ms_total / len(queries),

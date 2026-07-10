@@ -24,6 +24,7 @@ This project separates two questions that are often conflated:
 - Adds **FiQA RARS cross-setting validation** across BGE-small and MiniLM: BGE-small shows clear qrels gains for score-error RARS Top40, while MiniLM shows strong proxy score-error alignment but smaller, alpha-sensitive qrels gains, making the transfer result deliberately conservative rather than overclaimed.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
+- Adds a deployable RARS sidecar serving foundation and optional FastAPI sidecar API path: `/search` and `/batch-search` can request fixed Top-B residual correction when a sidecar artifact is configured.
 - Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
 - Includes an optional BGE cross-encoder reranking path after OPQ-IVF-PQ candidate retrieval, with experimental FiQA evaluation and true multi-query rerank batching.
 
@@ -965,6 +966,46 @@ The API exposes:
 
 The OPQ contract is validated by the service configuration. When `query_transform.enabled` is true, the retriever loads `query_opq_rotation.npy` and applies it before Faiss search.
 
+### Optional RARS sidecar correction
+
+The service also exposes an optional RARS / PQ-residual sidecar correction path
+when a compatible sidecar artifact is configured in `service_config.json`.
+
+Example request:
+
+```bash
+curl -X POST http://127.0.0.1:8000/search \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query":"What is a dividend stock?",
+    "top_k":5,
+    "candidate_k":100,
+    "nprobe":16,
+    "sidecar":true,
+    "sidecar_top_b":20
+  }'
+```
+
+The sidecar path performs:
+
+```text
+query embedding
+→ IVF-PQ candidate retrieval
+→ Top-B residual sidecar correction
+→ corrected reranking
+→ final Top-K response
+```
+
+The returned results include `ann_score`, `sidecar_correction`, and
+`corrected_score`. The `/health` endpoint reports sidecar readiness metadata.
+If `sidecar=true` is requested without a configured artifact, the service
+returns a clear runtime error. The current deployable default remains fixed
+Top20 correction, because learned query-adaptive routing did not beat fixed
+Top20 in the recorded diagnostics.
+
+This API path is documented in
+[`docs/rars_sidecar_serving.md`](docs/rars_sidecar_serving.md).
+
 ### Experimental two-stage reranking
 
 The service also supports an **optional** second-stage BGE cross-encoder reranker:
@@ -1434,4 +1475,4 @@ FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → true multi-query cross-encoder batching for `/batch-search`
 ```
 
-The current branch captures the million-scale low-rate PQ / OPQ full-sweep milestone, the compact fixed-budget Residual-PQ extension, the frozen IVF-PQ PQ-residual sidecar retrofit study with cross-setting results for MS MARCO 1M × BGE-small, FiQA × BGE-small, and FiQA × MiniLM, the RARS retrieval-aware residual basis evaluation on MS MARCO 1M, FiQA RARS transfer validation for both BGE-small and MiniLM, and learned query-adaptive RARS router diagnostics. The optional reranker is intentionally disabled in the default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is to move beyond handcrafted routing features toward stronger learned query-adaptive activation, followed by deployable sidecar serving and hybrid sparse-dense retrieval.
+The current branch captures the million-scale low-rate PQ / OPQ full-sweep milestone, the compact fixed-budget Residual-PQ extension, the frozen IVF-PQ PQ-residual sidecar retrofit study with cross-setting results for MS MARCO 1M × BGE-small, FiQA × BGE-small, and FiQA × MiniLM, the RARS retrieval-aware residual basis evaluation on MS MARCO 1M, FiQA RARS transfer validation for both BGE-small and MiniLM, learned query-adaptive RARS router diagnostics, and a deployable RARS sidecar serving/API foundation. The optional reranker is intentionally disabled in the default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is artifact-backed sidecar serving and latency-quality benchmarking, followed by stronger learned query-adaptive activation and hybrid sparse-dense retrieval.
