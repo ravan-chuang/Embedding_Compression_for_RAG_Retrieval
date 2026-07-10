@@ -20,7 +20,7 @@ This project separates two questions that are often conflated:
 - Includes fixed-budget Residual-PQ refinement with oracle ceilings, compact bitmap/rank-prefix sidecars, FP16 residual codebooks, strict storage accounting, and paired-bootstrap significance tests.
 - Adds a frozen-index **PQ-residual sidecar** study: a rank-16, per-dimension int8 correction layer that reranks only top ANN candidates without retraining or rewriting the original IVF-PQ index; evaluated on MS MARCO 1M × BGE-small and zero-retuning FiQA transfers with BGE-small and MiniLM.
 - Adds **Retrieval-Aware Residual Subspace (RARS)**: a score-error weighted residual basis that improves the frozen MS MARCO 1M sidecar result from Recall@10 `0.6914` with a PCA basis to `0.6999` under the same rank-16 int8 Top-40 correction budget.
-- Adds **query-adaptive RARS gate diagnostics**: fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving correction depth; oracle Top0/Top20/Top40 routing reaches Recall@10 `0.7103` with only `3.7` corrected candidates/query on average.
+- Adds **query-adaptive RARS diagnostics**: fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving correction depth; oracle Top0/Top20/Top40 routing shows headroom at Recall@10 `0.7103`, while 5-fold learned routers are retained as a negative diagnostic because they do not recover that headroom under the current feature set.
 - Adds **FiQA RARS cross-setting validation** across BGE-small and MiniLM: BGE-small shows clear qrels gains for score-error RARS Top40, while MiniLM shows strong proxy score-error alignment but smaller, alpha-sensitive qrels gains, making the transfer result deliberately conservative rather than overclaimed.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
@@ -550,23 +550,52 @@ Top-20 captures nearly all of the RARS-Score gain, while Top-40 is the best obse
 
 ### Query-adaptive correction diagnostics
 
-A follow-up diagnostic evaluates whether RARS correction depth can be selected per query from ANN score uncertainty features. The strongest current cost-aware operating point is fixed Top20 correction: it reaches Recall@10 `0.6989`, within `0.0010` of fixed Top40 (`0.6999`), while halving correction depth from 40 to 20 candidates/query.
+A follow-up diagnostic evaluates whether RARS correction depth can be selected per query from ANN score uncertainty and correction-magnitude features. The strongest currently validated cost-aware operating point remains fixed Top20 correction: it reaches Recall@10 `0.6989`, within `0.0010` of fixed Top40 (`0.6999`), while halving correction depth from 40 to 20 candidates/query.
 
-Random 5-fold threshold routing shows that simple one-dimensional score-margin gates do not robustly outperform fixed-depth activation. However, an oracle router over Top0/Top20/Top40 reaches Recall@10 `0.7103` with only `3.7` corrected candidates/query on average, suggesting substantial headroom for future learned query-adaptive routing.
+#### Fixed-depth and oracle routing
 
 | Strategy | Recall@10 | Success@10 | MRR@10 | nDCG@10 | Avg corrected candidates |
 |:--|--:|--:|--:|--:|--:|
 | Always Top0 | 0.6628 | 0.6740 | 0.4659 | 0.5099 | 0.0 |
-| Always Top20 | 0.6989 | 0.7090 | 0.4845 | 0.5324 | 20.0 |
-| Always Top40 | 0.6999 | 0.7100 | 0.4845 | 0.5325 | 40.0 |
+| Always Top20 | 0.6989 | 0.7090 | **0.4845** | 0.5324 | 20.0 |
+| Always Top40 | 0.6999 | 0.7100 | 0.4845 | **0.5325** | 40.0 |
+| Oracle cheapest Top0/Top20/Top40 | **0.7103** | **0.7200** | 0.4731 | 0.5262 | **1.1** |
+
+The oracle chooses the cheapest correction depth among Top0, Top20, and Top40 that attains the best per-query Recall@10. Its label distribution is highly imbalanced:
+
+| Oracle depth | Queries | Fraction |
+|---:|---:|---:|
+| 0 | 950 | 0.950 |
+| 20 | 45 | 0.045 |
+| 40 | 5 | 0.005 |
+
+This shows substantial query-adaptive headroom in principle: only a small minority of queries need deeper correction. However, that headroom is hard to recover with simple learned routers because the useful correction cases are rare.
+
+#### Simple gate and learned-router results
+
+Earlier random 5-fold threshold routing showed that simple one-dimensional score-margin gates do not robustly outperform fixed-depth activation:
+
+| Strategy | Recall@10 | Success@10 | MRR@10 | nDCG@10 | Avg corrected candidates |
+|:--|--:|--:|--:|--:|--:|
 | Best train-recall gate, target Top20 | 0.6979 | 0.7080 | 0.4840 | 0.5317 | 19.38 |
 | Best train-recall gate, target Top40 | 0.6989 | 0.7090 | 0.4839 | 0.5318 | 38.24 |
 | Cheapest within 0.001 train Recall, target Top20 | 0.6944 | 0.7040 | 0.4815 | 0.5289 | 15.32 |
 | Cheapest within 0.001 train Recall, target Top40 | 0.6949 | 0.7050 | 0.4819 | 0.5292 | 27.56 |
 
-The correct interpretation is conservative: fixed Top20 is the strongest current cost-aware deployment setting, while simple single-feature gates are retained as a negative/diagnostic result rather than a completed adaptive-routing method.
+A stronger learned-router diagnostic then trained 5-fold query-level routers over ANN score features, correction-magnitude features, and query-vector summary features. The router predicts one of Top0, Top20, or Top40 correction depth.
 
-See [`query_adaptive_rars_gate_diagnostics.md`](results/retrieval_aware_residual_basis/query_adaptive_rars_gate_diagnostics.md).
+| Strategy | Recall@10 | Success@10 | MRR@10 | nDCG@10 | Avg corrected candidates |
+|:--|--:|--:|--:|--:|--:|
+| Offline exact-proxy features + logistic regression | 0.6813 | 0.6920 | 0.4718 | 0.5185 | 4.56 |
+| Deployable features + logistic regression | 0.6774 | 0.6870 | 0.4760 | 0.5214 | 5.94 |
+| Deployable features + random forest | 0.6628 | 0.6740 | 0.4671 | 0.5109 | 0.70 |
+| Deployable features + histogram gradient boosting | 0.6628 | 0.6740 | 0.4659 | 0.5099 | 0.02 |
+
+The learned routers do not approach fixed Top20 / Top40 quality. The best learned result reaches Recall@10 `0.6813` with `4.56` corrected candidates/query, below fixed Top20 at `0.6989`. Most learned models either collapse toward Top0 because the oracle labels are highly imbalanced, or over-correct without recovering enough retrieval quality.
+
+The correct interpretation is conservative. Fixed Top20 remains the strongest validated deployable cost-aware RARS setting. The oracle result shows routing headroom, but the current handcrafted score, correction, and query-vector features are insufficient for robust learned query-adaptive activation. The learned-router experiment is therefore retained as a negative diagnostic result, not as a completed adaptive-routing method.
+
+See [`query_adaptive_rars_gate_diagnostics.md`](results/retrieval_aware_residual_basis/query_adaptive_rars_gate_diagnostics.md) and the [learned RARS router diagnostics](results/retrieval_aware_residual_basis/learned_rars_router/README.md).
 
 ### Cross-setting validation: FiQA BGE-small and MiniLM
 
@@ -660,6 +689,7 @@ The committed RARS package contains qrels summaries, proxy diagnostics, alpha an
 - [RARS-Score alpha sweep](results/retrieval_aware_residual_basis/score_error_weighted_alpha_qrels_sweep.csv)
 - [RARS-Score Top-B ablation](results/retrieval_aware_residual_basis/score_error_weighted_topb_qrels_ablation.csv)
 - [query-adaptive gate diagnostics](results/retrieval_aware_residual_basis/query_adaptive_rars_gate_diagnostics.md)
+- [learned RARS router diagnostics](results/retrieval_aware_residual_basis/learned_rars_router/README.md)
 - [FiQA BGE-small RARS transfer validation](results/retrieval_aware_residual_basis/fiqa_bge_small_transfer/README.md)
 - [FiQA MiniLM RARS transfer validation](results/retrieval_aware_residual_basis/fiqa_minilm_transfer/README.md)
 - [Gate 1b 5-fold strategy summary](results/retrieval_aware_residual_basis/gate1b_5fold_strategy_summary.csv)
@@ -884,7 +914,7 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 - **Frozen IVF-PQ retrofit sidecar (MS MARCO 1M):** a rank-16 int8 PQ-residual sidecar improves the fixed `M=32` IVF-PQ operating point from Recall@10 `0.6628` to `0.6914` (`+0.0287`; paired-bootstrap 95% CI `[+0.0147, +0.0430]`) while adding 16 bytes/document and correcting only Top-40 candidates. It is a frozen-index enhancement, not a same-byte replacement for a higher-rate PQ index.
 - **Retrieval-Aware Residual Subspace (RARS):** replacing the PCA residual basis with a score-error weighted basis improves the same frozen `M=32` sidecar setting from Recall@10 `0.6914` to `0.6999` under the same rank-16 int8 Top-40 correction budget. The paired-bootstrap difference over PCA is positive but narrowly crosses zero at the 95% level.
 - **FiQA RARS transfer:** on FiQA / BEIR with BGE-small, score-error weighted RARS Top40 improves frozen IVF-PQ from Recall@10 `0.2935` to `0.3235`, MRR@10 `0.2964` to `0.3220`, and nDCG@10 `0.2373` to `0.2587`. On MiniLM, proxy score-error alignment improves strongly, while qrels gains are smaller and alpha-sensitive: the best proxy-selected boundary basis improves Recall@10 `0.3446 → 0.3506` and nDCG@10 `0.2862 → 0.2880`, with MRR@10 essentially flat. The transfer result is therefore framed as model-sensitive validation rather than universal RARS superiority.
-- **Query-adaptive RARS diagnostics:** fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving the correction depth. Random 5-fold threshold routing shows simple single-feature gates do not robustly outperform fixed-depth activation, but oracle Top0/Top20/Top40 routing reaches Recall@10 `0.7103` with only `3.7` corrected candidates/query on average.
+- **Query-adaptive RARS diagnostics:** fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving the correction depth. Oracle Top0/Top20/Top40 routing reaches Recall@10 `0.7103` with only `1.1` corrected candidates/query, showing headroom, but 5-fold learned routers do not recover it: the best learned router reaches Recall@10 `0.6813` with `4.56` corrected candidates/query, below fixed Top20. This is retained as a negative diagnostic result.
 - **Cross-setting frozen-sidecar transfer:** the same rank-16 int8 Top-40 protocol produces positive Recall@10 point estimates on FiQA × BGE-small (`0.3287 → 0.3418`) and FiQA × MiniLM (`0.3358 → 0.3454`) without retuning. Their 95% paired-bootstrap intervals cross zero, so the transfer result is directional consistency rather than a universal significance claim.
 - **Compact fixed-budget Residual-PQ refinement:** bitmap/rank-prefix metadata and FP16 residual codebooks raise sidecar coverage to 77.8% (Compact-8bit) or 97.8% (Compact-4bit). Both compact layouts significantly improve low-rate `M=32` IVF-PQ; their differences from Uniform `M=48` are not statistically established on the held-out FiQA split.
 - **Candidate-side refinement ceiling:** oracle exact rescoring of compressed `M=32` Top-50 candidates reaches Recall@10 `0.3810`, exceeding uniform `M=48` at `0.3455`; practical sidecar coverage and code efficiency are the current bottlenecks.
@@ -1229,6 +1259,13 @@ results/
       proxy_diagnostics_summary.csv
       alpha_best_summary.csv
       topb_ablation_score_error_weighted.csv
+    learned_rars_router/
+      README.md
+      fixed_depth_metrics.csv
+      oracle_label_distribution.csv
+      router_5fold_summary.csv
+      router_strategy_comparison.csv
+      router_feature_importance.csv
     manifest.json
   rerank_fiqa_benchmark/
   fixed_budget_residual_pq/
@@ -1397,4 +1434,4 @@ FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
 → true multi-query cross-encoder batching for `/batch-search`
 ```
 
-The current branch captures the million-scale low-rate PQ / OPQ full-sweep milestone, the compact fixed-budget Residual-PQ extension, the frozen IVF-PQ PQ-residual sidecar retrofit study with cross-setting results for MS MARCO 1M × BGE-small, FiQA × BGE-small, and FiQA × MiniLM, the RARS retrieval-aware residual basis evaluation on MS MARCO 1M, and FiQA RARS transfer validation for both BGE-small and MiniLM. The optional reranker is intentionally disabled in the default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is stronger learned query-adaptive sidecar activation, followed by deployable sidecar serving and hybrid sparse-dense retrieval.
+The current branch captures the million-scale low-rate PQ / OPQ full-sweep milestone, the compact fixed-budget Residual-PQ extension, the frozen IVF-PQ PQ-residual sidecar retrofit study with cross-setting results for MS MARCO 1M × BGE-small, FiQA × BGE-small, and FiQA × MiniLM, the RARS retrieval-aware residual basis evaluation on MS MARCO 1M, FiQA RARS transfer validation for both BGE-small and MiniLM, and learned query-adaptive RARS router diagnostics. The optional reranker is intentionally disabled in the default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is to move beyond handcrafted routing features toward stronger learned query-adaptive activation, followed by deployable sidecar serving and hybrid sparse-dense retrieval.
