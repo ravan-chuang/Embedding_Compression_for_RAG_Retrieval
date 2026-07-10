@@ -20,6 +20,7 @@ This project separates two questions that are often conflated:
 - Includes fixed-budget Residual-PQ refinement with oracle ceilings, compact bitmap/rank-prefix sidecars, FP16 residual codebooks, strict storage accounting, and paired-bootstrap significance tests.
 - Adds a frozen-index **PQ-residual sidecar** study: a rank-16, per-dimension int8 correction layer that reranks only top ANN candidates without retraining or rewriting the original IVF-PQ index; evaluated on MS MARCO 1M × BGE-small and zero-retuning FiQA transfers with BGE-small and MiniLM.
 - Adds **Retrieval-Aware Residual Subspace (RARS)**: a score-error weighted residual basis that improves the frozen MS MARCO 1M sidecar result from Recall@10 `0.6914` with a PCA basis to `0.6999` under the same rank-16 int8 Top-40 correction budget.
+- Adds **query-adaptive RARS gate diagnostics**: fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving correction depth; oracle Top0/Top20/Top40 routing reaches Recall@10 `0.7103` with only `3.7` corrected candidates/query on average.
 - Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
 - Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
@@ -546,14 +547,37 @@ The best qrels setting in this sweep is `alpha=0.75`.
 
 Top-20 captures nearly all of the RARS-Score gain, while Top-40 is the best observed operating point. Correcting deeper than Top-40 does not improve qrels metrics on this split. This motivates future query-adaptive correction-depth selection.
 
+### Query-adaptive correction diagnostics
+
+A follow-up diagnostic evaluates whether RARS correction depth can be selected per query from ANN score uncertainty features. The strongest current cost-aware operating point is fixed Top20 correction: it reaches Recall@10 `0.6989`, within `0.0010` of fixed Top40 (`0.6999`), while halving correction depth from 40 to 20 candidates/query.
+
+Random 5-fold threshold routing shows that simple one-dimensional score-margin gates do not robustly outperform fixed-depth activation. However, an oracle router over Top0/Top20/Top40 reaches Recall@10 `0.7103` with only `3.7` corrected candidates/query on average, suggesting substantial headroom for future learned query-adaptive routing.
+
+| Strategy | Recall@10 | Success@10 | MRR@10 | nDCG@10 | Avg corrected candidates |
+|:--|--:|--:|--:|--:|--:|
+| Always Top0 | 0.6628 | 0.6740 | 0.4659 | 0.5099 | 0.0 |
+| Always Top20 | 0.6989 | 0.7090 | 0.4845 | 0.5324 | 20.0 |
+| Always Top40 | 0.6999 | 0.7100 | 0.4845 | 0.5325 | 40.0 |
+| Best train-recall gate, target Top20 | 0.6979 | 0.7080 | 0.4840 | 0.5317 | 19.38 |
+| Best train-recall gate, target Top40 | 0.6989 | 0.7090 | 0.4839 | 0.5318 | 38.24 |
+| Cheapest within 0.001 train Recall, target Top20 | 0.6944 | 0.7040 | 0.4815 | 0.5289 | 15.32 |
+| Cheapest within 0.001 train Recall, target Top40 | 0.6949 | 0.7050 | 0.4819 | 0.5292 | 27.56 |
+
+The correct interpretation is conservative: fixed Top20 is the strongest current cost-aware deployment setting, while simple single-feature gates are retained as a negative/diagnostic result rather than a completed adaptive-routing method.
+
+See [`query_adaptive_rars_gate_diagnostics.md`](results/retrieval_aware_residual_basis/query_adaptive_rars_gate_diagnostics.md).
+
 ### Reproducible result package
 
-The committed RARS package contains qrels summaries, proxy diagnostics, alpha and Top-B ablations, paired-bootstrap results, basis metadata, and a SHA-256 manifest:
+The committed RARS package contains qrels summaries, proxy diagnostics, alpha and Top-B ablations, query-adaptive gate diagnostics, paired-bootstrap results, basis metadata, and a SHA-256 manifest:
 
 - [RARS result README](results/retrieval_aware_residual_basis/README.md)
 - [main qrels table](results/retrieval_aware_residual_basis/basis_qrels_eval_main.csv)
 - [RARS-Score alpha sweep](results/retrieval_aware_residual_basis/score_error_weighted_alpha_qrels_sweep.csv)
 - [RARS-Score Top-B ablation](results/retrieval_aware_residual_basis/score_error_weighted_topb_qrels_ablation.csv)
+- [query-adaptive gate diagnostics](results/retrieval_aware_residual_basis/query_adaptive_rars_gate_diagnostics.md)
+- [Gate 1b 5-fold strategy summary](results/retrieval_aware_residual_basis/gate1b_5fold_strategy_summary.csv)
+- [Gate 1b 5-fold oracle summary](results/retrieval_aware_residual_basis/gate1b_5fold_oracle_router_summary.csv)
 - [final comparison table](results/retrieval_aware_residual_basis/rars_final_comparison_qrels.csv)
 - [paired-bootstrap comparison](results/retrieval_aware_residual_basis/paired_bootstrap_best_rars_score_vs_pca.json)
 - [integrity manifest](results/retrieval_aware_residual_basis/manifest.json)
@@ -773,6 +797,7 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 - **Frozen IVF-PQ retrofit sidecar (MS MARCO 1M):** a rank-16 int8 PQ-residual sidecar improves the fixed `M=32` IVF-PQ operating point from Recall@10 `0.6628` to `0.6914` (`+0.0287`; paired-bootstrap 95% CI `[+0.0147, +0.0430]`) while adding 16 bytes/document and correcting only Top-40 candidates. It is a frozen-index enhancement, not a same-byte replacement for a higher-rate PQ index.
 - **Retrieval-Aware Residual Subspace (RARS):** replacing the PCA residual basis with a score-error weighted basis improves the same frozen `M=32` sidecar setting from Recall@10 `0.6914` to `0.6999` under the same rank-16 int8 Top-40 correction budget. The paired-bootstrap difference over PCA is positive but narrowly crosses zero at the 95% level.
+- **Query-adaptive RARS diagnostics:** fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving the correction depth. Random 5-fold threshold routing shows simple single-feature gates do not robustly outperform fixed-depth activation, but oracle Top0/Top20/Top40 routing reaches Recall@10 `0.7103` with only `3.7` corrected candidates/query on average.
 - **Cross-setting frozen-sidecar transfer:** the same rank-16 int8 Top-40 protocol produces positive Recall@10 point estimates on FiQA × BGE-small (`0.3287 → 0.3418`) and FiQA × MiniLM (`0.3358 → 0.3454`) without retuning. Their 95% paired-bootstrap intervals cross zero, so the transfer result is directional consistency rather than a universal significance claim.
 - **Compact fixed-budget Residual-PQ refinement:** bitmap/rank-prefix metadata and FP16 residual codebooks raise sidecar coverage to 77.8% (Compact-8bit) or 97.8% (Compact-4bit). Both compact layouts significantly improve low-rate `M=32` IVF-PQ; their differences from Uniform `M=48` are not statistically established on the held-out FiQA split.
 - **Candidate-side refinement ceiling:** oracle exact rescoring of compressed `M=32` Top-50 candidates reaches Recall@10 `0.3810`, exceeding uniform `M=48` at `0.3455`; practical sidecar coverage and code efficiency are the current bottlenecks.
@@ -1097,6 +1122,11 @@ results/
     score_error_weighted_topb_qrels_ablation.csv
     rars_final_comparison_qrels.csv
     paired_bootstrap_best_rars_score_vs_pca.json
+    query_adaptive_rars_gate_diagnostics.md
+    query_adaptive_gate0_summary.csv
+    gate1_train_test_summary.csv
+    gate1b_5fold_strategy_summary.csv
+    gate1b_5fold_oracle_router_summary.csv
     manifest.json
   rerank_fiqa_benchmark/
   fixed_budget_residual_pq/
@@ -1172,7 +1202,8 @@ requirements-ci.txt
 4. Reconstruct the current 1M candidate cache from the frozen index; do not reuse earlier Gate1 candidate caches from incompatible index/corpus states.
 5. Train the PCA, RARS-Score, and RARS-Boundary residual bases under the same rank-16 sidecar budget.
 6. Build int8 coefficients, run candidate-score proxy diagnostics, qrels evaluation, alpha and Top-B ablations, and paired-bootstrap comparisons.
-7. Export the summary artifacts into `results/retrieval_aware_residual_basis/` and regenerate the package manifest after removing large memmaps, sidecar code arrays, residual caches, and candidate caches.
+7. Run query-adaptive correction diagnostics: Gate 0 same-split oracle analysis, Gate 1 sorted split diagnostic, and Gate 1b random 5-fold threshold routing.
+8. Export the summary artifacts into `results/retrieval_aware_residual_basis/` and regenerate the package manifest after removing large memmaps, sidecar code arrays, residual caches, and candidate caches.
 
 
 
