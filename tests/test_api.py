@@ -16,6 +16,8 @@ class FakeRetriever:
         }
         self.documents = [{"doc_id": "doc-1"}] * 3
         self.reranker = FakeReranker()
+        self.sidecar = None
+        self.sidecar_artifact_dir = None
 
     def search(
         self,
@@ -24,6 +26,8 @@ class FakeRetriever:
         nprobe: int | None,
         rerank: bool = False,
         candidate_k: int | None = None,
+        sidecar: bool = False,
+        sidecar_top_b: int | None = None,
     ) -> dict:
         return {
             "query": query,
@@ -31,6 +35,8 @@ class FakeRetriever:
             "nprobe": nprobe,
             "rerank_enabled": rerank,
             "candidate_k": candidate_k or top_k,
+            "sidecar_enabled": sidecar,
+            "sidecar_top_b": sidecar_top_b,
             "latency_ms": 1.25,
             "index_type": "IndexIVFPQ",
             "results": [
@@ -51,6 +57,8 @@ class FakeRetriever:
         nprobe: int | None,
         rerank: bool = False,
         candidate_k: int | None = None,
+        sidecar: bool = False,
+        sidecar_top_b: int | None = None,
     ) -> dict:
         return {
             "count": len(queries),
@@ -58,6 +66,8 @@ class FakeRetriever:
             "nprobe": nprobe,
             "rerank_enabled": rerank,
             "candidate_k": candidate_k or top_k,
+            "sidecar_enabled": sidecar,
+            "sidecar_top_b": sidecar_top_b,
             "latency_ms_total": 2.5,
             "latency_ms_per_query": 1.25,
             "index_type": "IndexIVFPQ",
@@ -68,6 +78,8 @@ class FakeRetriever:
                     nprobe,
                     rerank=rerank,
                     candidate_k=candidate_k,
+                    sidecar=sidecar,
+                    sidecar_top_b=sidecar_top_b,
                 )
                 for query in queries
             ],
@@ -84,6 +96,10 @@ def test_health_reports_service_metadata(monkeypatch) -> None:
     assert payload["document_count"] == 3
     assert payload["reranker_enabled"] is True
     assert payload["reranker_model"] == "fake/reranker"
+    assert payload["sidecar_enabled"] is False
+    assert payload["sidecar_artifact_dir"] is None
+    assert payload["sidecar_default_top_b"] is None
+    assert payload["sidecar_max_top_b"] is None
 
 
 def test_search_endpoint_delegates_rerank_options(monkeypatch) -> None:
@@ -96,6 +112,8 @@ def test_search_endpoint_delegates_rerank_options(monkeypatch) -> None:
             nprobe=8,
             rerank=True,
             candidate_k=10,
+            sidecar=True,
+            sidecar_top_b=20,
         )
     )
 
@@ -104,6 +122,8 @@ def test_search_endpoint_delegates_rerank_options(monkeypatch) -> None:
     assert payload["nprobe"] == 8
     assert payload["rerank_enabled"] is True
     assert payload["candidate_k"] == 10
+    assert payload["sidecar_enabled"] is True
+    assert payload["sidecar_top_b"] == 20
     assert payload["results"][0]["doc_id"] == "doc-1"
 
 
@@ -117,12 +137,16 @@ def test_batch_search_endpoint_delegates_rerank_options(monkeypatch) -> None:
             nprobe=16,
             rerank=True,
             candidate_k=20,
+            sidecar=True,
+            sidecar_top_b=40,
         )
     )
 
     assert payload["count"] == 2
     assert payload["rerank_enabled"] is True
     assert payload["candidate_k"] == 20
+    assert payload["sidecar_enabled"] is True
+    assert payload["sidecar_top_b"] == 40
     assert [item["query"] for item in payload["items"]] == [
         "first",
         "second",
