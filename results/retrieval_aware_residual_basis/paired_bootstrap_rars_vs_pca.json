@@ -1,0 +1,164 @@
+{
+  "boundary075_top40_vs_pca1_top40": {
+    "recall_at_10": {
+      "metric": "recall_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.0035000001080334187,
+      "ci95_low": -0.007499999832361937,
+      "ci95_high": 0.014499999582767487,
+      "fraction_le_zero": 0.2845,
+      "positive_queries": 18,
+      "zero_queries": 968,
+      "negative_queries": 14,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "success_at_10": {
+      "metric": "success_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.004000000189989805,
+      "ci95_low": -0.007000000216066837,
+      "ci95_high": 0.014999999664723873,
+      "fraction_le_zero": 0.2703,
+      "positive_queries": 18,
+      "zero_queries": 968,
+      "negative_queries": 14,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "mrr_at_10": {
+      "metric": "mrr_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.00010714244854170829,
+      "ci95_low": -0.00929856114089489,
+      "ci95_high": 0.009489904157817364,
+      "fraction_le_zero": 0.4929,
+      "positive_queries": 113,
+      "zero_queries": 782,
+      "negative_queries": 105,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "ndcg_at_10": {
+      "metric": "ndcg_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.00019098329357802868,
+      "ci95_low": -0.007672104053199291,
+      "ci95_high": 0.007940966635942459,
+      "fraction_le_zero": 0.4792,
+      "positive_queries": 115,
+      "zero_queries": 779,
+      "negative_queries": 106,
+      "n_boot": 20000,
+      "seed": 42
+    }
+  },
+  "boundary075_top40_vs_pca075_top40": {
+    "recall_at_10": {
+      "metric": "recall_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.007499999832361937,
+      "ci95_low": -0.0024999999441206455,
+      "ci95_high": 0.017500000074505806,
+      "fraction_le_zero": 0.0744,
+      "positive_queries": 17,
+      "zero_queries": 974,
+      "negative_queries": 9,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "success_at_10": {
+      "metric": "success_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.00800000037997961,
+      "ci95_low": -0.0020000000949949026,
+      "ci95_high": 0.017999999225139618,
+      "fraction_le_zero": 0.0683,
+      "positive_queries": 17,
+      "zero_queries": 974,
+      "negative_queries": 9,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "mrr_at_10": {
+      "metric": "mrr_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": -0.0014476189389824867,
+      "ci95_low": -0.009891289286315441,
+      "ci95_high": 0.0068275113590061665,
+      "fraction_le_zero": 0.6295,
+      "positive_queries": 106,
+      "zero_queries": 796,
+      "negative_queries": 98,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "ndcg_at_10": {
+      "metric": "ndcg_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": -9.161698835669085e-05,
+      "ci95_low": -0.007056616246700287,
+      "ci95_high": 0.006675800308585167,
+      "fraction_le_zero": 0.50815,
+      "positive_queries": 107,
+      "zero_queries": 793,
+      "negative_queries": 100,
+      "n_boot": 20000,
+      "seed": 42
+    }
+  },
+  "score_error075_top40_vs_pca1_top40": {
+    "recall_at_10": {
+      "metric": "recall_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.008500000461935997,
+      "ci95_low": -0.0020000000949949026,
+      "ci95_high": 0.019500000402331352,
+      "fraction_le_zero": 0.06615,
+      "positive_queries": 20,
+      "zero_queries": 969,
+      "negative_queries": 11,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "success_at_10": {
+      "metric": "success_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.008999999612569809,
+      "ci95_low": -0.0020000000949949026,
+      "ci95_high": 0.019999999552965164,
+      "fraction_le_zero": 0.06205,
+      "positive_queries": 20,
+      "zero_queries": 969,
+      "negative_queries": 11,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "mrr_at_10": {
+      "metric": "mrr_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.005303173791617155,
+      "ci95_low": -0.0035619044210761786,
+      "ci95_high": 0.014155169017612934,
+      "fraction_le_zero": 0.12235,
+      "positive_queries": 113,
+      "zero_queries": 791,
+      "negative_queries": 96,
+      "n_boot": 20000,
+      "seed": 42
+    },
+    "ndcg_at_10": {
+      "metric": "ndcg_at_10",
+      "n_queries": 1000,
+      "observed_mean_diff": 0.00501383887603879,
+      "ci95_low": -0.002320145256817341,
+      "ci95_high": 0.012380766682326794,
+      "fraction_le_zero": 0.09135,
+      "positive_queries": 115,
+      "zero_queries": 785,
+      "negative_queries": 100,
+      "n_boot": 20000,
+      "seed": 42
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "top_l": 100,
+  "nprobe": 16,
+  "num_queries": 1000,
+  "index_path": "/content/gdrive/MyDrive/rag-pq-checkpoints/msmarco_1m_pq_residual_gate3/frozen_ivfpq_m32_nlist512.index",
+  "candidate_id_space": "internal row ids for current 1M index"
+}

@@ -1,0 +1,11 @@
+{
+  "dataset": "MS MARCO deterministic 1M passage subset",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "dimension": 384,
+  "frozen_index": "IVF-PQ M=32 nlist=512 nprobe=16",
+  "candidate_top_l": 100,
+  "correction_top_b": 40,
+  "final_k": 10,
+  "sidecar_rank": 16,
+  "note": "This notebook rebuilds candidate cache from the current 1M frozen index; stale Gate1 candidate caches are intentionally not used."
+}

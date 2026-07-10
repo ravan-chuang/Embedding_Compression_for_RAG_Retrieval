@@ -1,0 +1,201 @@
+{
+  "package": "retrieval_aware_residual_basis_msmarco_1m",
+  "description": "Retrieval-aware residual basis evaluation for frozen IVF-PQ sidecar, including RARS-Score alpha and Top-B ablations.",
+  "files": [
+    {
+      "path": "basis_alpha_sweep_proxy.csv",
+      "bytes": 6801,
+      "sha256": "a42c7e2ba1156164450f1619a8f09700b30b6ef4f5bb9cda445e85ac41a49f23"
+    },
+    {
+      "path": "basis_alpha_sweep_proxy_current.csv",
+      "bytes": 5771,
+      "sha256": "163b781a709eca6df0d3e4410243ae4d64f861d3bd830a6083cfff687c691f4c"
+    },
+    {
+      "path": "basis_alpha_sweep_proxy_mapped.csv",
+      "bytes": 6801,
+      "sha256": "a42c7e2ba1156164450f1619a8f09700b30b6ef4f5bb9cda445e85ac41a49f23"
+    },
+    {
+      "path": "basis_correction_error_diagnostic.csv",
+      "bytes": 592,
+      "sha256": "2c10d0e6400c8e58b2300ec61557d9667c67203302ad14c980c37f466f815f14"
+    },
+    {
+      "path": "basis_correction_error_diagnostic_current.csv",
+      "bytes": 572,
+      "sha256": "6d74d92fdf0b7f0e39fb910451c2fb9b7654a2ecb1585699aec10d0a4ac5b868"
+    },
+    {
+      "path": "basis_pca_existing_rank16.npy",
+      "bytes": 24704,
+      "sha256": "88ebdb7103f42551703112a3c132f98c2950c333334684abf69316f01c0c334c"
+    },
+    {
+      "path": "basis_proxy_ablation.csv",
+      "bytes": 528,
+      "sha256": "086ec29961b4a618f0711944e97ce0a802a605d84febe35b48d721c28bceaae5"
+    },
+    {
+      "path": "basis_proxy_best_summary_current.csv",
+      "bytes": 1068,
+      "sha256": "9e483027a16f20bff45f0dee12ef960dd40807eba2da256c6ecff9d105fc2791"
+    },
+    {
+      "path": "basis_qrels_eval_main.csv",
+      "bytes": 933,
+      "sha256": "758916015693c6b5daaa2f88f458e62cb62999fbac4a8b3ccdb4ed005a2505b9"
+    },
+    {
+      "path": "basis_score_error_weighted_rank16.npy",
+      "bytes": 24704,
+      "sha256": "b6581db22ba4947517ed5907caae602020fefc37b05fbed948851599db2d8031"
+    },
+    {
+      "path": "basis_score_error_weighted_rank16_internal.npy",
+      "bytes": 24704,
+      "sha256": "c11f82f1ff4b66633f6120d5f669e09647fee59ef7657d9856b14bc18849ebbf"
+    },
+    {
+      "path": "basis_top10_boundary_weighted_rank16.npy",
+      "bytes": 24704,
+      "sha256": "ce719e0d82398aa153d4aef1845710157f2a531e77b35bd5fa43db7dfb86dc59"
+    },
+    {
+      "path": "basis_top10_boundary_weighted_rank16_internal.npy",
+      "bytes": 24704,
+      "sha256": "7027512ef0d9b05c6fabe9e4cf879074990088aefa06416a1410724b39cf20ca"
+    },
+    {
+      "path": "best_basis_topb_proxy_ablation_current.csv",
+      "bytes": 776,
+      "sha256": "00dc7c5a626139937e666af751df97969e4d3ab0b730052597b485ce873dffd9"
+    },
+    {
+      "path": "codes_pca_existing_rank16 (1).int8.memmap",
+      "bytes": 16000000,
+      "sha256": "58116575c25840084ded07646fd08f5e7fb8e75ee7896e274ea5040f142d5464"
+    },
+    {
+      "path": "codes_pca_existing_rank16.int8.memmap",
+      "bytes": 16000000,
+      "sha256": "58116575c25840084ded07646fd08f5e7fb8e75ee7896e274ea5040f142d5464"
+    },
+    {
+      "path": "codes_score_error_weighted_rank16 (1).int8.memmap",
+      "bytes": 16000000,
+      "sha256": "2d17d1c8197c07dc13f8cc36a59ad23c1587d063446a1e5b7011a13530dac0f3"
+    },
+    {
+      "path": "codes_score_error_weighted_rank16.int8.memmap",
+      "bytes": 16000000,
+      "sha256": "7356b24031abaef1988528de6e55721949bd4372826be6a0fa92e8edcfe81245"
+    },
+    {
+      "path": "codes_top10_boundary_weighted_rank16 (1).int8.memmap",
+      "bytes": 16000000,
+      "sha256": "27dd18aa04bc6816936ebbc3c35695180ed7198a9e68d21ada85c8d5fb8d4439"
+    },
+    {
+      "path": "codes_top10_boundary_weighted_rank16.int8.memmap",
+      "bytes": 16000000,
+      "sha256": "52e82c866013d6a4874c1a79221bfe34f4d71504182f3bd45f572405da029304"
+    },
+    {
+      "path": "config_fixed.json",
+      "bytes": 413,
+      "sha256": "401ed4b7edbfc1d596c2fd56854e4c7de526e1abc698b0fba9fa3abf932706c4"
+    },
+    {
+      "path": "current_1m_candidate_cache/candidate_cutoff_margin.npy",
+      "bytes": 400128,
+      "sha256": "8439c8b90a3a6e9d5d9de97be908daf09399fcab35bdedddbf906e3184127f8d"
+    },
+    {
+      "path": "current_1m_candidate_cache/candidate_exact_scores.npy",
+      "bytes": 400128,
+      "sha256": "cc10a8780f279bb20e72ff20499d67f7e105fff478f937eceda381f6b510b347"
+    },
+    {
+      "path": "current_1m_candidate_cache/candidate_is_exact_top10.npy",
+      "bytes": 100128,
+      "sha256": "a2e02a21acc04d9756a0cde5c8b224f4bf9a371403422118015c898a3ef56a6a"
+    },
+    {
+      "path": "current_1m_candidate_cache/ivfpq_m32_nprobe16_top100_internal_rows.npy",
+      "bytes": 800128,
+      "sha256": "499e86d308606b33af672013f923e495fd48b7a6e26196150448a13848306066"
+    },
+    {
+      "path": "current_1m_candidate_cache/ivfpq_m32_nprobe16_top100_scores.npy",
+      "bytes": 400128,
+      "sha256": "6d184c7fe1d47f18f0e1ccfaf14e9123c985658a62a06795d11f1a2478ed6e4c"
+    },
+    {
+      "path": "current_1m_candidate_cache/metadata.json",
+      "bytes": 245,
+      "sha256": "f0194d8a531a68c39b8f43751d28cdea8b363c085d174e5eb8b001517fc9db2d"
+    },
+    {
+      "path": "gate1_query_indices_in_query_vectors.npy",
+      "bytes": 8128,
+      "sha256": "b49bf1d44a9469413daa0f4327b40953f3e78cf63eff2298652a02970b197144"
+    },
+    {
+      "path": "paired_bootstrap_best_rars_score_vs_pca.json",
+      "bytes": 1415,
+      "sha256": "3db1ec2a2c9f1bdbead9d93e34e56eecb604305bec1ffe35399305ce4c9c2daf"
+    },
+    {
+      "path": "paired_bootstrap_rars_vs_pca.json",
+      "bytes": 4685,
+      "sha256": "1d8caecf75518a755891235bfdd900f3e2779271d910a34acd58aaaeed610cbc"
+    },
+    {
+      "path": "paper_style_qrels_result_table.csv",
+      "bytes": 768,
+      "sha256": "c16d869856ce012a9dd1578ce05d0aa369fb2443ab77d2c5eb9761f3e5b4a937"
+    },
+    {
+      "path": "rars_final_comparison_qrels.csv",
+      "bytes": 1077,
+      "sha256": "9c339de3dd12bf6d992f1cc28201ff2badbf83cf1224fae1fb8a5169a24294be"
+    },
+    {
+      "path": "residual_ivfpq_m32.float32.memmap",
+      "bytes": 1536000000,
+      "sha256": "e14263f36efe90941991548ce5dbb298c707d2e17495a64b4e5216f0471c982d"
+    },
+    {
+      "path": "scales_pca_existing_rank16.float32.npy",
+      "bytes": 192,
+      "sha256": "b16c0a72807a7d21f18d57aa3a89c50533b5fe0d52e5c86bec5e8262b15b5194"
+    },
+    {
+      "path": "scales_score_error_weighted_rank16.float32.npy",
+      "bytes": 192,
+      "sha256": "b4fb8372f72898d7ce7c64276e626a35d5d138e3098a5e0f0b2c823fb7d18c33"
+    },
+    {
+      "path": "scales_top10_boundary_weighted_rank16.float32.npy",
+      "bytes": 192,
+      "sha256": "b9591bd0d163528e633ea5262eef6b426e051c04a70f37973c44b8397728faa3"
+    },
+    {
+      "path": "score_error_weighted_alpha_qrels_sweep.csv",
+      "bytes": 1413,
+      "sha256": "04f344fe92033b63f57746b11050e357d153756ebd86e94770d68a7c17ed5630"
+    },
+    {
+      "path": "score_error_weighted_topb_qrels_ablation.csv",
+      "bytes": 1274,
+      "sha256": "1f4295ef7607c102fc03d9ef9442b9e4cd15d79d2fb61c33ff9d1653062e85b3"
+    },
+    {
+      "path": "topb_depth_qrels_ablation.csv",
+      "bytes": 857,
+      "sha256": "d4db14b131349ee8f2132bb36eadd0772717b0bd90c389ddc89bf5155e1d8110"
+    }
+  ]
+}
