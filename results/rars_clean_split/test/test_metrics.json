@@ -1,0 +1,85 @@
+{
+  "protocol": "rars_clean_query_split_v1",
+  "evaluation_split": "untouched_test",
+  "test_query_count": 1000,
+  "selected_config": {
+    "protocol": "rars_clean_query_split_v1",
+    "selection_split": "validation",
+    "basis_variant": "score_error_weighted",
+    "rank": 16,
+    "alpha": 0.75,
+    "top_b": 40,
+    "candidate_k": 100,
+    "final_k": 10,
+    "base_index": {
+      "nlist": 512,
+      "nprobe": 16,
+      "m": 32,
+      "nbits": 8
+    },
+    "validation_proxy": {
+      "corrected_top10_overlap": 0.5748999999999999,
+      "overlap_gain": 0.03469999999999984,
+      "mse_reduction_pct": 8.967014559364578
+    },
+    "test_evaluated": false
+  },
+  "verified_freeze_sha256": {
+    "selected_config.json": "45e50024077a03394a1063c9c165aa185cc87ce49a6c1f61af960db461ff4113",
+    "manifest.json": "e9f4f6f079bad8e7001413934bd2609d55a318cee452443dd6102bd2190e9c3b",
+    "bases/score_error_weighted_rank16.npy": "89388d2abc22b6682016f2219791e5c29488e2ccbdc5fdff06a918b5eacad60f",
+    "sidecars/scales_score_error_weighted_rank16.float32.npy": "4c63ddb7c546e677e80acb4122d4c6c30a6206e88eebd16f1640f99c8607213e",
+    "validation_selection.csv": "e970315777e37433c7a37282c9d7bbe7b3994ebd5b7cffbe5e748fcbdaefe112"
+  },
+  "qrels": {
+    "num_queries": 1000,
+    "missing_qrels": 0,
+    "zero_positive_qrels": 0
+  },
+  "metrics": {
+    "ivfpq_m32": {
+      "recall@10": 0.6833333333333333,
+      "success@10": 0.691,
+      "mrr@10": 0.4721543650793651,
+      "ndcg@10": 0.5203988191083827
+    },
+    "rars_frozen": {
+      "recall@10": 0.7073333333333334,
+      "success@10": 0.718,
+      "mrr@10": 0.4850583333333333,
+      "ndcg@10": 0.535955430682316
+    }
+  },
+  "paired_bootstrap": {
+    "rars_frozen_minus_ivfpq_m32": {
+      "recall@10": {
+        "difference": 0.024,
+        "ci95_low": 0.0105,
+        "ci95_high": 0.03783333333333333,
+        "probability_difference_gt_0": 0.9999
+      },
+      "success@10": {
+        "difference": 0.027,
+        "ci95_low": 0.013,
+        "ci95_high": 0.041,
+        "probability_difference_gt_0": 1.0
+      },
+      "mrr@10": {
+        "difference": 0.012903968253968253,
+        "ci95_low": 0.0030170337301587305,
+        "ci95_high": 0.02289691468253967,
+        "probability_difference_gt_0": 0.9951
+      },
+      "ndcg@10": {
+        "difference": 0.01555661157393329,
+        "ci95_low": 0.006813715381307211,
+        "ci95_high": 0.024377053958044844,
+        "probability_difference_gt_0": 0.9998
+      }
+    }
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260712
+  }
+}
