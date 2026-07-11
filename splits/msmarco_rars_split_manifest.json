@@ -19,5 +19,14 @@
       "count": 1000,
       "sha256": "d363de0e3548f4d2006f44d6ea3837e89dd2a299f2ea561719e9b2310bef631e"
     }
+  },
+  "source_qids_sha256": "427d11e73bbe5504f7955b3738e9ffc444c9d93e7c8ac2ccf38fb4a05830749f",
+  "source_qids_ordered": true,
+  "query_vector_rows": 6980,
+  "query_vector_dimension": 384,
+  "mapping_validation": {
+    "query_vectors_path": "artifacts/_rars_benchmark_inputs/query_vectors.fp32.npy",
+    "legacy_split_path": "artifacts/_rars_benchmark_inputs/heldout_eval_split.json",
+    "legacy_1000_row_mapping_verified": true
   }
 }
