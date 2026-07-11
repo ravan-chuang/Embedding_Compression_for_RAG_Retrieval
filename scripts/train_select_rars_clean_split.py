@@ -361,6 +361,11 @@ def main() -> None:
     index = faiss.read_index(str(args.index))
     index.nprobe = args.nprobe
 
+    # IVF indexes require a DirectMap for reconstruct_batch(row_ids).
+    if hasattr(index, "make_direct_map"):
+        index.make_direct_map()
+        print("Initialized Faiss direct map for reconstruction.")
+
     train_ann_rows, train_ann, train_exact = load_or_build_split_cache(
         "train", args.output_dir, Q, X, index, train_rows,
         args.top_l, args.batch_size,
@@ -432,7 +437,20 @@ def main() -> None:
         ascending=False,
     )
     results.to_csv(args.output_dir / "validation_selection.csv", index=False)
-    best = results.iloc[0].to_dict()
+    max_gain = float(results["overlap_gain"].max())
+
+    eligible = results[
+        results["overlap_gain"] >= 0.90 * max_gain
+    ].copy()
+
+    best = (
+        eligible.sort_values(
+            ["top_b", "corrected_top10_overlap", "mse_reduction_pct"],
+            ascending=[True, False, False],
+        )
+        .iloc[0]
+        .to_dict()
+    )
 
     selected = {
         "protocol": "rars_clean_query_split_v1",
