@@ -1343,7 +1343,7 @@ See [Docker API](docs/docker_api.md).
 
 ### Testing and CI
 
-The repository includes **10 offline unit tests** for artifact consistency, retriever behavior, endpoint logic, single-query reranking, multi-query reranking, and batch rerank integration.
+The repository includes **19 passing offline tests** for artifact consistency, retriever behavior, endpoint logic, single-query reranking, multi-query reranking, and batch rerank integration.
 
 ```bash
 pip install -r requirements-dev.txt
