@@ -1,0 +1,23 @@
+{
+  "protocol": "msmarco_rars_clean_query_split_v1",
+  "seed": 20260712,
+  "source": "data/msmarco_dev_qids.json",
+  "source_count": 6980,
+  "splits": {
+    "train": {
+      "path": "splits/msmarco_rars_train_qids.json",
+      "count": 4980,
+      "sha256": "1c648979fba4b81a484c5dcc2c6c11c650193b35eab2f9a3f12350d9f520d0c3"
+    },
+    "validation": {
+      "path": "splits/msmarco_rars_validation_qids.json",
+      "count": 1000,
+      "sha256": "0f5009cd72dc172fa6301288cc2785d3094f16e365347c3364ffd2ce397048a9"
+    },
+    "test": {
+      "path": "splits/msmarco_rars_test_qids.json",
+      "count": 1000,
+      "sha256": "d363de0e3548f4d2006f44d6ea3837e89dd2a299f2ea561719e9b2310bef631e"
+    }
+  }
+}
