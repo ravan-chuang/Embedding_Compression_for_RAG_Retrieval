@@ -34,3 +34,7 @@ msmarco_scale_results/*.pt
 
 # Colab resumable benchmark checkpoints
 results/msmarco_1000000_*/
+
+# Local RARS sidecar artifacts
+artifacts/_rars_export_inputs/
+artifacts/msmarco_rars_sidecar_m32_rank16/
