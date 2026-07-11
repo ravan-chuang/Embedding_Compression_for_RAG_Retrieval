@@ -5,28 +5,45 @@
 [![Faiss](https://img.shields.io/badge/ANN-Faiss-blue)](https://github.com/facebookresearch/faiss)
 [![Docker Verified](https://img.shields.io/badge/Docker-verified-2496ED)](docs/docker_api.md)
 
-A GPU benchmark and deployable retrieval system for embedding compression and approximate nearest-neighbor search in Retrieval-Augmented Generation (RAG).
+A research-grade benchmark, frozen-index retrofit study, and deployable retrieval system for embedding compression and approximate nearest-neighbor search in Retrieval-Augmented Generation (RAG).
 
-This project separates two questions that are often conflated:
+The repository separates three questions that are often conflated:
 
-1. **Compression quality:** How much retrieval quality remains after compressing document embeddings?
-2. **Retrieval efficiency:** How much latency and throughput improvement is obtained when searching directly in compressed Product Quantization (PQ) code space?
+1. **Compression quality:** How much retrieval quality remains after document embeddings are compressed?
+2. **Compressed-domain efficiency:** What latency and throughput are obtained when Faiss searches PQ codes directly?
+3. **Frozen-index recovery:** How much ranking quality can be recovered by attaching a compact residual sidecar without rebuilding or rewriting an existing IVF-PQ index?
+
+The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. On the held-out MS MARCO 1M evaluation, RARS Top20 improves Recall@10 from `0.66275` to `0.69892`, while a vectorized live-Faiss implementation adds `0.816 µs/query` of correction work in a 1,000-query batch.
+
+## Research Status
+
+| Area | Status |
+|---|---|
+| PQ / OPQ quality and GPU ADC benchmarking | Complete |
+| MS MARCO 1M low-rate sweep | Complete |
+| Frozen IVF-PQ residual sidecar | Complete |
+| Retrieval-Aware Residual Subspace (RARS) | Complete |
+| Deployable rank-16 int8 sidecar artifact | Complete |
+| FastAPI sidecar serving path | Complete |
+| Artifact-backed and live-Faiss benchmarks | Complete |
+| Paper-ready CSV / LaTeX table pipeline | Complete |
+| SIGIR short-paper manuscript | In preparation |
 
 ## Highlights
 
-- Evaluates Float32, INT8, INT4, PQ, OPQ, IVF-PQ, and OPQ-IVF-PQ.
-- Uses FiQA and SciFact / BEIR relevance benchmarks across MiniLM and BGE-small embedding models, plus a deterministic 1M-passage MS MARCO scale validation, instead of document-to-document nearest-neighbor proxies.
-- Measures Recall@5, Recall@10, MRR@10, nDCG@10, storage cost, latency, and QPS.
-- Includes fixed-budget Residual-PQ refinement with oracle ceilings, compact bitmap/rank-prefix sidecars, FP16 residual codebooks, strict storage accounting, and paired-bootstrap significance tests.
-- Adds a frozen-index **PQ-residual sidecar** study: a rank-16, per-dimension int8 correction layer that reranks only top ANN candidates without retraining or rewriting the original IVF-PQ index; evaluated on MS MARCO 1M × BGE-small and zero-retuning FiQA transfers with BGE-small and MiniLM.
-- Adds **Retrieval-Aware Residual Subspace (RARS)**: a score-error weighted residual basis that improves the frozen MS MARCO 1M sidecar result from Recall@10 `0.6914` with a PCA basis to `0.6999` under the same rank-16 int8 Top-40 correction budget.
-- Adds **query-adaptive RARS diagnostics**: fixed Top20 correction reaches Recall@10 `0.6989`, within `0.0010` of Top40 while halving correction depth; oracle Top0/Top20/Top40 routing shows headroom at Recall@10 `0.7103`, while 5-fold learned routers are retained as a negative diagnostic because they do not recover that headroom under the current feature set.
-- Adds **FiQA RARS cross-setting validation** across BGE-small and MiniLM: BGE-small shows clear qrels gains for score-error RARS Top40, while MiniLM shows strong proxy score-error alignment but smaller, alpha-sensitive qrels gains, making the transfer result deliberately conservative rather than overclaimed.
-- Implements genuine GPU compressed-domain retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
-- Exports a deployable MiniLM OPQ-IVF-PQ artifact, including the learned query-side rotation matrix required for serving.
-- Adds a deployable RARS sidecar serving foundation and optional FastAPI sidecar API path: `/search` and `/batch-search` can request fixed Top-B residual correction when a sidecar artifact is configured.
-- Ships a verified FastAPI retrieval service, Docker Compose deployment, metadata regeneration flow, unit tests, and GitHub Actions CI.
-- Includes an optional BGE cross-encoder reranking path after OPQ-IVF-PQ candidate retrieval, with experimental FiQA evaluation and true multi-query rerank batching.
+- Evaluates Float32, INT8, INT4, PQ, OPQ, IVF-PQ, and OPQ-IVF-PQ across FiQA, SciFact, and a deterministic 1M-passage MS MARCO benchmark.
+- Measures Recall@5, Recall@10, Success@10, MRR@10, nDCG@10, serialized storage, analytical code size, latency, and QPS.
+- Implements genuine compressed-domain GPU retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
+- Provides a complete low-rate MS MARCO 1M sweep over `M ∈ {24, 32, 48, 64, 96}` and `nprobe ∈ {4, 16, 32, 64}`.
+- Introduces a frozen-index rank-16 int8 residual sidecar that improves IVF-PQ `M=32` Recall@10 from `0.66275` to `0.69142` without retraining the coarse quantizer or rewriting PQ codes.
+- Introduces **RARS-Score**, a score-error weighted residual basis that improves the same frozen-index setting to Recall@10 `0.69992`.
+- Identifies **RARS Top20** as the preferred deployable operating point: Recall@10 `0.69892`, within `0.0010` of Top40 while halving correction depth.
+- Packages the 1M-document RARS sidecar as a deployable artifact with a `16.025 B/document` representation cost and `24.028 B/document` complete artifact cost including external document IDs.
+- Adds vectorized live-Faiss correction: on the recorded 14-thread CPU benchmark, Top20 requires `0.816 µs/query`, equal to `2.72%` of independently timed Faiss search cost; alternating paired measurements observed `5.41%` mean end-to-end overhead.
+- Verifies live-Faiss and cached candidates with score-close ratio `1.0` and row-position match `0.99988`.
+- Adds FastAPI `/search`, `/batch-search`, and `/health` support for optional fixed Top-B RARS correction.
+- Retains negative results rather than hiding them: higher-rate `M=48` remains stronger when rebuilding is allowed, RARS-vs-PCA confidence intervals cross zero, FiQA transfer is model-sensitive, learned routers do not beat fixed Top20, and the evaluated cross-encoder reranker does not justify its latency.
+- Generates reproducible paper-ready CSV and LaTeX tables directly from committed result artifacts.
 
 ## Benchmark Setup
 
@@ -42,7 +59,7 @@ This project separates two questions that are often conflated:
 | Retrieval metrics | Recall@5, Recall@10, MRR@10, nDCG@10 |
 | ANN backend | Faiss GPU IVF-PQ ADC |
 | GPU | NVIDIA Tesla T4 |
-| IVF configuration | FiQA / SciFact: `nlist=256`, representative `nprobe=16`; MS MARCO 1M: `nlist=4096` |
+| IVF configuration | FiQA / SciFact reference benchmarks: `nlist=256`; MS MARCO high-rate sweep: `nlist=4096`; frozen-index sidecar / RARS study: `nlist=512`; representative `nprobe=16` |
 
 ## Methods
 
@@ -701,6 +718,134 @@ The committed RARS package contains qrels summaries, proxy diagnostics, alpha an
 
 
 
+## Deployable RARS Artifact and Live Faiss Benchmark
+
+The final rank-16 int8 RARS sidecar is exported as a versioned artifact for the
+1,000,000-document frozen IVF-PQ `M=32` index.
+
+```text
+artifacts/msmarco_rars_sidecar_m32_rank16/
+├── basis.npy
+├── scales.npy
+├── codes.int8.npy
+├── doc_ids.npy
+├── sidecar_config.json
+└── manifest.json
+```
+
+### Storage accounting
+
+| Component | Total bytes | Bytes/document |
+|:--|--:|--:|
+| Int8 coefficient codes | 16,000,128 | 16.000128 |
+| Shared basis and scales amortized with codes | 16,025,024 | 16.025024 |
+| External document IDs | 8,000,128 | 8.000128 |
+| Complete deployable artifact | 24,027,749 | 24.027749 |
+
+The correct paper wording is:
+
+> The rank-16 int8 RARS representation requires 16.03 bytes per document, while the complete deployable artifact including external document-ID metadata requires 24.03 bytes per document.
+
+The external document IDs are reported separately because they are serving
+metadata rather than part of the residual representation itself.
+
+### Artifact-backed cached-candidate benchmark
+
+The artifact loader is tested against the committed Top-100 candidate cache and
+held-out qrels. It reproduces the expected retrieval metrics:
+
+| Method | Recall@10 | Success@10 | MRR@10 | nDCG@10 |
+|:--|--:|--:|--:|--:|
+| Frozen IVF-PQ `M=32` | 0.66275 | 0.674 | 0.46588 | 0.50991 |
+| RARS Top20 | 0.69892 | 0.709 | 0.48455 | 0.53236 |
+| RARS Top40 | 0.69992 | 0.710 | 0.48450 | 0.53251 |
+
+Detailed outputs are stored under
+[`results/retrieval_aware_residual_basis/sidecar_artifact_benchmark/`](results/retrieval_aware_residual_basis/sidecar_artifact_benchmark/).
+
+### Live Faiss benchmark
+
+The live benchmark executes the actual frozen Faiss `index.search()` call and
+then applies the artifact-backed RARS correction. It compares the original
+Python loop with a vectorized implementation and records search-only,
+correction-only, estimated-combined, and alternating paired end-to-end timing.
+
+The vectorized correction computes:
+
+```text
+q_proj = queries @ basis
+coeff  = int8_codes[candidate_rows] * scales
+delta  = einsum(coeff, q_proj)
+corrected_scores = ann_scores + alpha * delta
+```
+
+Recorded 1,000-query results:
+
+| Threads | Method | Recall@10 | Correction | Correction / Faiss | Paired E2E overhead |
+|--:|:--|--:|--:|--:|--:|
+| 1 | RARS Top20 | 0.69892 | 0.613 µs/query | 0.23% | 0.49% |
+| 1 | RARS Top40 | 0.69992 | 1.058 µs/query | 0.39% | 0.60% |
+| 14 | RARS Top20 | 0.69892 | 0.816 µs/query | 2.72% | 5.41% |
+| 14 | RARS Top40 | 0.69992 | 1.325 µs/query | 4.41% | 5.51% |
+
+Vectorization accelerates correction by approximately `8.9×` for Top20 and
+`5.9×` for Top40 relative to the recorded Python loop.
+
+The two overhead measures answer different questions:
+
+- **Correction / Faiss** compares independently timed correction work with
+  independently timed Faiss search and is the cleanest estimate of the
+  incremental computation.
+- **Paired E2E overhead** alternates baseline and corrected runs to reduce drift,
+  but remains sensitive to operating-system and multi-thread scheduling noise.
+
+Small non-zero or negative Top0 paired deltas are measurement noise and do not
+represent acceleration from a no-op correction.
+
+Detailed outputs are stored under
+[`results/retrieval_aware_residual_basis/live_faiss_benchmark/`](results/retrieval_aware_residual_basis/live_faiss_benchmark/).
+
+## Paper-Ready Result Tables
+
+The repository includes a reproducible table-generation pipeline:
+
+```bash
+python scripts/build_rars_paper_tables.py
+```
+
+It generates CSV and LaTeX tables under `results/paper_tables/`:
+
+```text
+paper_main_table.*
+paper_rars_cross_setting_table.*
+paper_pca_transfer_table.*
+paper_system_table.*
+paper_ablation_table.*
+paper_significance_table.*
+paper_storage_table.*
+```
+
+The generated tables deliberately preserve unavailable metrics as blank rather
+than mixing incompatible protocols or imputing values. They also separate:
+
+- RARS cross-setting results from the legacy PCA-only transfer package;
+- frozen-index retrofit methods from higher-rate indexes that require
+  re-encoding;
+- residual representation bytes from complete deployable artifact bytes;
+- independent correction cost from paired end-to-end overhead.
+
+The main paper interpretation is:
+
+- RARS is strongest on the held-out MS MARCO 1M setting.
+- Top20 captures nearly all Top40 gain at lower serving cost.
+- PCA remains competitive on FiQA BGE-small.
+- MiniLM transfer is mixed and alpha-sensitive.
+- RARS has a positive point estimate over PCA on MS MARCO, but the paired
+  bootstrap confidence intervals cross zero.
+- Higher-rate `M=48` remains stronger when a full rebuild and re-encoding are
+  operationally acceptable.
+
+
 ## Fixed-Budget Residual-PQ Refinement
 
 Beyond standard PQ / OPQ benchmarking, this project evaluates whether a
@@ -1219,112 +1364,51 @@ app/
   retriever.py
 artifacts/
   fiqa_opq_ivfpq_m96/
-    index.faiss
-    query_opq_rotation.npy
-    service_config.json
-    doc_ids.json
+  msmarco_rars_sidecar_m32_rank16/
 docker/
   entrypoint.sh
 docs/
   api_benchmark.md
   benchmark_methodology.md
   docker_api.md
+  rars_sidecar_serving.md
   residual_pq_scale_limitations.md
   retrieval_api.md
   selective_residual_pq_protocol.md
   testing_ci.md
 figures/
-  storage_quality_tradeoff.png
-  throughput_stability.png
-  fixed_budget_residual_pq_quality.png
-  residual_pq_coverage_tradeoff.png
 notebooks/
-  Ai_embedding_compression.ipynb
-  SciFact_OPQ_IVFPQ_Benchmark.ipynb
-  FiQA_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
-  SciFact_BGE_Small_OPQ_IVFPQ_Benchmark.ipynb
-  MSMARCO_1M_Low_Rate_PQ_OPQ_Pareto.ipynb
-  MSMARCO_1M_PQ_Residual_Sidecar_Gate3.ipynb
-  MSMARCO_1M_Retrieval_Aware_Residual_Basis.ipynb
-  FiQA_BGE_Small_PQ_Residual_Sidecar_Transfer.ipynb
-  FiQA_MiniLM_PQ_Residual_Sidecar_Transfer.ipynb
-  FiQA_BGE_Small_RARS_Transfer.ipynb
-  FiQA_MiniLM_RARS_Transfer.ipynb
-  FiQA_BM25_Hybrid_RRF_Benchmark.ipynb
-  SciFact_BM25_Hybrid_RRF_Transfer.ipynb
 results/
   api_benchmark/
-  fiqa_gpu_benchmark/
-  scifact_gpu_benchmark/
-  fiqa_bge_small_gpu_benchmark/
-  scifact_bge_small_gpu_benchmark/
-  msmarco_low_rate_pareto/
-    1m_pilot_m24_m48/
-    1m_full_m24_m96/
-  msmarco_low_rate_pareto_results_full_m32_m64_m96/
-  msmarco_1m_pq_residual_gate3/
-  pq_residual_sidecar_cross_setting/
-    README.md
-    cross_setting_summary.csv
-    cross_setting_summary.json
-    figures/
-      recall_cross_setting.png
-      sidecar_gain_bootstrap.png
-    setting_details/
-      fiqa_bge_small.json
-      fiqa_minilm.json
-      msmarco_1m_bge_small.json
-    manifest.json
-  retrieval_aware_residual_basis/
-    README.md
-    basis_qrels_eval_main.csv
-    score_error_weighted_alpha_qrels_sweep.csv
-    score_error_weighted_topb_qrels_ablation.csv
-    rars_final_comparison_qrels.csv
-    paired_bootstrap_best_rars_score_vs_pca.json
-    query_adaptive_rars_gate_diagnostics.md
-    query_adaptive_gate0_summary.csv
-    gate1_train_test_summary.csv
-    gate1b_5fold_strategy_summary.csv
-    gate1b_5fold_oracle_router_summary.csv
-    fiqa_bge_small_transfer/
-      README.md
-      qrels_final_metrics.csv
-      proxy_diagnostics_summary.csv
-      alpha_best_summary.csv
-      topb_ablation_score_error_weighted.csv
-    fiqa_minilm_transfer/
-      README.md
-      qrels_final_metrics.csv
-      qrels_final_metrics_extended.csv
-      proxy_diagnostics_summary.csv
-      alpha_best_summary.csv
-      topb_ablation_score_error_weighted.csv
-    learned_rars_router/
-      README.md
-      fixed_depth_metrics.csv
-      oracle_label_distribution.csv
-      router_5fold_summary.csv
-      router_strategy_comparison.csv
-      router_feature_importance.csv
-    manifest.json
-  rerank_fiqa_benchmark/
-  fixed_budget_residual_pq/
   compact_residual_pq_sidecar/
-    bootstrap_significance/
+  fixed_budget_residual_pq/
+  fiqa_gpu_benchmark/
+  msmarco_low_rate_pareto/
+  paper_tables/
+  pq_residual_sidecar_cross_setting/
+  retrieval_aware_residual_basis/
+    fiqa_bge_small_transfer/
+    fiqa_minilm_transfer/
+    learned_rars_router/
+    live_faiss_benchmark/
+    sidecar_artifact_benchmark/
+    sidecar_serving/
+  rerank_fiqa_benchmark/
 scripts/
   benchmark_api.py
-  benchmark_reranker.py
+  benchmark_rars_live_faiss.py
+  benchmark_rars_sidecar_artifact.py
+  build_rars_paper_tables.py
+  export_rars_sidecar_artifact.py
   export_service_artifacts.py
-  merge_msmarco_low_rate_results.py
   prepare_fiqa_documents.py
-  plot_fixed_budget_residual_pq.py
-  compact_sidecar_layout.py
 tests/
   test_api.py
   test_artifact_contract.py
   test_reranker.py
   test_retriever.py
+  test_sidecar.py
+  test_sidecar_api_contract.py
 Dockerfile
 docker-compose.yml
 environment.yml
@@ -1333,6 +1417,10 @@ requirements-api.txt
 requirements-dev.txt
 requirements-ci.txt
 ```
+
+The tree above is intentionally abbreviated. Large embedding memmaps, transient
+candidate caches, generated document metadata, and other reproducible heavy
+artifacts are excluded from Git.
 
 ## Reproducibility
 
@@ -1448,31 +1536,130 @@ python scripts/merge_msmarco_low_rate_results.py
 
 For all GPU experiments, use Google Colab with an NVIDIA GPU runtime and install `requirements-colab.txt`.
 
+
+### RARS artifact-backed benchmark
+
+```bash
+python scripts/benchmark_rars_sidecar_artifact.py
+```
+
+This validates the serialized sidecar against the committed held-out candidate
+cache and regenerates:
+
+```text
+results/retrieval_aware_residual_basis/sidecar_artifact_benchmark/
+```
+
+### Live Faiss RARS benchmark
+
+```bash
+python scripts/benchmark_rars_live_faiss.py \
+  --threads 1 14 \
+  --implementations loop vectorized \
+  --top-b 0 20 40 \
+  --nprobe 16 \
+  --candidate-k 100 \
+  --warmup-runs 3 \
+  --timed-runs 20
+```
+
+This requires the aligned local benchmark inputs and regenerates:
+
+```text
+results/retrieval_aware_residual_basis/live_faiss_benchmark/
+```
+
+The script verifies live/cached candidate alignment and numerical equivalence
+between loop and vectorized correction before writing results.
+
+### Paper-ready tables
+
+```bash
+python scripts/build_rars_paper_tables.py
+```
+
+This regenerates all CSV and LaTeX outputs under `results/paper_tables/` from
+committed benchmark artifacts.
+
+### Tests
+
+```bash
+python -m pytest -q
+```
+
+The current recorded suite contains 19 passing tests covering retrieval,
+artifact contracts, optional reranking, sidecar loading, API contracts, and
+fake-retriever request behavior.
+
+
 ## Limitations and Next Steps
 
-- FiQA and SciFact provide cross-dataset ranking validation, while the deterministic MS MARCO 1M experiment provides a single-GPU million-scale retrieval benchmark. It does not yet establish multi-node, billion-vector, or online-production behavior.
-- The benchmark currently uses two English embedding models; it does not yet validate multilingual or Traditional Chinese retrieval.
-- The deployment uses a learned external OPQ transform; any compatible serving implementation must apply the same query rotation before Faiss search.
-- The current BGE CPU reranker configuration is experimental: it did not improve the recorded 100-query FiQA subset and adds substantial local latency. Future reranking work should compare domain-appropriate models, title-aware / truncated document formatting, and throughput under realistic batch loads before making a production-default claim.
-- Future work includes hybrid sparse-dense retrieval, a Traditional Chinese retrieval benchmark, query-aware retrieval routing, model-specific deployment selection, and production observability / deployment hardening.
-- Fixed-budget Residual-PQ transfer requires a larger corpus than SciFact for an 8-bit residual codebook, because amortized shared-codebook storage becomes prohibitive on small corpora. Future transfer experiments should test compact sidecars on a sufficiently large corpus and preserve identical storage accounting without re-tuning the allocation policy.
-- The frozen IVF-PQ PQ-residual sidecar is validated on MS MARCO 1M plus zero-retuning FiQA transfers with BGE-small and MiniLM. Only the 1M MS MARCO result has a fully positive 95% paired-bootstrap interval; the smaller FiQA transfer intervals cross zero. Its GPU timing is a batched Python-orchestrated prototype, not a fused serving kernel, and its storage-quality comparison shows that higher-rate PQ remains stronger when a full index rebuild is permitted.
-- RARS-Score currently has a positive held-out MS MARCO 1M gain over the PCA residual basis, but the paired-bootstrap intervals narrowly cross zero at the 95% level. It should be treated as a promising retrieval-aware basis improvement pending cross-setting validation and query-adaptive correction-depth evaluation.
+- The strongest RARS result is the held-out MS MARCO 1M setting. FiQA transfer
+  is model-sensitive: BGE-small improves, while MiniLM fixed-transfer results
+  are nearly flat and some ranking metrics decline.
+- RARS-Score has a positive point estimate over PCA on MS MARCO, but the
+  paired-bootstrap 95% confidence intervals cross zero. The repository does not
+  claim statistically significant superiority over PCA.
+- IVF-PQ `M=48` produces higher absolute quality at a comparable total
+  representation budget. RARS is positioned as a frozen-index retrofit for
+  environments where rebuilding and re-encoding the corpus are undesirable,
+  not as a globally storage-optimal replacement for higher-rate PQ.
+- The RARS representation costs `16.025 B/document`; the complete deployable
+  artifact costs `24.028 B/document` when external document IDs are included.
+  These values must not be conflated.
+- Live-Faiss timings cover index search and residual correction. They exclude
+  query encoding, HTTP transport, JSON serialization, document lookup,
+  process startup, and artifact loading.
+- The paired end-to-end benchmark reduces order drift but remains sensitive to
+  OS scheduling and Faiss multi-thread variability. Independent correction cost
+  and paired end-to-end overhead are therefore reported separately.
+- The current sidecar implementation is vectorized NumPy around Faiss output,
+  not a fused Faiss/C++/CUDA kernel.
+- Learned query-adaptive routers do not recover the oracle routing headroom
+  under the current feature set. Fixed Top20 remains the strongest validated
+  deployable cost-aware setting.
+- The evaluated BGE cross-encoder reranker does not improve the recorded FiQA
+  subset and adds substantial CPU latency; it remains disabled by default.
+- The benchmark covers English dense retrieval with MiniLM and BGE-small. It
+  does not yet establish multilingual, Traditional Chinese, hybrid
+  sparse-dense, multi-node, billion-vector, or production-online behavior.
+- Some historical result packages use different index configurations and
+  evaluation splits. Paper tables explicitly separate these protocols rather
+  than combining them into a single universal comparison.
+
+The immediate research priority is manuscript preparation rather than adding
+more serving features:
+
+1. finalize the SIGIR short-paper narrative and novelty boundary;
+2. document train/validation/held-out selection protocol and eliminate any
+   ambiguity about hyperparameter tuning;
+3. add a compact method diagram and quality-storage-latency trade-off figure;
+4. benchmark PCA and RARS under the same vectorized serving implementation;
+5. consider one additional medium-to-large retrieval dataset only if it
+   materially strengthens the generalization claim.
 
 ## Release Readiness
 
-The repository now represents a retrieval-engineering workflow with initial cross-dataset and cross-model validation:
+The repository now represents a complete research and engineering workflow:
 
 ```text
-FiQA GPU benchmark → serialized MiniLM OPQ-IVF-PQ artifact + query rotation
-→ FastAPI serving → Docker metadata regeneration
-→ Docker end-to-end verification → automated CI
-→ FiQA + SciFact × MiniLM + BGE-small validation
-→ MS MARCO 1M GPU IVF-PQ / native OPQ scale validation
-→ frozen IVF-PQ PQ-residual sidecar + cross-setting transfer result package
-→ Retrieval-Aware Residual Subspace (RARS) score-error weighted basis evaluation
-→ optional BGE reranking experiment + reproducible negative-result evaluation
-→ true multi-query cross-encoder batching for `/batch-search`
+FiQA / SciFact compression benchmarks
+→ MS MARCO 1M PQ / OPQ low-rate sweep
+→ frozen IVF-PQ residual sidecar
+→ Retrieval-Aware Residual Subspace (RARS)
+→ deployable rank-16 int8 sidecar artifact
+→ artifact-backed correctness benchmark
+→ FastAPI optional sidecar serving
+→ vectorized live-Faiss benchmark
+→ reproducible CSV / LaTeX paper tables
+→ automated tests and CI
 ```
 
-The current branch captures the million-scale low-rate PQ / OPQ full-sweep milestone, the compact fixed-budget Residual-PQ extension, the frozen IVF-PQ PQ-residual sidecar retrofit study with cross-setting results for MS MARCO 1M × BGE-small, FiQA × BGE-small, and FiQA × MiniLM, the RARS retrieval-aware residual basis evaluation on MS MARCO 1M, FiQA RARS transfer validation for both BGE-small and MiniLM, learned query-adaptive RARS router diagnostics, and a deployable RARS sidecar serving/API foundation. The optional reranker is intentionally disabled in the default artifact because the recorded FiQA evaluation did not justify its latency cost. The next research milestone is artifact-backed sidecar serving and latency-quality benchmarking, followed by stronger learned query-adaptive activation and hybrid sparse-dense retrieval.
+Current validated headline result:
+
+> On the held-out MS MARCO 1M evaluation, RARS Top20 improves Recall@10 from `0.66275` to `0.69892` on a frozen IVF-PQ `M=32` index. The rank-16 int8 representation costs `16.025 B/document`, and the recorded vectorized 14-thread live-Faiss correction costs `0.816 µs/query` in a 1,000-query batch.
+
+The project is ready for research-paper drafting and reproducible artifact
+release. It should still be described as a research prototype rather than a
+production vector database: operational hardening, fused-kernel integration,
+broader generalization, and full request-level load testing remain future work.
