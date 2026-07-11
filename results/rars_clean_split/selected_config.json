@@ -1,0 +1,22 @@
+{
+  "protocol": "rars_clean_query_split_v1",
+  "selection_split": "validation",
+  "basis_variant": "score_error_weighted",
+  "rank": 16,
+  "alpha": 0.75,
+  "top_b": 40,
+  "candidate_k": 100,
+  "final_k": 10,
+  "base_index": {
+    "nlist": 512,
+    "nprobe": 16,
+    "m": 32,
+    "nbits": 8
+  },
+  "validation_proxy": {
+    "corrected_top10_overlap": 0.5748999999999999,
+    "overlap_gain": 0.03469999999999984,
+    "mse_reduction_pct": 8.967014559364578
+  },
+  "test_evaluated": false
+}
