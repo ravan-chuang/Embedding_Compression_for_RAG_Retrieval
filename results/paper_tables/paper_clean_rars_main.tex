@@ -1,0 +1,13 @@
+\begin{table}[t]
+\centering
+\caption{Untouched-test retrieval quality on the deterministic MS MARCO 1M benchmark. RARS is frozen after train/validation selection.}
+\label{tab:clean-rars-main}
+\begin{tabular}{lrrrr}
+\toprule
+Method & Recall@10 & Success@10 & MRR@10 & nDCG@10 \\
+\midrule
+Frozen IVF-PQ M32 & 0.6833 & 0.6910 & 0.4722 & 0.5204 \\
+Frozen RARS Top40 & \textbf{0.7073} & \textbf{0.7180} & \textbf{0.4851} & \textbf{0.5360} \\
+\bottomrule
+\end{tabular}
+\end{table}
