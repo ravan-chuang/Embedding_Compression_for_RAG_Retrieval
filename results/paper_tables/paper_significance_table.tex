@@ -1,0 +1,14 @@
+\begin{table}[t]
+\caption{Paired bootstrap comparison of RARS and PCA.}
+\label{tab:rars-significance}
+\begin{tabular}{llrrrrrrrr}
+\toprule
+Comparison & Metric & Mean difference & 95\% CI low & 95\% CI high & Bootstrap P(diff<=0) & Positive queries & Zero queries & Negative queries & Bootstrap samples \\
+\midrule
+RARS score-error a=0.75 Top40 vs PCA a=1 Top40 & recall@10 & 0.008500 & -0.002000 & 0.019500 & 0.066150 & 20 & 969 & 11 & 20000 \\
+RARS score-error a=0.75 Top40 vs PCA a=1 Top40 & success@10 & 0.009000 & -0.002000 & 0.020000 & 0.062050 & 20 & 969 & 11 & 20000 \\
+RARS score-error a=0.75 Top40 vs PCA a=1 Top40 & mrr@10 & 0.005303 & -0.003562 & 0.014155 & 0.122350 & 113 & 791 & 96 & 20000 \\
+RARS score-error a=0.75 Top40 vs PCA a=1 Top40 & ndcg@10 & 0.005014 & -0.002320 & 0.012381 & 0.091350 & 115 & 785 & 100 & 20000 \\
+\bottomrule
+\end{tabular}
+\end{table}

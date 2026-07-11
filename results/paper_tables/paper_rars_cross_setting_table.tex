@@ -1,0 +1,23 @@
+\begin{table}[t]
+\caption{Cross-setting RARS and PCA comparison.}
+\label{tab:rars-cross-setting}
+\begin{tabular}{lllllrrrrrrrr}
+\toprule
+Setting & Dataset & Embedding model & Selection & Method & Alpha & Top-B & Queries & Recall@10 & Success@10 & MRR@10 & nDCG@10 & Recall gain vs base \\
+\midrule
+msmarco\_1m\_bge\_small & MS MARCO & BAAI/bge-small-en-v1.5 & final held-out & Base M32 & 0.000000 & 0 & 1000 & 0.662750 & 0.674000 & 0.465880 & 0.509914 & 0.000000 \\
+msmarco\_1m\_bge\_small & MS MARCO & BAAI/bge-small-en-v1.5 & final held-out & PCA Top40 & 1.000000 & 40 & 1000 & 0.691417 & 0.701000 & 0.479193 & 0.527499 & 0.028667 \\
+msmarco\_1m\_bge\_small & MS MARCO & BAAI/bge-small-en-v1.5 & final held-out & RARS Top40 & 0.750000 & 40 & 1000 & 0.699917 & 0.710000 & 0.484496 & 0.532513 & 0.037167 \\
+fiqa\_bge\_small & FiQA & BAAI/bge-small-en-v1.5 & fixed transfer & Base M32 & 0.000000 & 0 & 648 & 0.293509 & 0.478395 & 0.296356 & 0.237310 & 0.000000 \\
+fiqa\_bge\_small & FiQA & BAAI/bge-small-en-v1.5 & fixed transfer & PCA Top40 & 1.000000 & 40 & 648 & 0.328162 & 0.523148 & 0.318078 & 0.260043 & 0.034653 \\
+fiqa\_bge\_small & FiQA & BAAI/bge-small-en-v1.5 & fixed transfer & RARS Top20 & 1.000000 & 20 & 648 & 0.318435 & 0.506173 & 0.318035 & 0.255942 & 0.024925 \\
+fiqa\_bge\_small & FiQA & BAAI/bge-small-en-v1.5 & fixed transfer & RARS Top40 & 1.000000 & 40 & 648 & 0.323451 & 0.520062 & 0.322017 & 0.258725 & 0.029942 \\
+fiqa\_minilm & FiQA & all-MiniLM-L6-v2 & fixed transfer & Base M32 & 0.000000 & 0 & 648 & 0.344598 & 0.549383 & 0.360291 & 0.286221 & 0.000000 \\
+fiqa\_minilm & FiQA & all-MiniLM-L6-v2 & fixed transfer & PCA Top40 & 1.000000 & 40 & 648 & 0.338867 & 0.543210 & 0.346867 & 0.279505 & -0.005731 \\
+fiqa\_minilm & FiQA & all-MiniLM-L6-v2 & fixed transfer & RARS Top20 & 1.000000 & 20 & 648 & 0.342755 & 0.547840 & 0.348952 & 0.278941 & -0.001843 \\
+fiqa\_minilm & FiQA & all-MiniLM-L6-v2 & fixed transfer & RARS Top40 & 1.000000 & 40 & 648 & 0.344015 & 0.549383 & 0.348884 & 0.279501 & -0.000583 \\
+fiqa\_minilm & FiQA & all-MiniLM-L6-v2 & proxy-selected & RARS Top20 & 0.750000 & 20 & 648 & 0.346206 & 0.554012 & 0.357828 & 0.284488 & 0.001608 \\
+fiqa\_minilm & FiQA & all-MiniLM-L6-v2 & proxy-selected & RARS Top40 & 0.750000 & 40 & 648 & 0.350165 & 0.554012 & 0.357719 & 0.285709 & 0.005567 \\
+\bottomrule
+\end{tabular}
+\end{table}

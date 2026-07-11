@@ -1,0 +1,27 @@
+\begin{table}[t]
+\caption{RARS alpha and correction-depth ablations.}
+\label{tab:rars-ablation}
+\begin{tabular}{lrlrrrrrr}
+\toprule
+Ablation & Value & Basis & Top-B & Recall@10 & Success@10 & MRR@10 & nDCG@10 & Recall gain \\
+\midrule
+alpha & 0.000000 & none & 0 & 0.662750 & 0.674000 & 0.465880 & 0.509914 & 0.000000 \\
+alpha & 0.250000 & score\_error\_weighted & 40 & 0.679750 & 0.691000 & 0.476507 & 0.521965 & 0.017000 \\
+alpha & 0.500000 & score\_error\_weighted & 40 & 0.691917 & 0.702000 & 0.478797 & 0.526855 & 0.029167 \\
+alpha & 0.750000 & score\_error\_weighted & 40 & 0.699917 & 0.710000 & 0.484496 & 0.532513 & 0.037167 \\
+alpha & 1.000000 & score\_error\_weighted & 40 & 0.697917 & 0.708000 & 0.480475 & 0.529079 & 0.035167 \\
+alpha & 1.250000 & score\_error\_weighted & 40 & 0.695250 & 0.706000 & 0.473967 & 0.523605 & 0.032500 \\
+alpha & 1.500000 & score\_error\_weighted & 40 & 0.690083 & 0.700000 & 0.463519 & 0.514718 & 0.027333 \\
+alpha & 1.750000 & score\_error\_weighted & 40 & 0.682083 & 0.693000 & 0.453737 & 0.505022 & 0.019333 \\
+alpha & 2.000000 & score\_error\_weighted & 40 & 0.677750 & 0.689000 & 0.445098 & 0.497131 & 0.015000 \\
+Top-B (RARS score-error basis) & 0.000000 & none & 0 & 0.662750 & 0.674000 & 0.465880 & 0.509914 & 0.000000 \\
+Top-B (RARS score-error basis) & 5.000000 & score\_error\_weighted & 5 & 0.664750 & 0.676000 & 0.477626 & 0.519388 & 0.002000 \\
+Top-B (RARS score-error basis) & 10.000000 & score\_error\_weighted & 10 & 0.674917 & 0.686000 & 0.480260 & 0.523737 & 0.012167 \\
+Top-B (RARS score-error basis) & 20.000000 & score\_error\_weighted & 20 & 0.698917 & 0.709000 & 0.484546 & 0.532359 & 0.036167 \\
+Top-B (RARS score-error basis) & 40.000000 & score\_error\_weighted & 40 & 0.699917 & 0.710000 & 0.484496 & 0.532513 & 0.037167 \\
+Top-B (RARS score-error basis) & 60.000000 & score\_error\_weighted & 60 & 0.698917 & 0.709000 & 0.484349 & 0.532178 & 0.036167 \\
+Top-B (RARS score-error basis) & 80.000000 & score\_error\_weighted & 80 & 0.698917 & 0.709000 & 0.484349 & 0.532178 & 0.036167 \\
+Top-B (RARS score-error basis) & 100.000000 & score\_error\_weighted & 100 & 0.698917 & 0.709000 & 0.484349 & 0.532178 & 0.036167 \\
+\bottomrule
+\end{tabular}
+\end{table}

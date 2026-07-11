@@ -1,0 +1,13 @@
+\begin{table}[t]
+\caption{Legacy PCA residual-sidecar transfer validation.}
+\label{tab:pca-transfer}
+\begin{tabular}{lllrrrrrrrrl}
+\toprule
+Setting & Dataset & Embedding model & Base Recall@10 & PCA Top40 Recall@10 & Gain & 95\% CI low & 95\% CI high & M48 Recall@10 & Oracle Recall@10 & Oracle-gap recovery & Significance \\
+\midrule
+msmarco\_1m\_bge\_small & MS MARCO & BAAI/bge-small-en-v1.5 & 0.662750 & 0.691417 & 0.028667 & 0.014663 & 0.043000 & 0.731083 & 0.779167 & 0.246200 & Paired-bootstrap 95\% CI is fully positive. \\
+fiqa\_bge\_small & FiQA / BEIR test & BAAI/bge-small-en-v1.5 & 0.328653 & 0.341765 & 0.013112 & -0.000556 & 0.026845 & 0.389584 & 0.430639 & 0.128565 & Positive point estimate; 95\% paired-bootstrap interval marginally crosses zero. \\
+fiqa\_minilm & FiQA / BEIR test & sentence-transformers/all-MiniLM-L6-v2 & 0.335795 & 0.345414 & 0.009620 & -0.005607 & 0.025221 & 0.372256 & 0.411422 & 0.127201 & Positive point estimate; 95\% paired-bootstrap interval crosses zero. \\
+\bottomrule
+\end{tabular}
+\end{table}
