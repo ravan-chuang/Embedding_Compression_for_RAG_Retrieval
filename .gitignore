@@ -38,3 +38,5 @@ results/msmarco_1000000_*/
 # Local RARS sidecar artifacts
 artifacts/_rars_export_inputs/
 artifacts/msmarco_rars_sidecar_m32_rank16/
+
+artifacts/_rars_benchmark_inputs/
