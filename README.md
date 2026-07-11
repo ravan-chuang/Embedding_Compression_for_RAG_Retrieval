@@ -13,16 +13,16 @@ The repository separates three questions that are often conflated:
 2. **Compressed-domain efficiency:** What latency and throughput are obtained when Faiss searches PQ codes directly?
 3. **Frozen-index recovery:** How much ranking quality can be recovered by attaching a compact residual sidecar without rebuilding or rewriting an existing IVF-PQ index?
 
-The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The latest result uses a strict query-level protocol: 4,980 MS MARCO queries for basis fitting, 1,000 validation queries for configuration selection, and an untouched 1,000-query test split evaluated only after the selected configuration and evaluator were committed.
+The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The latest result uses a strict query-level protocol: 4,980 MS MARCO queries for basis fitting, 1,000 validation queries for configuration selection, and a 1,000-query test split held out from the clean train/validation pipeline and evaluated only after the selected configuration and evaluator were committed.
 
-On that untouched MS MARCO 1M test split, frozen RARS Top40 improves:
+On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improves:
 
 - Recall@10: `0.6833 → 0.7073` (`+0.0240`, 95% paired-bootstrap CI `[+0.0105, +0.0378]`)
 - Success@10: `0.6910 → 0.7180` (`+0.0270`, CI `[+0.0130, +0.0410]`)
 - MRR@10: `0.4722 → 0.4851` (`+0.0129`, CI `[+0.0030, +0.0229]`)
 - nDCG@10: `0.5204 → 0.5360` (`+0.0156`, CI `[+0.0068, +0.0244]`)
 
-All four confidence intervals are strictly above zero. The base IVF-PQ index and its existing PQ codes remain unchanged.
+All four confidence intervals are strictly above zero on the full 1,000-query clean-pipeline held-out split. A project-history audit subsequently found that 137 of those queries had appeared in an earlier exploratory query set. After excluding those 137 queries by ID, the remaining 863 prior-unseen queries retain statistically positive gains for Recall@10, Success@10, and nDCG@10; MRR@10 remains directionally positive but its 95% confidence interval narrowly crosses zero. The base IVF-PQ index and its existing PQ codes remain unchanged.
 
 ## Research Status
 
@@ -32,7 +32,7 @@ All four confidence intervals are strictly above zero. The base IVF-PQ index and
 | MS MARCO 1M low-rate sweep | Complete |
 | Frozen IVF-PQ residual sidecar | Complete |
 | Clean query-level RARS train / validation / test protocol | Complete |
-| Untouched-test RARS evaluation and audit manifest | Complete |
+| Clean-pipeline held-out RARS evaluation and audit manifest | Complete |
 | Deployable rank-16 int8 sidecar artifact | Complete |
 | FastAPI sidecar serving path | Complete |
 | Artifact-backed and live-Faiss benchmarks | Complete |
@@ -46,9 +46,9 @@ All four confidence intervals are strictly above zero. The base IVF-PQ index and
 - Implements genuine compressed-domain GPU retrieval with Faiss IVF-PQ ADC; document vectors are not reconstructed to Float32 during ANN search.
 - Provides a complete low-rate MS MARCO 1M sweep over `M ∈ {24, 32, 48, 64, 96}` and `nprobe ∈ {4, 16, 32, 64}`.
 - Introduces a frozen-index rank-16 int8 residual sidecar that requires no retraining of the coarse quantizer and no rewrite of existing PQ codes.
-- Adds a leakage-resistant RARS protocol with deterministic `4,980 / 1,000 / 1,000` train, validation, and untouched-test query splits.
-- Fits the score-error weighted residual basis on train queries only, selects `alpha=0.75` and Top40 on validation only, freezes the configuration in Git, and then performs a one-shot untouched-test evaluation.
-- Improves untouched-test Recall@10 from `0.6833` to `0.7073`; all four primary paired-bootstrap confidence intervals are above zero.
+- Adds a leakage-resistant RARS protocol with deterministic `4,980 / 1,000 / 1,000` train, validation, and clean-pipeline held-out query splits.
+- Fits the score-error weighted residual basis on train queries only, selects `alpha=0.75` and Top40 on validation only, freezes the configuration in Git, and then performs a one-shot clean-pipeline held-out evaluation.
+- Improves clean-pipeline held-out Recall@10 from `0.6833` to `0.7073`; all four paired-bootstrap confidence intervals are above zero on the full 1,000-query split. After excluding 137 queries used in earlier exploratory work, Recall@10 improves from `0.6956` to `0.7124` (`+0.0168`, 95% CI `[+0.0029, +0.0303]`).
 - Packages the 1M-document RARS sidecar with a `16.025 B/document` residual-representation cost and `24.028 B/document` complete artifact cost including external document IDs.
 - Adds vectorized live-Faiss correction; the previously recorded 14-thread Top40 implementation requires `1.325 µs/query`, equal to `4.41%` of independently timed Faiss search cost. These timing measurements come from the earlier artifact benchmark and are reported separately from the clean-split quality result.
 - Verifies clean-split artifacts with SHA-256 hashes for the selected configuration, basis, scales, evaluator inputs, test results, and per-query outputs.
@@ -498,7 +498,7 @@ s_corr(q, x)
 
 ### Clean query-level protocol
 
-The original exploratory notebook reused the same 1,000-query set for weighted-basis fitting, alpha / depth selection, and qrels reporting. That result was useful for method development but was not an untouched held-out estimate.
+The original exploratory notebook reused the same 1,000-query set for weighted-basis fitting, alpha / depth selection, and qrels reporting. That result was useful for method development but was not a clean held-out estimate.
 
 The corrected protocol uses all 6,980 available MS MARCO dev queries with deterministic, non-overlapping query splits:
 
@@ -506,7 +506,7 @@ The corrected protocol uses all 6,980 available MS MARCO dev queries with determ
 |---|---:|---|
 | Train | 4,980 | Candidate-score error construction and weighted-basis fitting |
 | Validation | 1,000 | Basis, alpha, and correction-depth selection |
-| Untouched test | 1,000 | One-shot final qrels evaluation only |
+| Clean-pipeline held-out test | 1,000 | One-shot final qrels evaluation only |
 
 Additional safeguards:
 
@@ -536,7 +536,7 @@ Additional safeguards:
 
 Validation selected Top40 because it retained approximately 94% of the maximum candidate-overlap gain while reducing correction depth by 60% relative to Top100.
 
-### Untouched-test results
+### Clean-pipeline held-out results
 
 | Method | Recall@10 | Success@10 | MRR@10 | nDCG@10 |
 |:--|--:|--:|--:|--:|
@@ -553,11 +553,42 @@ Validation selected Top40 because it retained approximately 94% of the maximum c
 | MRR@10 | +0.0129 | [+0.0030, +0.0229] | 0.9951 |
 | nDCG@10 | +0.0156 | [+0.0068, +0.0244] | 0.9998 |
 
-All four 95% confidence intervals are strictly above zero. The result therefore establishes a statistically positive improvement over the frozen IVF-PQ baseline on unseen test queries under the frozen configuration.
+All four 95% confidence intervals are strictly above zero on the full 1,000-query clean-pipeline held-out split. This establishes a statistically positive improvement over the frozen IVF-PQ baseline under the frozen configuration, but it does not by itself establish that every test query was untouched across the entire project history.
+
+### Prior-exploration overlap audit
+
+A query-ID audit found that the earlier exploratory 1,000-query set was redistributed by the later deterministic split:
+
+| Destination in clean split | Queries from earlier exploratory set |
+|:--|--:|
+| Train | 729 |
+| Validation | 134 |
+| Clean-pipeline held-out test | 137 |
+
+The held-out split is therefore valid relative to the clean fitting and selection pipeline, but it is not fully untouched across the complete project history.
+
+The 137 previously explored test queries were excluded using query IDs only, without outcome-dependent filtering, refitting, or retuning. The remaining 863 prior-unseen queries give:
+
+| Metric | Frozen M32 | Frozen RARS | Difference | 95% CI |
+|:--|--:|--:|--:|:--|
+| Recall@10 | 0.6956 | 0.7124 | +0.0168 | [+0.0029, +0.0303] |
+| Success@10 | 0.7034 | 0.7231 | +0.0197 | [+0.0058, +0.0336] |
+| MRR@10 | 0.4809 | 0.4915 | +0.0106 | [-0.0003, +0.0218] |
+| nDCG@10 | 0.5299 | 0.5422 | +0.0123 | [+0.0030, +0.0218] |
+
+Recall@10, Success@10, and nDCG@10 retain confidence intervals strictly above zero. MRR@10 remains directionally positive, but its 95% interval narrowly crosses zero.
+
+This is a post-hoc contamination sensitivity audit, not a replacement untouched test. All 6,980 MS MARCO development queries have now influenced fitting, selection, evaluation, or subsequent analysis. A future project-history-level untouched confirmation must therefore use a new external query set under a pre-frozen protocol.
+
+See:
+
+- [prior-exploration overlap audit](docs/rars_prior_exploration_overlap_audit.md)
+- [prior-exploration-excluded sensitivity JSON](results/rars_clean_split/test/prior_exploration_excluded_sensitivity.json)
+- [overlap sensitivity paper table](results/paper_tables/paper_rars_overlap_sensitivity.csv)
 
 The primary paper claim is:
 
-> On an untouched 1,000-query MS MARCO test split, a rank-16 int8 retrieval-aware residual sidecar applied to a frozen IVF-PQ M32 index improves Recall@10 from 0.6833 to 0.7073, with a paired-bootstrap difference of +0.0240 and a 95% confidence interval of [+0.0105, +0.0378], without rebuilding or rewriting the base index.
+> On a 1,000-query MS MARCO test split held out from the clean train/validation pipeline, a rank-16 int8 retrieval-aware residual sidecar applied to a frozen IVF-PQ M32 index improves Recall@10 from 0.6833 to 0.7073, with a paired-bootstrap difference of +0.0240 and a 95% confidence interval of [+0.0105, +0.0378], without rebuilding or rewriting the base index. A project-history audit found 137 queries overlapping an earlier exploratory set; excluding them leaves an 863-query prior-unseen sensitivity subset with a Recall@10 gain of +0.0168 and 95% CI [+0.0029, +0.0303].
 
 ### Reproducible clean-split package
 
@@ -569,10 +600,12 @@ The committed package includes:
 - [frozen selected configuration](results/rars_clean_split/selected_config.json)
 - [validation selection table](results/rars_clean_split/validation_selection.csv)
 - [pre-test freeze manifest](results/rars_clean_split/freeze_manifest.json)
-- [untouched-test metrics](results/rars_clean_split/test/test_metrics.json)
+- [clean-pipeline held-out metrics](results/rars_clean_split/test/test_metrics.json)
 - [per-query test metrics](results/rars_clean_split/test/test_per_query_metrics.csv)
 - [test audit manifest](results/rars_clean_split/test/test_audit_manifest.json)
 - [paper-ready test summary](results/rars_clean_split/test/summary.md)
+- [prior-exploration overlap audit](docs/rars_prior_exploration_overlap_audit.md)
+- [prior-exploration-excluded sensitivity JSON](results/rars_clean_split/test/prior_exploration_excluded_sensitivity.json)
 
 ### Relationship to earlier exploratory results
 
@@ -583,13 +616,13 @@ Earlier same-query exploratory artifacts reported:
 - RARS-Score Top40 Recall@10 `0.6999`;
 - RARS-Score Top20 Recall@10 `0.6989`.
 
-Those values remain useful as ablations, artifact-serving tests, router diagnostics, and historical development records, but they are **not** the primary untouched-test estimate. They must not be presented as the final clean held-out result.
+Those values remain useful as ablations, artifact-serving tests, router diagnostics, and historical development records, but they are **not** the primary clean-pipeline held-out estimate. They must not be presented as the final clean held-out result.
 
 The clean result has a smaller but statistically established gain:
 
 ```text
 old exploratory difference: +0.0372
-clean untouched-test difference: +0.0240
+clean-pipeline held-out difference: +0.0240
 ```
 
 This reduction is expected after separating fitting, selection, and evaluation queries.
@@ -644,7 +677,7 @@ metadata rather than part of the residual representation itself.
 The artifact loader is tested against the committed Top-100 candidate cache.
 The quality values below come from the earlier same-query exploratory package
 and are retained to verify serving-artifact equivalence. They are not the
-primary clean untouched-test estimate:
+primary clean-pipeline held-out estimate:
 
 | Method | Recall@10 | Success@10 | MRR@10 | nDCG@10 |
 |:--|--:|--:|--:|--:|
@@ -726,7 +759,7 @@ than mixing incompatible protocols or imputing values. They also separate:
 - residual representation bytes from complete deployable artifact bytes;
 - independent correction cost from paired end-to-end overhead.
 
-The clean-split table refresh must use the untouched-test result as the primary
+The clean-split table refresh must use the clean-pipeline held-out result as the primary
 RARS quality row:
 
 - frozen IVF-PQ `M=32`: Recall@10 `0.6833`;
@@ -736,7 +769,7 @@ RARS quality row:
 
 Earlier same-query RARS / PCA rows remain exploratory ablations and artifact
 verification records. They must be labeled separately rather than mixed with
-the untouched-test table. Higher-rate `M=48` remains stronger when a full
+the clean-pipeline held-out table. Higher-rate `M=48` remains stronger when a full
 rebuild and re-encoding are operationally acceptable.
 
 
@@ -951,7 +984,7 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 ## Key Findings
 
-- **Clean untouched-test RARS result:** after fitting on 4,980 train queries, selecting on 1,000 validation queries, freezing the configuration, and evaluating once on 1,000 untouched test queries, RARS Top40 improves Recall@10 `0.6833 → 0.7073` (`+0.0240`, 95% CI `[+0.0105, +0.0378]`).
+- **Clean-pipeline held-out RARS result:** after fitting on 4,980 train queries, selecting on 1,000 validation queries, freezing the configuration, and evaluating once on a 1,000-query held-out split, RARS Top40 improves Recall@10 `0.6833 → 0.7073` (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). A project-history audit found 137 queries overlapping an earlier exploratory set; the remaining 863 prior-unseen queries retain a Recall@10 gain of `+0.0168` with 95% CI `[+0.0029, +0.0303]`.
 - **The improvement is broad, not metric-specific:** Success@10 improves `0.6910 → 0.7180`, MRR@10 `0.4722 → 0.4851`, and nDCG@10 `0.5204 → 0.5360`; all paired-bootstrap 95% intervals are above zero.
 - **The corrected protocol removes same-query adaptation:** basis fitting, configuration selection, and final qrels evaluation use disjoint query sets, and the selected configuration plus evaluator were committed before the test run.
 - **Frozen-index retrofit:** the method attaches a rank-16 int8 sidecar without retraining the coarse quantizer or rewriting existing PQ codes.
@@ -1360,7 +1393,9 @@ original exploratory notebook.
 1. Create the deterministic `4,980 / 1,000 / 1,000` query split:
 
    ```bash
-   python scripts/create_msmarco_rars_query_splits.py
+   python scripts/create_msmarco_rars_query_splits.py \
+     --input /path/to/msmarco_dev_qids.json \
+     --output-dir splits
    ```
 
 2. Fit bases and select the frozen configuration using train and validation
@@ -1530,7 +1565,7 @@ fake-retriever request behavior.
 
 - The statistically established RARS result currently covers one deterministic
   1M-passage MS MARCO subset, one embedding model, one frozen IVF-PQ
-  configuration, and one untouched 1,000-query test split.
+  configuration, and one 1,000-query test split held out from the clean train/validation pipeline.
 - The clean result establishes superiority over the frozen IVF-PQ baseline, not
   over every alternative retrofit or over a newly rebuilt higher-rate index.
 - A clean PCA-versus-RARS comparison was not part of the one-shot test run.
@@ -1558,18 +1593,18 @@ fake-retriever request behavior.
   does not yet establish multilingual, Traditional Chinese, hybrid
   sparse-dense, multi-node, billion-vector, or production-online behavior.
 - Historical result packages use different index configurations and evaluation
-  protocols. Tables must separate clean untouched-test rows from exploratory
+  protocols. Tables must separate clean-pipeline held-out rows from exploratory
   or transfer rows.
 
 Immediate priorities:
 
-1. refresh `results/paper_tables/` so the clean untouched-test row is the
+1. refresh `results/paper_tables/` so the clean-pipeline held-out row is the
    headline RARS result;
 2. update the abstract, method, protocol, and statistical-significance sections
    of the manuscript;
 3. add a compact query-split and frozen-evaluation diagram;
 4. benchmark cleanly frozen PCA and RARS comparators only if the comparison is
-   specified before another untouched evaluation;
+   specified before an external confirmation evaluation;
 5. retain the current test split as a final evaluation set and do not tune any
    method choice against its results.
 

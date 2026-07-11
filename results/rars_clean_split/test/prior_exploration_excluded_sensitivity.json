@@ -1,0 +1,42 @@
+{
+  "analysis": "prior_exploration_excluded_sensitivity",
+  "total_test_queries": 1000,
+  "excluded_prior_explored_queries": 137,
+  "remaining_never_explored_queries": 863,
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 20260712,
+  "metrics": {
+    "recall@10": {
+      "base": 0.6956353804557743,
+      "rars": 0.7124372344534569,
+      "difference": 0.0168018539976825,
+      "ci95_low": 0.0028968713789107765,
+      "ci95_high": 0.030325415218230907,
+      "probability_gt_0": 0.9925
+    },
+    "success@10": {
+      "base": 0.7033603707995365,
+      "rars": 0.7230590961761297,
+      "difference": 0.019698725376593278,
+      "ci95_low": 0.005793742757821553,
+      "ci95_high": 0.03360370799536501,
+      "probability_gt_0": 0.9971
+    },
+    "mrr@10": {
+      "base": 0.4808571980356453,
+      "rars": 0.4915048097261307,
+      "difference": 0.010647611690485389,
+      "ci95_low": -0.0003160808548989309,
+      "ci95_high": 0.021816269381448986,
+      "probability_gt_0": 0.9708
+    },
+    "ndcg@10": {
+      "base": 0.529906530362091,
+      "rars": 0.5421679749325565,
+      "difference": 0.012261444570465565,
+      "ci95_low": 0.0029626118036362235,
+      "ci95_high": 0.021809923764829226,
+      "probability_gt_0": 0.9939
+    }
+  }
+}
