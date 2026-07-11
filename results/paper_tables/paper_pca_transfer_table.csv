@@ -1,0 +1,4 @@
+Setting,Dataset,Embedding model,Base Recall@10,PCA Top40 Recall@10,Gain,95% CI low,95% CI high,M48 Recall@10,Oracle Recall@10,Oracle-gap recovery,Significance
+msmarco_1m_bge_small,MS MARCO,BAAI/bge-small-en-v1.5,0.66275,0.6914166667,0.0286666667,0.0146625,0.043,0.7310833333,0.7791666667,0.2462,Paired-bootstrap 95% CI is fully positive.
+fiqa_bge_small,FiQA / BEIR test,BAAI/bge-small-en-v1.5,0.3286528715,0.3417646996,0.0131118282,-0.0005560723,0.0268452875,0.3895839029,0.4306390026,0.1285648157,Positive point estimate; 95% paired-bootstrap interval marginally crosses zero.
+fiqa_minilm,FiQA / BEIR test,sentence-transformers/all-MiniLM-L6-v2,0.3357946152,0.3454144749,0.0096198597,-0.0056066304,0.0252210982,0.3722560105,0.4114217915,0.1272010963,Positive point estimate; 95% paired-bootstrap interval crosses zero.

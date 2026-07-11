@@ -1,0 +1,7 @@
+Method,Frozen index,Rewrite PQ codes,Extra representation B/doc,Deployable artifact B/doc,Recall@10,Success@10,MRR@10,nDCG@10,Correction us/query,Correction/Faiss %,Paired E2E overhead %,Note
+IVF-PQ M32,Yes,No,0.0,0.0,0.66275,0.674,0.4658797619047619,0.5099139792095526,,,,Frozen base index
+PCA sidecar Top40,Yes,No,16.0,,0.6914166666666668,0.701,0.479193253968254,0.527499023206698,,,,Post-hoc PCA residual sidecar
+RARS Top20,Yes,No,16.025024,24.027749,0.6989166666666667,0.709,0.4845460317460318,0.5323589948263593,0.8160938,2.7189350728963997,5.4076401633028155,Preferred deployable operating point
+RARS Top40,Yes,No,16.025024,24.027749,0.6999166666666667,0.71,0.4844964285714285,0.532512862288887,1.32493125,4.4142009715077695,5.506867587413498,Quality-max RARS operating point
+IVF-PQ M48,No,Yes,16.0,,0.7310833333,0.741,,,,,,Higher-rate index; requires re-encoding
+Exact candidate oracle,Yes,No,,,0.7791666667,0.787,,,,,,Top-100 candidate rescoring ceiling

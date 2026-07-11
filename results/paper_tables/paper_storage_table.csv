@@ -1,0 +1,5 @@
+Component,Bytes total,Bytes/document,Accounting
+RARS representation,16025024,16.025024,codes + shared basis/scales
+Int8 codes,16000128,16.000128,rank-16 int8 coefficients
+External document IDs,8000128,8.000128,serving metadata
+Complete deployable artifact,24027749,24.027749,representation + IDs + config/manifest

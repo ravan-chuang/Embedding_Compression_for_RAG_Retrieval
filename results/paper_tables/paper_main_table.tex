@@ -1,0 +1,16 @@
+\begin{table}[t]
+\caption{MS MARCO 1M frozen-index retrofit comparison.}
+\label{tab:rars-main}
+\begin{tabular}{lllrrrrrrrrrl}
+\toprule
+Method & Frozen index & Rewrite PQ codes & Extra representation B/doc & Deployable artifact B/doc & Recall@10 & Success@10 & MRR@10 & nDCG@10 & Correction us/query & Correction/Faiss \% & Paired E2E overhead \% & Note \\
+\midrule
+IVF-PQ M32 & Yes & No & 0.000000 & 0.000000 & 0.662750 & 0.674000 & 0.465880 & 0.509914 & -- & -- & -- & Frozen base index \\
+PCA sidecar Top40 & Yes & No & 16.000000 & -- & 0.691417 & 0.701000 & 0.479193 & 0.527499 & -- & -- & -- & Post-hoc PCA residual sidecar \\
+RARS Top20 & Yes & No & 16.025024 & 24.027749 & 0.698917 & 0.709000 & 0.484546 & 0.532359 & 0.816094 & 2.718935 & 5.407640 & Preferred deployable operating point \\
+RARS Top40 & Yes & No & 16.025024 & 24.027749 & 0.699917 & 0.710000 & 0.484496 & 0.532513 & 1.324931 & 4.414201 & 5.506868 & Quality-max RARS operating point \\
+IVF-PQ M48 & No & Yes & 16.000000 & -- & 0.731083 & 0.741000 & -- & -- & -- & -- & -- & Higher-rate index; requires re-encoding \\
+Exact candidate oracle & Yes & No & -- & -- & 0.779167 & 0.787000 & -- & -- & -- & -- & -- & Top-100 candidate rescoring ceiling \\
+\bottomrule
+\end{tabular}
+\end{table}

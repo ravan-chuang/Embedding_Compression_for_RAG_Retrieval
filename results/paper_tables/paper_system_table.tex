@@ -1,0 +1,16 @@
+\begin{table}[t]
+\caption{Live Faiss and vectorized RARS latency.}
+\label{tab:rars-system}
+\begin{tabular}{rlrrrrrrr}
+\toprule
+Threads & Method & Recall@10 & MRR@10 & Search us/query & Correction us/query & Estimated combined us/query & Correction/Faiss \% & Paired E2E overhead \% \\
+\midrule
+1 & ivfpq\_m32\_base & 0.662750 & 0.465880 & 270.445394 & 0.000000 & 270.451794 & 0.000000 & -- \\
+1 & rars\_top20 & 0.698917 & 0.484546 & 270.445394 & 0.613236 & 271.058629 & 0.226750 & 0.487952 \\
+1 & rars\_top40 & 0.699917 & 0.484496 & 270.445394 & 1.057852 & 271.503246 & 0.391152 & 0.603811 \\
+14 & ivfpq\_m32\_base & 0.662750 & 0.465880 & 30.015200 & 0.000000 & 30.021200 & 0.000000 & -- \\
+14 & rars\_top20 & 0.698917 & 0.484546 & 30.015200 & 0.816094 & 30.831294 & 2.718935 & 5.407640 \\
+14 & rars\_top40 & 0.699917 & 0.484496 & 30.015200 & 1.324931 & 31.340131 & 4.414201 & 5.506868 \\
+\bottomrule
+\end{tabular}
+\end{table}
