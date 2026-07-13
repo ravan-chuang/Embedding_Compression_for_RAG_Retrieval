@@ -1,0 +1,44 @@
+{
+  "policy_id": "trec_dl_2019_msmarco_1m_corpus_restricted_v1",
+  "dataset": "msmarco-passage/trec-dl-2019/judged",
+  "status": "frozen_before_retrieval_evaluation",
+  "analysis_type": "corpus_restricted_external_sensitivity",
+  "full_benchmark_claim_allowed": false,
+  "indexed_corpus": "frozen deterministic MS MARCO passage 1M subset",
+  "query_count": 42,
+  "prior_query_id_overlap_count": 0,
+  "prior_normalized_text_overlap_count": 0,
+  "total_positive_qrels_full": 4102,
+  "total_positive_qrels_in_indexed_corpus": 502,
+  "total_positive_qrels_missing_from_indexed_corpus": 3600,
+  "positive_qrels_corpus_coverage": 0.12237932715748416,
+  "qrels_policy": "restrict_original_qrels_to_frozen_indexed_corpus",
+  "metric_interpretation": {
+    "recall_at_10": "Recall among positively judged passages that are present in the frozen 1M indexed corpus.",
+    "success_at_10": "Whether at least one positively judged indexed passage appears in the top 10.",
+    "mrr_at_10": "Reciprocal rank of the first positively judged indexed passage.",
+    "ndcg_at_10": "nDCG computed only from judgments whose passages exist in the frozen indexed corpus."
+  },
+  "primary_metric": "recall@10",
+  "primary_contrast": "rars_r16_int8_minus_pca_r16_int8",
+  "bootstrap_replicates": 20000,
+  "bootstrap_seed": 20260712,
+  "selection_or_retuning_allowed": false,
+  "retrieval_outcomes_observed_before_freeze": false,
+  "limitations": [
+    "Only 12.24% of positive TREC DL 2019 passage qrels are present in the frozen 1M index.",
+    "Results are conditional on the frozen 1M corpus subset.",
+    "Results must not be reported as official full-corpus TREC DL 2019 benchmark scores.",
+    "The eligible external set contains 42 queries, so confidence intervals may be wide."
+  ],
+  "original_query_count": 43,
+  "eligible_query_count": 42,
+  "excluded_query_count": 1,
+  "excluded_qids": [
+    "1121709"
+  ],
+  "query_exclusion_rule": "Exclude external queries with zero positively judged passages present in the frozen 1M indexed corpus. This rule was applied before any Base, PCA, or RARS retrieval outcomes were observed.",
+  "restricted_qrel_rows": 1095,
+  "eligible_positive_qrels": 502,
+  "evaluator_input_validation_policy": "require_all_positive_in_corpus"
+}

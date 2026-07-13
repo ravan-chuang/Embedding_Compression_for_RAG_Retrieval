@@ -1,0 +1,125 @@
+{
+  "manifest_id": "trec_dl_2019_msmarco_1m_restricted_external_confirmation_v1",
+  "status": "frozen_before_qrels_evaluation",
+  "protocol_id": "rars_pca_comparator_v1",
+  "dataset_name": "trec_dl_2019_msmarco_1m_restricted",
+  "query_count": 42,
+  "primary_metric": "recall@10",
+  "primary_contrast": "rars_r16_int8_minus_pca_r16_int8",
+  "prior_overlap_audit_complete": true,
+  "outcome_inspection_before_freeze": false,
+  "qrels_policy": "require_all_positive_in_corpus",
+  "positive_qrels_corpus_coverage": 1.0,
+  "files": {
+    "query_vectors": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/external_confirmation/trec_dl_2019/frozen_input_v1/query_vectors.fp32.npy",
+      "bytes": 64640,
+      "sha256": "345b91b56f619cce6845155bc02d1d5b159f78196bc29de4125674f18a7b4920"
+    },
+    "query_manifest": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/external_confirmation/trec_dl_2019/frozen_input_v1/query_manifest.json",
+      "bytes": 4648,
+      "sha256": "5c71413befa7748678e1a512b4d28aae7a4cb26ba0321add3281535935b0dc14"
+    },
+    "qrels": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/external_confirmation/trec_dl_2019/qrels.indexed_corpus.eligible_42.txt",
+      "bytes": 21899,
+      "sha256": "011745e86de0936f8b976d2cca4c547b4cdf9ffc2cdc7ccd5bd1f470ce1e3a17"
+    },
+    "doc_ids": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/msmarco_basis_gate0_cache/doc_ids.int64.memmap",
+      "bytes": 8000000,
+      "sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96"
+    },
+    "index": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/msmarco_1m_pq_residual_gate3/frozen_ivfpq_m32_nlist512.index",
+      "bytes": 41183924,
+      "sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8"
+    },
+    "pca_config": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/results/rars_pca_comparator/selected_pca_config.json",
+      "bytes": 908,
+      "sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4"
+    },
+    "pca_basis": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/results/rars_pca_comparator/bases/pca_unweighted_rank16.float32.npy",
+      "bytes": 24704,
+      "sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec"
+    },
+    "pca_scales": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/results/rars_pca_comparator/sidecars/scales_pca_rank16.float32.npy",
+      "bytes": 192,
+      "sha256": "7f2efa852dc11b6079e1d23e153de00e45119e4d3cfba40c97be0c72e3fc3bf6"
+    },
+    "pca_codes": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/rars_pca_comparator_v1/sidecars/codes_pca_rank16.int8.memmap",
+      "bytes": 16000000,
+      "sha256": "20bc05d1e5e645e85ca23ff07a420da8e732a311ecb2a2969025b21cde1ad41f"
+    },
+    "rars_config": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/results/rars_clean_split/selected_config.json",
+      "bytes": 487,
+      "sha256": "45e50024077a03394a1063c9c165aa185cc87ce49a6c1f61af960db461ff4113"
+    },
+    "rars_basis": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/rars_clean_split_v1/bases/score_error_weighted_rank16.npy",
+      "bytes": 24704,
+      "sha256": "89388d2abc22b6682016f2219791e5c29488e2ccbdc5fdff06a918b5eacad60f"
+    },
+    "rars_scales": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/rars_clean_split_v1/sidecars/scales_score_error_weighted_rank16.float32.npy",
+      "bytes": 192,
+      "sha256": "4c63ddb7c546e677e80acb4122d4c6c30a6206e88eebd16f1640f99c8607213e"
+    },
+    "rars_codes": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/rars_clean_split_v1/sidecars/codes_score_error_weighted_rank16.int8.memmap",
+      "bytes": 16000000,
+      "sha256": "ec1b1cf4d3ddd8dc316d7f104721c79f84a1cf67db14c91f450f8d5ac5b9b08b"
+    },
+    "evaluator": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/scripts/evaluate_rars_pca_external.py",
+      "bytes": 20634,
+      "sha256": "51aaa779847957cea65f0365eef891a385eec5d7563bd0b0ec0ea6f74fe1c278"
+    },
+    "protocol": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/protocols/rars_pca_comparator_v1.json",
+      "bytes": 1238,
+      "sha256": "b91beedf7d1f78edeca1215cb47747bad78986e94b12075f1d3bca3d2c1ecda1"
+    },
+    "policy": {
+      "path": "corpus_restricted_policy.json",
+      "bytes": 2252,
+      "sha256": "636050afbb7e91ec3327b53882bab378c7674e3eac93668c3733be806152ca0d"
+    }
+  },
+  "analysis_type": "corpus_restricted_external_sensitivity",
+  "full_benchmark_claim_allowed": false,
+  "original_query_count": 43,
+  "excluded_query_count": 1,
+  "excluded_qids": [
+    "1121709"
+  ],
+  "original_positive_qrels": 4102,
+  "positive_qrels_in_frozen_corpus": 502,
+  "original_positive_qrels_corpus_coverage": 0.12237932715748416,
+  "original_qrels_policy": "restrict_original_qrels_to_frozen_indexed_corpus",
+  "evaluator_input_validation_policy": "require_all_positive_in_corpus",
+  "prior_query_id_overlap_count": 0,
+  "prior_normalized_text_overlap_count": 0,
+  "selection_or_retuning_allowed": false,
+  "retrieval_outcomes_observed_before_freeze": false,
+  "query_embedding_compatibility": {
+    "model": "BAAI/bge-small-en-v1.5",
+    "normalized": true,
+    "row_mapping_used": true,
+    "sample_count": 16,
+    "minimum_cosine_similarity": 0.9999999403953552,
+    "maximum_absolute_difference": 2.086162567138672e-07
+  },
+  "limitations": [
+    "Only 12.24% of positive TREC DL 2019 passage qrels are present in the frozen 1M index.",
+    "Results are conditional on the frozen 1M corpus subset.",
+    "Results must not be reported as official full-corpus TREC DL 2019 benchmark scores.",
+    "The eligible external set contains 42 queries, so confidence intervals may be wide."
+  ]
+}
