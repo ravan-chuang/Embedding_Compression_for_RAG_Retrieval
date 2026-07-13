@@ -1,0 +1,59 @@
+{
+  "protocol_id": "rars_pca_comparator_v1",
+  "status": "preregistration",
+  "primary_metric": "recall@10",
+  "primary_contrast": "rars_r16_int8_minus_pca_r16_int8",
+  "bootstrap": {
+    "replicates": 20000,
+    "seed": 20260712,
+    "interval": "two_sided_percentile_95"
+  },
+  "shared": {
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "dimension": 384,
+    "base_index": "IVF-PQ M32",
+    "nlist": 512,
+    "nprobe": 16,
+    "nbits": 8,
+    "candidate_k": 100,
+    "final_k": 10,
+    "rank": 16,
+    "coefficient_dtype": "int8",
+    "max_svd_samples": 300000,
+    "basis_seed": 42
+  },
+  "validation_search": {
+    "alphas": [
+      -2.0,
+      -1.5,
+      -1.0,
+      -0.75,
+      -0.5,
+      -0.25,
+      -0.1,
+      0.0,
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "top_b": [
+      10,
+      20,
+      40,
+      100
+    ],
+    "selection_rule": "smallest Top-B retaining at least 90% of maximum validation overlap gain; then best alpha; ties by smaller abs(alpha), then smaller alpha"
+  },
+  "external_confirmation": {
+    "preferred_sets": [
+      "TREC DL 2019 passage",
+      "TREC DL 2020 passage"
+    ],
+    "must_audit_prior_query_overlap": true,
+    "one_shot": true
+  }
+}
