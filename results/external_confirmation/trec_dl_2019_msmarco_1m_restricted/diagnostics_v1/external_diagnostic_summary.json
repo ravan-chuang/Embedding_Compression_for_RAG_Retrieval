@@ -1,0 +1,52 @@
+{
+  "query_count": 42,
+  "analysis_type": "post_hoc_diagnostic_only",
+  "retrieval_performed": false,
+  "fitting_performed": false,
+  "selection_performed": false,
+  "retuning_performed": false,
+  "rars_vs_pca": {
+    "recall@10": {
+      "mean_difference": -0.018124600267457408,
+      "win_tie_loss": {
+        "win": 3,
+        "tie": 37,
+        "loss": 2
+      }
+    },
+    "success@10": {
+      "mean_difference": -0.023809523809523808,
+      "win_tie_loss": {
+        "win": 0,
+        "tie": 41,
+        "loss": 1
+      }
+    },
+    "mrr@10": {
+      "mean_difference": 0.024801587301587304,
+      "win_tie_loss": {
+        "win": 2,
+        "tie": 39,
+        "loss": 1
+      }
+    },
+    "ndcg@10": {
+      "mean_difference": 0.006601414867256809,
+      "win_tie_loss": {
+        "win": 11,
+        "tie": 20,
+        "loss": 11
+      }
+    }
+  },
+  "tradeoffs": {
+    "mrr_up_recall_down_count": 0,
+    "ndcg_up_recall_down_count": 0
+  },
+  "leave_one_query_out_primary": {
+    "minimum_difference": -0.02344471246910271,
+    "maximum_difference": 0.005823580213824117,
+    "all_negative": false,
+    "sign_changes": 1
+  }
+}

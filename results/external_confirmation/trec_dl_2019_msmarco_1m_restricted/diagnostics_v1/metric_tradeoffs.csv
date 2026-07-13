@@ -1,0 +1,43 @@
+qid,query_text,query_token_count,positive_qrel_count,rars_minus_pca_recall_at_10,rars_minus_pca_success_at_10,rars_minus_pca_mrr_at_10,rars_minus_pca_ndcg_at_10,rars_vs_pca_recall_group,rars_mrr_up_recall_down_vs_pca,rars_ndcg_up_recall_down_vs_pca
+156493,do goldfish grow,3,18,0.0,0.0,0.0,-0.009743133900408374,tie,False,False
+1110199,what is wifi vs bluetooth,5,6,0.0,0.0,0.0,0.0,tie,False,False
+1063750,why did the us volunterilay enter ww1,7,39,0.0,0.0,0.0,0.0,tie,False,False
+130510,definition declaratory judgment,3,5,0.0,0.0,0.0,0.0,tie,False,False
+489204,right pelvic pain causes,4,10,0.0,0.0,0.0,-0.0052197468361592225,tie,False,False
+573724,what are the social determinants of health,7,6,0.0,0.0,0.0,-0.012061195471912312,tie,False,False
+168216,does legionella pneumophila cause pneumonia,5,36,0.02777777777777779,0.0,0.0,0.02484918997941954,win,False,False
+1133167,how is the weather in jamaica,6,33,0.0,0.0,0.0,0.0,tie,False,False
+527433,types of dysarthria from cerebral palsy,6,11,0.0,0.0,0.0,-0.0039023416339253325,tie,False,False
+1037798,who is robert gray,4,1,0.0,0.0,0.0,0.0,tie,False,False
+915593,what types of food can you cook sous vide,9,15,0.0,0.0,0.0,0.0,tie,False,False
+264014,how long is life cycle of flea,7,27,0.0,0.0,0.0,0.0,tie,False,False
+1121402,what can contour plowing reduce,5,8,0.0,0.0,0.0,0.0,tie,False,False
+962179,when was the salvation army founded,6,1,-1.0,-1.0,-0.125,-0.3154648767857287,loss,False,False
+1117099,what is a active margin,5,19,0.0,0.0,0.0,0.0,tie,False,False
+148538,difference between rn and bsn,5,7,-0.1428571428571429,0.0,0.0,-0.05127081319797916,loss,False,False
+451602,medicare's definition of mechanical ventilation,5,17,0.0,0.0,0.6666666666666667,0.1402868292727325,tie,False,False
+359349,how to find the midsegment of a trapezoid,8,4,0.0,0.0,0.0,0.0,tie,False,False
+1115776,what is an aml surveillance analyst,6,1,0.0,0.0,0.0,0.0,tie,False,False
+1112341,what is the daily life of thai people,8,13,0.1538461538461539,0.0,0.0,0.0395042646494676,win,False,False
+131843,definition of a sigmet,4,8,0.0,0.0,0.0,0.0,tie,False,False
+104861,cost of interior concrete flooring,5,20,0.0,0.0,0.0,-0.0026334352554373552,tie,False,False
+833860,what is the most popular food in switzerland,8,8,0.0,0.0,0.0,-0.01629971400254704,tie,False,False
+207786,how are some sharks warm blooded,6,6,0.0,0.0,0.0,0.0,tie,False,False
+1114819,what is durable medical equipment consist of,7,37,0.0,0.0,0.0,0.0025947786870342826,tie,False,False
+183378,exons definition biology,3,29,0.0,0.0,0.0,-0.008967047041898102,tie,False,False
+1106007,define visceral?,2,7,0.0,0.0,0.0,0.004214140790689824,tie,False,False
+1124210,tracheids are part of _____.,5,14,0.0,0.0,0.0,0.0,tie,False,False
+490595,rsa definition key,3,8,0.0,0.0,0.0,0.010088624504374866,tie,False,False
+1103812,who formed the commonwealth of independent states,7,1,0.0,0.0,0.0,0.0,tie,False,False
+87181,causes of left ventricular hypertrophy,5,11,0.0,0.0,0.0,-0.02728702264734373,tie,False,False
+443396,lps laws definition,3,15,0.0,0.0,0.0,0.0,tie,False,False
+87452,causes of military suicide,4,5,0.19999999999999996,0.0,0.0,0.1969840654104265,win,False,False
+855410,what is theraderm used for,5,1,0.0,0.0,0.0,0.0,tie,False,False
+1114646,what is famvir prescribed for,5,8,0.0,0.0,0.0,0.0,tie,False,False
+19335,anthropological definition of environment,4,4,0.0,0.0,0.5,0.3017531560036727,tie,False,False
+47923,axon terminals or synaptic knob definition,6,14,0.0,0.0,0.0,-0.003541281458612766,tie,False,False
+405717,is cdg airport in main paris,6,7,0.0,0.0,0.0,0.005435548436858673,tie,False,False
+182539,example of monotonic function,4,1,0.0,0.0,0.0,0.0,tie,False,False
+1113437,what is physical description of spruce,6,12,0.0,0.0,0.0,0.0012212707419815838,tie,False,False
+1129237,hydrogen is a liquid below what temperature,7,5,0.0,0.0,0.0,0.0,tie,False,False
+146187,difference between a mcdouble and a double cheeseburger,8,4,0.0,0.0,0.0,0.006718164180079977,tie,False,False
