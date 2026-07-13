@@ -363,7 +363,15 @@ def select_registered_configuration(results: pd.DataFrame) -> dict[str, Any]:
 
     max_gain = float(results["overlap_gain"].max())
     threshold = 0.90 * max_gain
-    eligible = results[results["overlap_gain"] >= threshold].copy()
+    eligible = results[
+        (results["overlap_gain"] > threshold)
+        | np.isclose(
+            results["overlap_gain"],
+            threshold,
+            rtol=0.0,
+            atol=1e-12,
+        )
+    ].copy()
     min_top_b = int(eligible["top_b"].min())
     eligible = eligible[eligible["top_b"] == min_top_b].copy()
 
