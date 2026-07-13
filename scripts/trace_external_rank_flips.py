@@ -280,7 +280,7 @@ def main() -> None:
                 for row in relevant_trace
                 if row["left_rars_top10_vs_pca"]
             ],
-            "negative_entered_rars_top10_vs_pca": [
+            "nonpositive_entered_rars_top10_vs_pca": [
                 row["doc_id"]
                 for row in rows
                 if row["qid"] == qid
