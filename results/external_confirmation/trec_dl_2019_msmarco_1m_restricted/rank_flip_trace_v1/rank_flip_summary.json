@@ -1,0 +1,81 @@
+{
+  "analysis_type": "frozen_post_hoc_rank_flip_trace",
+  "retrieval_rerun": true,
+  "fitting_performed": false,
+  "selection_performed": false,
+  "retuning_performed": false,
+  "candidate_k": 100,
+  "trace_k": 15,
+  "top_b": 40,
+  "alpha": 0.75,
+  "nprobe": 16,
+  "query_count": 5,
+  "queries": [
+    {
+      "qid": "168216",
+      "query_text": "does legionella pneumophila cause pneumonia",
+      "positive_qrels": 36,
+      "positive_docs_in_trace": 8,
+      "positive_entered_rars_top10_vs_pca": [
+        4656297
+      ],
+      "positive_left_rars_top10_vs_pca": [],
+      "nonpositive_entered_rars_top10_vs_pca": []
+    },
+    {
+      "qid": "962179",
+      "query_text": "when was the salvation army founded",
+      "positive_qrels": 1,
+      "positive_docs_in_trace": 1,
+      "positive_entered_rars_top10_vs_pca": [],
+      "positive_left_rars_top10_vs_pca": [
+        3705165
+      ],
+      "nonpositive_entered_rars_top10_vs_pca": [
+        4831573,
+        724895,
+        5374952
+      ]
+    },
+    {
+      "qid": "148538",
+      "query_text": "difference between rn and bsn",
+      "positive_qrels": 7,
+      "positive_docs_in_trace": 4,
+      "positive_entered_rars_top10_vs_pca": [],
+      "positive_left_rars_top10_vs_pca": [
+        2915327
+      ],
+      "nonpositive_entered_rars_top10_vs_pca": [
+        888704
+      ]
+    },
+    {
+      "qid": "1112341",
+      "query_text": "what is the daily life of thai people",
+      "positive_qrels": 13,
+      "positive_docs_in_trace": 4,
+      "positive_entered_rars_top10_vs_pca": [
+        2694635,
+        7615749
+      ],
+      "positive_left_rars_top10_vs_pca": [],
+      "nonpositive_entered_rars_top10_vs_pca": [
+        8100082
+      ]
+    },
+    {
+      "qid": "87452",
+      "query_text": "causes of military suicide",
+      "positive_qrels": 5,
+      "positive_docs_in_trace": 3,
+      "positive_entered_rars_top10_vs_pca": [
+        6018164
+      ],
+      "positive_left_rars_top10_vs_pca": [],
+      "nonpositive_entered_rars_top10_vs_pca": [
+        8436575
+      ]
+    }
+  ]
+}
