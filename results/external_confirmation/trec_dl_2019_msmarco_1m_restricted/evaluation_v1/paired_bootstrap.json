@@ -1,0 +1,104 @@
+{
+  "rars_minus_pca": {
+    "recall@10": {
+      "difference": -0.01812460026745741,
+      "ci_low": -0.07350718065003778,
+      "ci_high": 0.01684981684981685,
+      "probability_difference_gt_zero": 0.29715,
+      "replicates": 20000,
+      "seed": 20260712
+    },
+    "success@10": {
+      "difference": -0.023809523809523808,
+      "ci_low": -0.07142857142857142,
+      "ci_high": 0.0,
+      "probability_difference_gt_zero": 0.0,
+      "replicates": 20000,
+      "seed": 20260713
+    },
+    "mrr@10": {
+      "difference": 0.024801587301587304,
+      "ci_low": -0.005952380952380952,
+      "ci_high": 0.06845238095238096,
+      "probability_difference_gt_zero": 0.86705,
+      "replicates": 20000,
+      "seed": 20260714
+    },
+    "ndcg@10": {
+      "difference": 0.006601414867256807,
+      "ci_low": -0.016636209542366227,
+      "ci_high": 0.030439790801285907,
+      "probability_difference_gt_zero": 0.7243,
+      "replicates": 20000,
+      "seed": 20260715
+    }
+  },
+  "pca_minus_base": {
+    "recall@10": {
+      "difference": -0.006179844400649963,
+      "ci_low": -0.03169271937219634,
+      "ci_high": 0.017377851718169742,
+      "probability_difference_gt_zero": 0.32425,
+      "replicates": 20000,
+      "seed": 20260712
+    },
+    "success@10": {
+      "difference": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "probability_difference_gt_zero": 0.0,
+      "replicates": 20000,
+      "seed": 20260713
+    },
+    "mrr@10": {
+      "difference": 0.015447845804988663,
+      "ci_low": -0.026218820861678,
+      "ci_high": 0.060090702947845805,
+      "probability_difference_gt_zero": 0.7516,
+      "replicates": 20000,
+      "seed": 20260714
+    },
+    "ndcg@10": {
+      "difference": 0.015289012434149384,
+      "ci_low": -0.017105027320888647,
+      "ci_high": 0.045593086462222994,
+      "probability_difference_gt_zero": 0.8271,
+      "replicates": 20000,
+      "seed": 20260715
+    }
+  },
+  "rars_minus_base": {
+    "recall@10": {
+      "difference": -0.024304444668107376,
+      "ci_low": -0.08328827703166664,
+      "ci_high": 0.01718029783192052,
+      "probability_difference_gt_zero": 0.1884,
+      "replicates": 20000,
+      "seed": 20260712
+    },
+    "success@10": {
+      "difference": -0.023809523809523808,
+      "ci_low": -0.07142857142857142,
+      "ci_high": 0.0,
+      "probability_difference_gt_zero": 0.0,
+      "replicates": 20000,
+      "seed": 20260713
+    },
+    "mrr@10": {
+      "difference": 0.04024943310657597,
+      "ci_low": -0.003401360544217687,
+      "ci_high": 0.09183673469387757,
+      "probability_difference_gt_zero": 0.9694,
+      "replicates": 20000,
+      "seed": 20260714
+    },
+    "ndcg@10": {
+      "difference": 0.021890427301406192,
+      "ci_low": -0.014566176166918852,
+      "ci_high": 0.053861593072951214,
+      "probability_difference_gt_zero": 0.8894,
+      "replicates": 20000,
+      "seed": 20260715
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "protocol_id": "rars_pca_comparator_v1",
+  "external_manifest_sha256": "7e951aa2b45f1d138f84f165067c54ebf3a72e83764cc57efe21266f6bc0e811",
+  "query_count": 42,
+  "systems": [
+    "base_m32",
+    "pca_r16_int8",
+    "rars_r16_int8"
+  ],
+  "primary_metric": "recall@10",
+  "primary_contrast": "rars_minus_pca",
+  "bootstrap_replicates": 20000,
+  "bootstrap_seed_base": 20260712,
+  "selection_performed": false,
+  "fitting_performed": false,
+  "files": {
+    "metrics.json": {
+      "bytes": 506,
+      "sha256": "3acc3087908aa0f1964b95811768ff19a9ee3dc3c49da9253ddbef01c34dd705"
+    },
+    "paired_bootstrap.json": {
+      "bytes": 2897,
+      "sha256": "f72473851dd053b9c4af1cffddc226e1470a7880e91963bf72bdab5e07a461b9"
+    },
+    "per_query_metrics.csv": {
+      "bytes": 5049,
+      "sha256": "3afd6bce0aa092fd5e0109da918563a96f19df43f739e531ba54f1b4ac4088e7"
+    }
+  }
+}
