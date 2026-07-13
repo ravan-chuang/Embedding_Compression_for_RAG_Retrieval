@@ -1,0 +1,14 @@
+{
+  "path": "sidecars/codes_pca_rank16.int8.memmap",
+  "committed_to_git": false,
+  "dtype": "int8",
+  "shape": [
+    1000000,
+    16
+  ],
+  "bytes": 16000000,
+  "bytes_per_document": 16.0,
+  "sha256": "20bc05d1e5e645e85ca23ff07a420da8e732a311ecb2a2969025b21cde1ad41f",
+  "generation_script": "scripts/train_select_pca_comparator.py",
+  "protocol": "rars_pca_comparator_v1"
+}

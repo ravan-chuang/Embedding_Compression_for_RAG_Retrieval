@@ -1,0 +1,95 @@
+{
+  "package": "rars_pca_comparator_train_validation_v1",
+  "protocol_id": "rars_pca_comparator_v1",
+  "heldout_split_loaded": false,
+  "external_qrels_loaded": false,
+  "files": [
+    {
+      "path": "bases/pca_sample_rows.int64.npy",
+      "bytes": 2400128,
+      "sha256": "8a10e1f5abf4f62f3e8add94d7b0ee2b3449a6612594a3244aa11518705c2c07"
+    },
+    {
+      "path": "bases/pca_unweighted_rank16.float32.npy",
+      "bytes": 24704,
+      "sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec"
+    },
+    {
+      "path": "candidate_cache/train/ann_rows.npy",
+      "bytes": 3984128,
+      "sha256": "095e217ddf2a17fa4a90367b336b2fefbfbce3e257a2b721a7d89b24131eec5c"
+    },
+    {
+      "path": "candidate_cache/train/ann_scores.npy",
+      "bytes": 1992128,
+      "sha256": "43ba494e520df2812721d7cbc3d50f706724bddebeedded8222b8b93b7535408"
+    },
+    {
+      "path": "candidate_cache/train/exact_scores.npy",
+      "bytes": 1992128,
+      "sha256": "36b2a89ccfb41d6b751f023d4cbb368507011645fe4d7f672caff59e31f12569"
+    },
+    {
+      "path": "candidate_cache/validation/ann_rows.npy",
+      "bytes": 800128,
+      "sha256": "67198a0e258ac6d06157d000da9102d4872473df6a1a961b27880d1ef55d6172"
+    },
+    {
+      "path": "candidate_cache/validation/ann_scores.npy",
+      "bytes": 400128,
+      "sha256": "53657f8d0215b0b2ed006195e112555cee7cf56ff1b154555d0f9287729a8733"
+    },
+    {
+      "path": "candidate_cache/validation/exact_scores.npy",
+      "bytes": 400128,
+      "sha256": "8ec910ecbb093ce86d449af305518421aa7863af0ba3b2a392a927c9e487a104"
+    },
+    {
+      "path": "residual_ivfpq_m32.float32.memmap",
+      "bytes": 1536000000,
+      "sha256": null
+    },
+    {
+      "path": "selected_pca_config.json",
+      "bytes": 908,
+      "sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4"
+    },
+    {
+      "path": "sidecars/codes_pca_rank16.int8.memmap",
+      "bytes": 16000000,
+      "sha256": "20bc05d1e5e645e85ca23ff07a420da8e732a311ecb2a2969025b21cde1ad41f"
+    },
+    {
+      "path": "sidecars/scales_pca_rank16.float32.npy",
+      "bytes": 192,
+      "sha256": "7f2efa852dc11b6079e1d23e153de00e45119e4d3cfba40c97be0c72e3fc3bf6"
+    },
+    {
+      "path": "validation_selection.csv",
+      "bytes": 7553,
+      "sha256": "1c591ae216d1ea712f2b91b7196106c83511be5c451f2b64705acca4873a477a"
+    }
+  ],
+  "inputs": {
+    "protocol": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/protocols/rars_pca_comparator_v1.json",
+      "sha256": "b91beedf7d1f78edeca1215cb47747bad78986e94b12075f1d3bca3d2c1ecda1"
+    },
+    "train_split": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/splits/msmarco_rars_train_split.json",
+      "sha256": "881a46f9fb123d37ce8bbadaa78843da8f94e4d76f15b68472e8c2aee28327c2"
+    },
+    "validation_split": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval/splits/msmarco_rars_validation_split.json",
+      "sha256": "1d816f01d46c2f8891af72ceedcdfa06ab1a790b2cc96fbe72019b36a348eac1"
+    },
+    "index": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/msmarco_1m_pq_residual_gate3/frozen_ivfpq_m32_nlist512.index",
+      "sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8"
+    },
+    "query_vectors": {
+      "path": "/content/gdrive/MyDrive/rag-pq-checkpoints/msmarco_basis_gate0_cache/query_vectors.fp32.npy",
+      "sha256": "4536f88c55d4ff8f37d7b0f0a31c3a727d78cdc031403795c9c8907a64dacaeb"
+    }
+  }
+}
