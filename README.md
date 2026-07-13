@@ -13,7 +13,7 @@ The repository separates three questions that are often conflated:
 2. **Compressed-domain efficiency:** What latency and throughput are obtained when Faiss searches PQ codes directly?
 3. **Frozen-index recovery:** How much ranking quality can be recovered by attaching a compact residual sidecar without rebuilding or rewriting an existing IVF-PQ index?
 
-The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The latest result uses a strict query-level protocol: 4,980 MS MARCO queries for basis fitting, 1,000 validation queries for configuration selection, and a 1,000-query test split held out from the clean train/validation pipeline and evaluated only after the selected configuration and evaluator were committed.
+The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The evidence now has two distinct layers: a positive MS MARCO clean-pipeline result against the frozen base index, and a preregistered external RARS-versus-PCA comparison whose primary hypothesis was not supported.
 
 On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improves:
 
@@ -24,6 +24,8 @@ On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improv
 
 All four confidence intervals are strictly above zero on the full 1,000-query clean-pipeline held-out split. A project-history audit subsequently found that 137 of those queries had appeared in an earlier exploratory query set. After excluding those 137 queries by ID, the remaining 863 prior-unseen queries retain statistically positive gains for Recall@10, Success@10, and nDCG@10; MRR@10 remains directionally positive but its 95% confidence interval narrowly crosses zero. The base IVF-PQ index and its existing PQ codes remain unchanged.
 
+The later external comparison froze a storage-matched PCA sidecar and RARS before evaluating 42 eligible TREC DL 2019 queries against the same frozen 1M corpus. RARS minus PCA Recall@10 was `-0.0181`, with a 95% paired-bootstrap CI of `[-0.0735, +0.0168]`. The external primary hypothesis was therefore **not supported**. This 42-query result is a corpus-restricted sensitivity analysis, not an official full-corpus TREC benchmark, but it is the latest confirmatory evidence and is reported without retuning.
+
 ## Research Status
 
 | Area | Status |
@@ -33,11 +35,15 @@ All four confidence intervals are strictly above zero on the full 1,000-query cl
 | Frozen IVF-PQ residual sidecar | Complete |
 | Clean query-level RARS train / validation / test protocol | Complete |
 | Clean-pipeline held-out RARS evaluation and audit manifest | Complete |
+| Storage-matched PCA comparator and validation freeze | Complete |
+| Preregistered external RARS-versus-PCA evaluation | Complete; primary hypothesis unsupported |
+| External query-level and rank-flip diagnostics | Complete; post-hoc and non-tuning |
+| Larger independent BEIR NQ confirmation | [Protocol](docs/beir_nq_confirmation_protocol.md) and [Colab T4 + Drive runbook](docs/beir_nq_colab_runbook.md) ready for design freeze; test qrels not accessed |
 | Deployable rank-16 int8 sidecar artifact | Complete |
 | FastAPI sidecar serving path | Complete |
 | Artifact-backed and live-Faiss benchmarks | Complete |
-| Paper-ready CSV / LaTeX table pipeline | Requires clean-split table refresh |
-| SIGIR short-paper manuscript | In preparation |
+| Paper-ready CSV / LaTeX table pipeline | Complete, including external tables |
+| SIGIR short-paper manuscript | [Draft v2](docs/rars_paper_draft_v2.md) reframes the mixed evidence |
 
 ## Highlights
 
@@ -49,11 +55,13 @@ All four confidence intervals are strictly above zero on the full 1,000-query cl
 - Adds a leakage-resistant RARS protocol with deterministic `4,980 / 1,000 / 1,000` train, validation, and clean-pipeline held-out query splits.
 - Fits the score-error weighted residual basis on train queries only, selects `alpha=0.75` and Top40 on validation only, freezes the configuration in Git, and then performs a one-shot clean-pipeline held-out evaluation.
 - Improves clean-pipeline held-out Recall@10 from `0.6833` to `0.7073`; all four paired-bootstrap confidence intervals are above zero on the full 1,000-query split. After excluding 137 queries used in earlier exploratory work, Recall@10 improves from `0.6956` to `0.7124` (`+0.0168`, 95% CI `[+0.0029, +0.0303]`).
+- Freezes an ordinary unweighted rank-16 int8 PCA comparator under the same candidate pool, correction depth, selection rule, and storage budget as RARS.
+- Reports the negative preregistered external result without retuning: on 42 eligible TREC DL 2019 queries restricted to the frozen 1M corpus, RARS minus PCA Recall@10 is `-0.0181` with 95% CI `[-0.0735, +0.0168]`.
 - Packages the 1M-document RARS sidecar with a `16.025 B/document` residual-representation cost and `24.028 B/document` complete artifact cost including external document IDs.
 - Adds vectorized live-Faiss correction; the previously recorded 14-thread Top40 implementation requires `1.325 µs/query`, equal to `4.41%` of independently timed Faiss search cost. These timing measurements come from the earlier artifact benchmark and are reported separately from the clean-split quality result.
 - Verifies clean-split artifacts with SHA-256 hashes for the selected configuration, basis, scales, evaluator inputs, test results, and per-query outputs.
 - Adds FastAPI `/search`, `/batch-search`, and `/health` support for optional fixed Top-B RARS correction.
-- Retains negative results rather than hiding them: higher-rate `M=48` remains stronger when rebuilding is allowed, FiQA transfer is model-sensitive, learned routers do not beat fixed-depth correction, and the evaluated cross-encoder reranker does not justify its latency.
+- Retains negative results rather than hiding them: the external RARS-over-PCA hypothesis is unsupported, higher-rate `M=48` remains stronger when rebuilding is allowed, FiQA transfer is model-sensitive, learned routers do not beat fixed-depth correction, and the evaluated cross-encoder reranker does not justify its latency.
 
 ## Benchmark Setup
 
@@ -578,7 +586,7 @@ The 137 previously explored test queries were excluded using query IDs only, wit
 
 Recall@10, Success@10, and nDCG@10 retain confidence intervals strictly above zero. MRR@10 remains directionally positive, but its 95% interval narrowly crosses zero.
 
-This is a post-hoc contamination sensitivity audit, not a replacement untouched test. All 6,980 MS MARCO development queries have now influenced fitting, selection, evaluation, or subsequent analysis. A future project-history-level untouched confirmation must therefore use a new external query set under a pre-frozen protocol.
+This is a post-hoc contamination sensitivity audit, not a replacement untouched test. All 6,980 MS MARCO development queries have now influenced fitting, selection, evaluation, or subsequent analysis. This finding motivated the later pre-frozen external comparison reported below; the original 6,980-query pool remains closed to new confirmatory claims.
 
 See:
 
@@ -586,9 +594,39 @@ See:
 - [prior-exploration-excluded sensitivity JSON](results/rars_clean_split/test/prior_exploration_excluded_sensitivity.json)
 - [overlap sensitivity paper table](results/paper_tables/paper_rars_overlap_sensitivity.csv)
 
-The primary paper claim is:
+### Storage-matched PCA comparator and external confirmation
 
-> On a 1,000-query MS MARCO test split held out from the clean train/validation pipeline, a rank-16 int8 retrieval-aware residual sidecar applied to a frozen IVF-PQ M32 index improves Recall@10 from 0.6833 to 0.7073, with a paired-bootstrap difference of +0.0240 and a 95% confidence interval of [+0.0105, +0.0378], without rebuilding or rewriting the base index. A project-history audit found 137 queries overlapping an earlier exploratory set; excluding them leaves an 863-query prior-unseen sensitivity subset with a Recall@10 gain of +0.0168 and 95% CI [+0.0029, +0.0303].
+After the project-history audit, the repository preregistered a direct comparison among the frozen base index, an ordinary unweighted residual-PCA sidecar, and RARS. PCA and RARS use the same rank-16 int8 payload, Top-100 candidate pool, Top-40 correction depth, final Top-10 cutoff, and validation-only configuration selection. The evaluator and artifact hashes were frozen before external qrels evaluation.
+
+The external set contains 42 eligible TREC DL 2019 passage queries with no query-ID or normalized-text overlap against the earlier 6,980-query pool. Because only 502 of the original 4,102 positive judgments occur in the frozen 1M index, the result is explicitly limited to that indexed corpus.
+
+| System | Recall@10 | Success@10 | MRR@10 | nDCG@10 |
+|:--|--:|--:|--:|--:|
+| Frozen IVF-PQ `M=32` | 0.3507 | 0.8095 | 0.6939 | 0.4405 |
+| PCA rank-16 int8 | 0.3445 | 0.8095 | 0.7093 | 0.4558 |
+| RARS rank-16 int8 | 0.3264 | 0.7857 | 0.7341 | 0.4624 |
+
+The preregistered primary contrast was:
+
+```text
+RARS minus PCA Recall@10 = -0.0181
+95% paired-bootstrap CI  = [-0.0735, +0.0168]
+P(difference > 0)        = 0.2972
+```
+
+The primary hypothesis was not supported. RARS has higher MRR@10 and nDCG@10 point estimates than PCA, but their paired confidence intervals also cross zero. Post-hoc diagnostics show that only five queries differ in Recall@10 and that one sparse-judgment boundary flip changes the sign of the leave-one-query-out mean. This explains the instability; it does not override the frozen result or authorize retuning.
+
+See:
+
+- [comparator protocol](docs/rars_pca_comparator_protocol.md)
+- [frozen external result](results/external_confirmation/trec_dl_2019_msmarco_1m_restricted/evaluation_v1/README.md)
+- [query-level diagnostics](results/external_confirmation/trec_dl_2019_msmarco_1m_restricted/diagnostics_v1/README.md)
+- [rank-flip trace](results/external_confirmation/trec_dl_2019_msmarco_1m_restricted/rank_flip_trace_v1/README.md)
+- [external paper tables](results/paper_tables/paper_external_contrast_table.csv)
+
+The defensible paper-level conclusion is:
+
+> RARS improves the frozen IVF-PQ base on the clean-pipeline MS MARCO split, and the prior-unseen sensitivity subset retains a positive Recall@10 gain. However, the preregistered corpus-restricted external evaluation does not establish that retrieval-aware basis learning outperforms an ordinary storage-matched PCA sidecar. Broader independent confirmation is required before claiming general RARS superiority.
 
 ### Reproducible clean-split package
 
@@ -747,6 +785,8 @@ paper_pca_transfer_table.*
 paper_system_table.*
 paper_ablation_table.*
 paper_significance_table.*
+paper_external_system_table.*
+paper_external_contrast_table.*
 paper_storage_table.*
 ```
 
@@ -757,20 +797,18 @@ than mixing incompatible protocols or imputing values. They also separate:
 - frozen-index retrofit methods from higher-rate indexes that require
   re-encoding;
 - residual representation bytes from complete deployable artifact bytes;
-- independent correction cost from paired end-to-end overhead.
+- independent correction cost from paired end-to-end overhead;
+- developmental same-pool comparisons from the frozen external confirmation.
 
-The clean-split table refresh must use the clean-pipeline held-out result as the primary
-RARS quality row:
+The paper tables preserve two result tiers that must not be merged:
 
-- frozen IVF-PQ `M=32`: Recall@10 `0.6833`;
-- frozen RARS Top40: Recall@10 `0.7073`;
-- paired difference: `+0.0240`, 95% CI `[+0.0105, +0.0378]`;
-- Success@10, MRR@10, and nDCG@10 confidence intervals are also strictly above zero.
+- **Clean-pipeline base comparison:** frozen IVF-PQ `M=32` Recall@10 `0.6833` versus RARS Top40 `0.7073`, a paired difference of `+0.0240` with 95% CI `[+0.0105, +0.0378]`.
+- **Preregistered external comparator:** RARS minus PCA Recall@10 `-0.0181`, with 95% CI `[-0.0735, +0.0168]`; the primary hypothesis is unsupported.
 
 Earlier same-query RARS / PCA rows remain exploratory ablations and artifact
 verification records. They must be labeled separately rather than mixed with
-the clean-pipeline held-out table. Higher-rate `M=48` remains stronger when a full
-rebuild and re-encoding are operationally acceptable.
+the clean-pipeline or external tables. Higher-rate `M=48` remains stronger when
+a full rebuild and re-encoding are operationally acceptable.
 
 
 ## Fixed-Budget Residual-PQ Refinement
@@ -984,9 +1022,10 @@ For experimental modes, storage accounting, latency protocol, and interpretation
 
 ## Key Findings
 
+- **The preregistered external RARS-over-PCA hypothesis is unsupported:** on 42 eligible TREC DL 2019 queries restricted to the frozen 1M corpus, RARS minus PCA Recall@10 is `-0.0181` with 95% CI `[-0.0735, +0.0168]`. No post-result retuning was performed.
 - **Clean-pipeline held-out RARS result:** after fitting on 4,980 train queries, selecting on 1,000 validation queries, freezing the configuration, and evaluating once on a 1,000-query held-out split, RARS Top40 improves Recall@10 `0.6833 → 0.7073` (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). A project-history audit found 137 queries overlapping an earlier exploratory set; the remaining 863 prior-unseen queries retain a Recall@10 gain of `+0.0168` with 95% CI `[+0.0029, +0.0303]`.
-- **The improvement is broad, not metric-specific:** Success@10 improves `0.6910 → 0.7180`, MRR@10 `0.4722 → 0.4851`, and nDCG@10 `0.5204 → 0.5360`; all paired-bootstrap 95% intervals are above zero.
-- **The corrected protocol removes same-query adaptation:** basis fitting, configuration selection, and final qrels evaluation use disjoint query sets, and the selected configuration plus evaluator were committed before the test run.
+- **The clean-pipeline improvement is broad, not metric-specific:** Success@10 improves `0.6910 → 0.7180`, MRR@10 `0.4722 → 0.4851`, and nDCG@10 `0.5204 → 0.5360`; all paired-bootstrap 95% intervals are above zero on the full split.
+- **The corrected pipeline removes fitting/selection overlap:** basis fitting, configuration selection, and final qrels evaluation use disjoint query splits, and the selected configuration plus evaluator were committed before the test run. The later project-history audit separately discloses the 137 earlier exploratory overlaps.
 - **Frozen-index retrofit:** the method attaches a rank-16 int8 sidecar without retraining the coarse quantizer or rewriting existing PQ codes.
 - **Deployment-aware operating point:** validation selected `score_error_weighted`, `alpha=0.75`, Top40 using a predeclared cost-aware rule. Top40 retained about 94% of the maximum validation overlap gain while using 60% fewer corrected candidates than Top100.
 - **Auditability:** committed manifests record the hashes of the query split, frozen configuration, basis, scales, test evaluator, qrels, index, query vectors, document IDs, sidecar codes, metrics, and per-query outputs.
@@ -1266,7 +1305,10 @@ See [Docker API](docs/docker_api.md).
 
 ### Testing and CI
 
-The repository includes **19 passing offline tests** for artifact consistency, retriever behavior, endpoint logic, single-query reranking, multi-query reranking, and batch rerank integration.
+The repository includes offline test cases covering artifact consistency,
+retriever and endpoint behavior, reranking, sidecar correction, frozen comparator
+selection, external evaluation, diagnostics, paper-table generation, and the
+qrels-free BEIR NQ freeze gate.
 
 ```bash
 pip install -r requirements-dev.txt
@@ -1556,22 +1598,27 @@ committed benchmark artifacts.
 python -m pytest -q
 ```
 
-The current recorded suite contains 19 passing tests covering retrieval,
-artifact contracts, optional reranking, sidecar loading, API contracts, and
-fake-retriever request behavior.
+The test suite covers retrieval, artifact contracts, optional reranking,
+sidecar loading, API contracts, frozen comparator selection, external
+evaluation, diagnostic analysis, and paper-table generation.
 
 
 ## Limitations and Next Steps
 
-- The statistically established RARS result currently covers one deterministic
-  1M-passage MS MARCO subset, one embedding model, one frozen IVF-PQ
-  configuration, and one 1,000-query test split held out from the clean train/validation pipeline.
+- The positive clean-pipeline RARS result covers one deterministic 1M-passage
+  MS MARCO subset, one embedding model, one frozen IVF-PQ configuration, and
+  one 1,000-query split held out from that fitting/selection pipeline.
+- A project-history audit found 137 queries from an earlier exploratory set in
+  that 1,000-query split. The 863-query exclusion analysis is a sensitivity
+  result, not a replacement untouched test.
 - The clean result establishes superiority over the frozen IVF-PQ baseline, not
   over every alternative retrofit or over a newly rebuilt higher-rate index.
-- A clean PCA-versus-RARS comparison was not part of the one-shot test run.
-  Earlier PCA comparisons reuse the exploratory query set and must remain
-  clearly labeled. A future PCA comparator requires its own pre-frozen
-  validation protocol.
+- The later preregistered external comparison does not support RARS superiority
+  over a storage-matched PCA sidecar: Recall@10 difference `-0.0181`, 95% CI
+  `[-0.0735, +0.0168]`.
+- The external analysis contains only 42 eligible queries and is conditional on
+  the frozen 1M corpus, which contains 12.24% of the original positive TREC DL
+  2019 judgments. It is not an official full-corpus TREC result.
 - IVF-PQ `M=48` produces higher absolute quality at a comparable total
   representation budget. RARS is positioned as a frozen-index retrofit for
   environments where rebuilding and re-encoding are undesirable.
@@ -1598,15 +1645,16 @@ fake-retriever request behavior.
 
 Immediate priorities:
 
-1. refresh `results/paper_tables/` so the clean-pipeline held-out row is the
-   headline RARS result;
-2. update the abstract, method, protocol, and statistical-significance sections
-   of the manuscript;
-3. add a compact query-split and frozen-evaluation diagram;
-4. benchmark cleanly frozen PCA and RARS comparators only if the comparison is
-   specified before an external confirmation evaluation;
-5. retain the current test split as a final evaluation set and do not tune any
-   method choice against its results.
+1. treat both the 1,000-query clean-pipeline test and 42-query external result
+   as closed; do not tune the method against either outcome;
+2. restructure the manuscript around mixed evidence rather than a universal
+   RARS-superiority claim;
+3. freeze and execute the [BEIR NQ confirmation protocol](docs/beir_nq_confirmation_protocol.md)
+   with full corpus coverage and Base/PCA/RARS before loading its test qrels;
+4. use enough independent queries to reduce sensitivity to a handful of Top-10
+   boundary flips, and report per-query paired statistics;
+5. add a compact protocol/evidence diagram and keep developmental, sensitivity,
+   and confirmatory tables visually separate.
 
 ## Release Readiness
 
@@ -1621,15 +1669,19 @@ FiQA / SciFact compression benchmarks
 → artifact-backed correctness benchmark
 → FastAPI optional sidecar serving
 → vectorized live-Faiss benchmark
+→ storage-matched PCA comparator freeze
+→ preregistered external confirmation and diagnostics
 → reproducible CSV / LaTeX paper tables
 → automated tests and CI
 ```
 
-Current validated headline result:
+Current evidence summary:
 
-> On the held-out MS MARCO 1M evaluation, RARS Top20 improves Recall@10 from `0.66275` to `0.69892` on a frozen IVF-PQ `M=32` index. The rank-16 int8 representation costs `16.025 B/document`, and the recorded vectorized 14-thread live-Faiss correction costs `0.816 µs/query` in a 1,000-query batch.
+> RARS Top40 improves Recall@10 from `0.6833` to `0.7073` on the 1,000-query clean-pipeline MS MARCO split (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). However, the preregistered 42-query corpus-restricted external comparison gives RARS minus PCA Recall@10 `-0.0181` with 95% CI `[-0.0735, +0.0168]`, so general superiority over PCA is not established. The rank-16 int8 representation costs `16.025 B/document`.
 
-The project is ready for research-paper drafting and reproducible artifact
-release. It should still be described as a research prototype rather than a
-production vector database: operational hardening, fused-kernel integration,
-broader generalization, and full request-level load testing remain future work.
+The project is ready for an evidence-honest manuscript revision and
+reproducible artifact release. A stronger method-superiority submission still
+requires broader independent confirmation. The system should remain described
+as a research prototype rather than a production vector database: operational
+hardening, fused-kernel integration, and full request-level load testing remain
+future work.

@@ -591,6 +591,73 @@ def build_significance_table() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def build_external_system_table() -> pd.DataFrame:
+    """Build the frozen external aggregate table without mixing protocols."""
+    root = (
+        ROOT
+        / "results"
+        / "external_confirmation"
+        / "trec_dl_2019_msmarco_1m_restricted"
+    )
+    metrics = load_json(root / "evaluation_v1" / "metrics.json")
+    manifest = load_json(root / "external_confirmation_manifest.json")
+
+    rows = []
+    for system_id, display_name in [
+        ("base_m32", "Base IVF-PQ M32"),
+        ("pca_r16_int8", "PCA rank-16 int8"),
+        ("rars_r16_int8", "RARS rank-16 int8"),
+    ]:
+        result = metrics[system_id]
+        rows.append(
+            {
+                "System": display_name,
+                "Queries": int(manifest["query_count"]),
+                "Recall@10": result["recall@10"],
+                "Success@10": result["success@10"],
+                "MRR@10": result["mrr@10"],
+                "nDCG@10": result["ndcg@10"],
+                "Evaluation": "TREC DL 2019 / frozen 1M corpus restriction",
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+
+def build_external_contrast_table() -> pd.DataFrame:
+    """Build the preregistered external RARS-minus-PCA contrast table."""
+    source = load_json(
+        ROOT
+        / "results"
+        / "external_confirmation"
+        / "trec_dl_2019_msmarco_1m_restricted"
+        / "evaluation_v1"
+        / "paired_bootstrap.json"
+    )["rars_minus_pca"]
+
+    rows = []
+    for metric in ["recall@10", "success@10", "mrr@10", "ndcg@10"]:
+        result = source[metric]
+        rows.append(
+            {
+                "Contrast": "RARS minus PCA",
+                "Metric": metric.replace("ndcg", "nDCG").replace(
+                    "recall", "Recall"
+                ).replace("success", "Success").replace("mrr", "MRR"),
+                "Mean difference": result["difference"],
+                "95% CI low": result["ci_low"],
+                "95% CI high": result["ci_high"],
+                "Bootstrap P(diff>0)": result[
+                    "probability_difference_gt_zero"
+                ],
+                "Bootstrap samples": result["replicates"],
+                "Seed": result["seed"],
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+
 def build_storage_table() -> pd.DataFrame:
     storage = load_json(
         ROOT
@@ -666,8 +733,24 @@ def main() -> None:
         ),
         "paper_significance_table": (
             build_significance_table(),
-            "Paired bootstrap comparison of RARS and PCA.",
+            "Developmental paired bootstrap comparison of RARS and PCA.",
             "tab:rars-significance",
+        ),
+        "paper_external_system_table": (
+            build_external_system_table(),
+            (
+                "Frozen TREC DL 2019 evaluation restricted to the "
+                "MS MARCO 1M indexed corpus."
+            ),
+            "tab:rars-external-systems",
+        ),
+        "paper_external_contrast_table": (
+            build_external_contrast_table(),
+            (
+                "Frozen external RARS-minus-PCA paired-bootstrap "
+                "contrasts."
+            ),
+            "tab:rars-external-contrasts",
         ),
         "paper_storage_table": (
             build_storage_table(),
@@ -700,7 +783,9 @@ python scripts/build_rars_paper_tables.py
 - `paper_pca_transfer_table.*`: legacy PCA residual-sidecar transfer summary
 - `paper_system_table.*`: live Faiss latency and overhead
 - `paper_ablation_table.*`: alpha and Top-B ablations
-- `paper_significance_table.*`: paired bootstrap results
+- `paper_significance_table.*`: developmental paired-bootstrap results
+- `paper_external_system_table.*`: frozen external aggregate metrics
+- `paper_external_contrast_table.*`: frozen external RARS-minus-PCA contrasts
 - `paper_storage_table.*`: serialized storage accounting
 
 ## Interpretation constraints
@@ -714,8 +799,12 @@ python scripts/build_rars_paper_tables.py
 - `Paired E2E overhead %` is reported separately because multi-threaded timing
   is sensitive to scheduling noise.
 - Small non-zero or negative Top0 deltas are timing noise.
-- The RARS-vs-PCA bootstrap confidence intervals cross zero, so the paper
-  should claim a positive point estimate rather than statistical superiority.
+- The developmental RARS-vs-PCA table uses the earlier MS MARCO query pool and
+  must not be presented as external confirmation.
+- The preregistered external Recall@10 contrast is negative and its confidence
+  interval crosses zero; the external primary hypothesis was not supported.
+- The external set contains 42 eligible queries and only the judgments covered
+  by the frozen 1M corpus. It is not an official full-corpus TREC result.
 """
     (args.output_dir / "README.md").write_text(readme, encoding="utf-8")
 
