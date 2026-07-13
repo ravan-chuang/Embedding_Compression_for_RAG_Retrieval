@@ -1,0 +1,74 @@
+{
+  "manifest_id": "trec_dl_external_confirmation_v1",
+  "status": "DRAFT_NOT_FROZEN",
+  "protocol_id": "rars_pca_comparator_v1",
+  "dataset_name": "TO_BE_FILLED",
+  "query_count": null,
+  "primary_metric": "recall@10",
+  "primary_contrast": "rars_r16_int8_minus_pca_r16_int8",
+  "prior_overlap_audit_complete": false,
+  "outcome_inspection_before_freeze": false,
+  "exclusion_rule": "Exclude only exact query-ID or exact normalized-query-text overlaps identified before outcome inspection.",
+  "files": {
+    "query_vectors": {
+      "path": "TO_BE_FILLED",
+      "sha256": "TO_BE_FILLED"
+    },
+    "query_manifest": {
+      "path": "TO_BE_FILLED",
+      "sha256": "TO_BE_FILLED"
+    },
+    "qrels": {
+      "path": "TO_BE_FILLED",
+      "sha256": "TO_BE_FILLED"
+    },
+    "doc_ids": {
+      "path": "TO_BE_FILLED",
+      "sha256": "TO_BE_FILLED"
+    },
+    "index": {
+      "path": "TO_BE_FILLED",
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_config": {
+      "path": "results/rars_pca_comparator/selected_pca_config.json",
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_basis": {
+      "path": "results/rars_pca_comparator/bases/pca_unweighted_rank16.float32.npy",
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_scales": {
+      "path": "results/rars_pca_comparator/sidecars/scales_pca_rank16.float32.npy",
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_codes": {
+      "path": "external artifact",
+      "sha256": "20bc05d1e5e645e85ca23ff07a420da8e732a311ecb2a2969025b21cde1ad41f"
+    },
+    "rars_config": {
+      "path": "results/rars_clean_split/selected_config.json",
+      "sha256": "TO_BE_FILLED"
+    },
+    "rars_basis": {
+      "path": "external artifact",
+      "sha256": "89388d2abc22b6682016f2219791e5c29488e2ccbdc5fdff06a918b5eacad60f"
+    },
+    "rars_scales": {
+      "path": "external artifact",
+      "sha256": "4c63ddb7c546e677e80acb4122d4c6c30a6206e88eebd16f1640f99c8607213e"
+    },
+    "rars_codes": {
+      "path": "external artifact",
+      "sha256": "TO_BE_FILLED"
+    },
+    "evaluator": {
+      "path": "scripts/evaluate_rars_pca_external.py",
+      "sha256": "TO_BE_FILLED"
+    },
+    "protocol": {
+      "path": "protocols/rars_pca_comparator_v1.json",
+      "sha256": "TO_BE_FILLED"
+    }
+  }
+}
