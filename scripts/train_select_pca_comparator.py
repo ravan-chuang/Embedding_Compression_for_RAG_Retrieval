@@ -110,7 +110,14 @@ def validate_protocol(protocol: dict[str, Any], args: argparse.Namespace) -> Non
             )
 
     search = protocol["validation_search"]
-    if [float(v) for v in search["alphas"]] != [float(v) for v in ALPHAS]:
+    registered_alphas = np.asarray(search["alphas"], dtype=np.float64)
+    implementation_alphas = ALPHAS.astype(np.float64)
+    if registered_alphas.shape != implementation_alphas.shape or not np.allclose(
+        registered_alphas,
+        implementation_alphas,
+        rtol=0.0,
+        atol=1e-7,
+    ):
         raise ValueError("Alpha search space does not match preregistration")
     if [int(v) for v in search["top_b"]] != list(TOP_B_VALUES):
         raise ValueError("Top-B search space does not match preregistration")
