@@ -1,0 +1,35 @@
+{
+  "protocol": "rars_pca_comparator_v1",
+  "method": "pca_r16_int8",
+  "selection_split": "validation",
+  "basis_variant": "pca_unweighted",
+  "basis_training": {
+    "query_labels_used": false,
+    "qrels_used": false,
+    "retrieval_scores_used": false,
+    "sample_source": "document_residual_rows",
+    "sample_count": 300000,
+    "sample_seed": 42
+  },
+  "rank": 16,
+  "alpha": 0.75,
+  "top_b": 40,
+  "candidate_k": 100,
+  "final_k": 10,
+  "base_index": {
+    "nlist": 512,
+    "nprobe": 16,
+    "m": 32,
+    "nbits": 8
+  },
+  "validation_proxy": {
+    "corrected_top10_overlap": 0.57,
+    "overlap_gain": 0.029799999999999938,
+    "mse_reduction_pct": 7.82129327572134,
+    "maximum_overlap_gain": 0.03059999999999996,
+    "selection_threshold": 0.027539999999999964
+  },
+  "external_evaluated": false,
+  "current_heldout_used_for_selection": false,
+  "sensitivity_subset_used_for_selection": false
+}
