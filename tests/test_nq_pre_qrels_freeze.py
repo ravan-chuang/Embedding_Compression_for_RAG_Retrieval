@@ -36,6 +36,8 @@ def frozen_manifest() -> dict:
         entry["path"] = "artifact.bin"
         entry["bytes"] = 1
         entry["sha256"] = "a" * 64
+    for label, expected in MODULE.EXPECTED_ARCHIVES.items():
+        manifest["files"][label].update(expected)
     return manifest
 
 
@@ -85,7 +87,7 @@ def test_manifest_rejects_test_qrels_or_outcome_artifact() -> None:
 def test_manifest_rejects_qrels_hidden_under_registered_label() -> None:
     protocol = load(PROTOCOL_PATH)
     manifest = frozen_manifest()
-    manifest["files"]["dataset_archive"]["path"] = "qrels/test.tsv"
+    manifest["files"]["test_dataset_archive"]["path"] = "qrels/test.tsv"
 
     with pytest.raises(ValueError, match="forbidden pre-qrels path"):
         MODULE.validate_manifest(

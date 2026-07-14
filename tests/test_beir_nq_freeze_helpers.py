@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import zipfile
 from pathlib import Path
 
 import numpy as np
@@ -47,6 +48,27 @@ def test_portable_manifest_paths_distinguish_drive_and_repo(tmp_path: Path) -> N
 def test_manifest_builder_rejects_true_test_access_flags() -> None:
     with pytest.raises(ValueError, match="Unsafe flag"):
         BUILDER.reject_unsafe_flags({"nested": {"test_qrels_accessed": True}})
+
+
+def test_stage3_extracts_test_queries_and_qrels_from_test_archive_only(
+    tmp_path: Path,
+) -> None:
+    archive_path = tmp_path / "nq.zip"
+    with zipfile.ZipFile(archive_path, "w") as archive:
+        archive.writestr("nq/corpus.jsonl", "must not be extracted\n")
+        archive.writestr("nq/queries.jsonl", '{"_id":"q","text":"question"}\n')
+        archive.writestr("nq/qrels/test.tsv", "query-id\tcorpus-id\tscore\nq\td\t1\n")
+
+    queries = EVALUATOR.extract_test_queries(
+        archive_path, tmp_path / "stage3" / "queries.jsonl"
+    )
+    qrels = EVALUATOR.extract_test_qrels(
+        archive_path, tmp_path / "stage3" / "qrels" / "test.tsv"
+    )
+
+    assert queries.read_text(encoding="utf-8").startswith('{"_id":"q"')
+    assert "q\td\t1" in qrels.read_text(encoding="utf-8")
+    assert not (tmp_path / "stage3" / "corpus.jsonl").exists()
 
 
 def test_query_normalization_and_metrics() -> None:

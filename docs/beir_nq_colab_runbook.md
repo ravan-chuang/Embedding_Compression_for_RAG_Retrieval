@@ -9,7 +9,8 @@ test qrels during method construction. The companion notebook is
 There are three separate Git freezes:
 
 1. **Design freeze:** commit protocol, builders, trainers, registry, evaluator,
-   and tests before downloading NQ.
+   and tests before extracting or opening NQ test queries/test qrels. Downloading
+   and hash/member-directory verification alone does not open those members.
 2. **Method-artifact freeze:** after validation-only selection, commit the
    filled pre-qrels manifest and selected PCA/RARS configuration copies before
    opening `qrels/test.tsv`.
@@ -30,7 +31,8 @@ Use at least 25 GB of free Drive space. The main persistent artifacts are:
 
 | Artifact | Approximate size |
 |---|---:|
-| Source archive and selective extraction | dataset-dependent |
+| Two source archives | about 1.90 GB |
+| Selectively extracted test corpus + train inputs | about 1.52 GB |
 | FP16 document embeddings | 2.06 GB |
 | Frozen IVF-PQ index | roughly 0.1 GB plus metadata |
 | Fit/validation candidate caches | query-count-dependent |
@@ -42,7 +44,7 @@ residual matrix.
 The notebook uses this default Drive root:
 
 ```text
-/content/drive/MyDrive/rars-beir-nq-confirmation-v1
+/content/drive/MyDrive/rars-beir-nq-confirmation-v2
 ```
 
 Re-running a completed cell is safe. Corpus encoding, IVF-PQ addition, ANN
@@ -69,9 +71,11 @@ If this check fails, stop. Do not bypass it by editing the runner in Colab.
 
 The notebook runs these operations in order:
 
-1. resume-download `nq.zip` and verify the registered MD5;
-2. selectively extract `corpus.jsonl`, `queries.jsonl`, and
-   `qrels/train.tsv` only;
+1. resume-download `nq.zip` and `nq-train.zip`, then verify each registered
+   byte count, MD5, and SHA-256;
+2. extract only `corpus.jsonl` from `nq.zip`, and only `queries.jsonl` plus
+   `qrels/train.tsv` from `nq-train.zip`; never extract the train archive's
+   separate corpus, and leave test queries/test qrels sealed in `nq.zip`;
 3. scan the full corpus, validate unique string document IDs, and record the
    exact count and SHA-256;
 4. derive the deterministic fit/validation split from train membership;
@@ -80,8 +84,8 @@ The notebook runs these operations in order:
 7. encode fit then validation queries to one FP32 NumPy array;
 8. train and incrementally add the full corpus to the frozen IVF-PQ index.
 
-The splitter scans the shared BEIR query JSONL but retains and emits text only
-for official train-membership IDs. It reads only the first column of
+The splitter scans the train archive's query JSONL but retains and emits text
+only for official train-membership IDs. It reads only the first column of
 `qrels/train.tsv`; relevance values are not parsed.
 
 ## Stage 2 — PCA/RARS fitting and validation selection
@@ -112,13 +116,14 @@ After the method-artifact freeze only:
 
 ```bash
 python scripts/evaluate_beir_nq_frozen.py audit \
-  --artifact-root /content/drive/MyDrive/rars-beir-nq-confirmation-v1 \
+  --artifact-root /content/drive/MyDrive/rars-beir-nq-confirmation-v2 \
   --repo /content/Embedding_Compression_for_RAG_Retrieval \
   --method-freeze-commit <40-hex-method-commit> \
-  --output-dir /content/drive/MyDrive/rars-beir-nq-confirmation-v1/stage3/audit
+  --output-dir /content/drive/MyDrive/rars-beir-nq-confirmation-v2/stage3/audit
 ```
 
-This is the first command allowed to extract and parse `qrels/test.tsv`. It:
+This is the first command allowed to extract the test query JSONL and extract
+and parse `qrels/test.tsv` from `nq.zip`. It:
 
 - verifies every pre-qrels artifact again;
 - checks every positive qrel document against the full string-ID corpus map;
@@ -137,12 +142,12 @@ With the audit JSON tracked in the clean audit-freeze commit:
 
 ```bash
 python scripts/evaluate_beir_nq_frozen.py evaluate \
-  --artifact-root /content/drive/MyDrive/rars-beir-nq-confirmation-v1 \
+  --artifact-root /content/drive/MyDrive/rars-beir-nq-confirmation-v2 \
   --repo /content/Embedding_Compression_for_RAG_Retrieval \
   --method-freeze-commit <40-hex-method-commit> \
   --audit-freeze-commit <40-hex-audit-commit> \
   --audit <repo-path-to-eligible_test_query_audit.json> \
-  --output-dir /content/drive/MyDrive/rars-beir-nq-confirmation-v1/stage3/evaluation
+  --output-dir /content/drive/MyDrive/rars-beir-nq-confirmation-v2/stage3/evaluation
 ```
 
 The evaluator loads the same hashed model snapshot, runs Base/PCA/RARS
@@ -156,7 +161,8 @@ not authorize retuning on NQ.
 
 ## Failure policy
 
-- **Wrong archive MD5:** stop; retain the partial file for diagnosis.
+- **Wrong archive size, MD5, or SHA-256:** stop; retain the partial file for
+  diagnosis.
 - **Non-T4 GPU:** request a new Colab runtime; do not change the protocol.
 - **Drive disconnect:** remount the same Drive and rerun the interrupted cell.
 - **Artifact/hash mismatch:** stop and identify the changed input; do not update

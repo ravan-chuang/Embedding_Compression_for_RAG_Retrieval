@@ -23,11 +23,17 @@
     }
   },
   "files": {
-    "dataset_archive": {
+    "test_dataset_archive": {
       "path": "TO_BE_FILLED",
       "bytes": null,
       "sha256": "TO_BE_FILLED",
       "md5": "d4d3d2e48787a744b6f6e691ff534307"
+    },
+    "train_dataset_archive": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED",
+      "md5": "966435435932347d5513f56fed19161c"
     },
     "corpus_manifest": {
       "path": "TO_BE_FILLED",

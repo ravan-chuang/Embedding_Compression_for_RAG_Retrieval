@@ -3,9 +3,11 @@
 
 The commands in this module are deliberately staged and resumable.  Before
 any network or dataset operation, ``init`` verifies a clean, user-supplied Git
-design-freeze commit.  Extraction then materializes only the corpus, the shared
-query JSONL, and ``qrels/train.tsv``; ``qrels/test.tsv`` remains unopened in the
-verified source archive until the separate method-artifact freeze is committed.
+design-freeze commit. Extraction uses the official split archives separately:
+``nq.zip`` supplies only the test-corpus ``corpus.jsonl`` during Stage 1, while
+``nq-train.zip`` supplies only train ``queries.jsonl`` and ``qrels/train.tsv``.
+Test queries and ``qrels/test.tsv`` remain unopened in ``nq.zip`` until the
+separate method-artifact freeze is committed.
 
 Typical order::
 
@@ -45,8 +47,20 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PROTOCOL = ROOT / "protocols" / "beir_nq_rars_pca_confirmation_v1.json"
 PROTOCOL_ID = "beir_nq_rars_pca_confirmation_v1"
-ARCHIVE_NAME = "nq.zip"
-EXPECTED_MD5 = "d4d3d2e48787a744b6f6e691ff534307"
+ARCHIVES = {
+    "test": {
+        "name": "nq.zip",
+        "md5": "d4d3d2e48787a744b6f6e691ff534307",
+        "sha256": "2553bf7bfbab47b1436ca00a34bce57320e18e611fd00999a2a3a1b4714be752",
+        "bytes": 498_307_926,
+    },
+    "train": {
+        "name": "nq-train.zip",
+        "md5": "966435435932347d5513f56fed19161c",
+        "sha256": "3aa8eec8d67174d85c055fce6971fa3127e830335842696756373f491bf391c9",
+        "bytes": 1_405_702_846,
+    },
+}
 REQUIRED_FREEZE_PATHS = (
     "protocols/beir_nq_rars_pca_confirmation_v1.json",
     "protocols/beir_nq_pre_qrels_manifest.template.json",
@@ -160,6 +174,29 @@ def protocol_values(protocol_path: Path) -> dict[str, Any]:
     for key, value in expected.items():
         if embedding.get(key) != value:
             raise ValueError(f"Protocol embedding.{key} drifted")
+    dataset = protocol.get("dataset", {})
+    for name, expected_archive in ARCHIVES.items():
+        archive = dataset.get(f"{name}_archive", {})
+        for key in ("md5", "sha256", "bytes"):
+            if archive.get(key) != expected_archive[key]:
+                raise ValueError(f"Protocol dataset.{name}_archive.{key} drifted")
+    if dataset.get("test_archive", {}).get("stage1_members_allowed") != [
+        "corpus.jsonl"
+    ]:
+        raise ValueError("Protocol test-archive Stage-1 access rule drifted")
+    if dataset.get("test_archive", {}).get("stage3_members_allowed") != [
+        "queries.jsonl",
+        "qrels/test.tsv",
+    ]:
+        raise ValueError("Protocol test-archive Stage-3 access rule drifted")
+    train_archive = dataset.get("train_archive", {})
+    if train_archive.get("stage1_members_allowed") != [
+        "queries.jsonl",
+        "qrels/train.tsv",
+    ]:
+        raise ValueError("Protocol train-archive Stage-1 access rule drifted")
+    if train_archive.get("corpus_member_prohibited") is not True:
+        raise ValueError("Protocol must prohibit the train-archive corpus")
     for key, value in {
         "m": 32,
         "nbits": 8,
@@ -236,14 +273,14 @@ def verify_gate(
     return gate
 
 
-def archive_path(artifact_root: Path) -> Path:
-    return artifact_root / "source" / ARCHIVE_NAME
+def archive_path(artifact_root: Path, archive_name: str) -> Path:
+    return artifact_root / "source" / str(ARCHIVES[archive_name]["name"])
 
 
-def download_with_resume(url: str, destination: Path) -> None:
+def download_with_resume(url: str, destination: Path, expected_md5: str) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.exists():
-        if md5_file(destination) == EXPECTED_MD5:
+        if md5_file(destination) == expected_md5:
             print(f"Archive already verified: {destination}")
             return
         raise ValueError(f"Existing archive has the wrong MD5: {destination}")
@@ -272,26 +309,35 @@ def download_with_resume(url: str, destination: Path) -> None:
             os.fsync(output.fileno())
     print()
     actual = md5_file(partial)
-    if actual != EXPECTED_MD5:
-        raise ValueError(f"Downloaded archive MD5 {actual} != {EXPECTED_MD5}")
+    if actual != expected_md5:
+        raise ValueError(f"Downloaded archive MD5 {actual} != {expected_md5}")
     partial.replace(destination)
 
 
-def download_archive(
+def download_archives(
     artifact_root: Path,
     protocol_path: Path,
 ) -> dict[str, Any]:
     protocol = protocol_values(protocol_path)
-    target = archive_path(artifact_root)
-    download_with_resume(protocol["dataset"]["source_url"], target)
-    record = file_record(target, include_md5=True)
-    if record["md5"] != protocol["dataset"]["source_archive_md5"]:
-        raise ValueError("Archive MD5 does not match the frozen protocol")
+    records: dict[str, Any] = {}
+    for name in ("test", "train"):
+        registered = protocol["dataset"][f"{name}_archive"]
+        target = archive_path(artifact_root, name)
+        download_with_resume(registered["url"], target, registered["md5"])
+        record = file_record(target, include_md5=True)
+        if record["bytes"] != registered["bytes"]:
+            raise ValueError(f"{name} archive byte count does not match protocol")
+        if record["md5"] != registered["md5"]:
+            raise ValueError(f"{name} archive MD5 does not match protocol")
+        if record["sha256"] != registered["sha256"]:
+            raise ValueError(f"{name} archive SHA-256 does not match protocol")
+        records[f"{name}_dataset_archive"] = record
     manifest = {
         "protocol_id": PROTOCOL_ID,
-        "dataset_archive": record,
+        "archives": records,
         "download_completed_utc": utc_now(),
         "test_qrels_opened": False,
+        "test_queries_opened": False,
     }
     atomic_write_json(artifact_root / "source" / "archive_manifest.json", manifest)
     return manifest
@@ -304,12 +350,10 @@ def safe_member_name(value: str) -> PurePosixPath:
     return normalized
 
 
-def choose_train_only_members(archive: zipfile.ZipFile) -> dict[str, zipfile.ZipInfo]:
-    suffixes = {
-        "corpus.jsonl": ("corpus.jsonl",),
-        "queries.jsonl": ("queries.jsonl",),
-        "qrels/train.tsv": ("qrels", "train.tsv"),
-    }
+def choose_members(
+    archive: zipfile.ZipFile,
+    suffixes: dict[str, tuple[str, ...]],
+) -> dict[str, zipfile.ZipInfo]:
     selected: dict[str, zipfile.ZipInfo] = {}
     for info in archive.infolist():
         path = safe_member_name(info.filename)
@@ -320,39 +364,55 @@ def choose_train_only_members(archive: zipfile.ZipFile) -> dict[str, zipfile.Zip
                 selected[label] = info
     missing = sorted(set(suffixes) - set(selected))
     if missing:
-        raise FileNotFoundError(f"Archive is missing train-only inputs: {missing}")
+        raise FileNotFoundError(f"Archive is missing required inputs: {missing}")
     return selected
 
 
 def extract_train_only(artifact_root: Path) -> dict[str, Any]:
-    source = archive_path(artifact_root)
-    if not source.is_file() or md5_file(source) != EXPECTED_MD5:
-        raise ValueError("Verified NQ archive is unavailable")
+    sources = {
+        name: archive_path(artifact_root, name)
+        for name in ("test", "train")
+    }
+    for name, source in sources.items():
+        if not source.is_file() or md5_file(source) != ARCHIVES[name]["md5"]:
+            raise ValueError(f"Verified NQ {name} archive is unavailable")
     target_root = artifact_root / "stage1" / "data" / "nq"
     outputs = {
         "corpus.jsonl": target_root / "corpus.jsonl",
-        "queries.jsonl": target_root / "queries.jsonl",
+        "queries.jsonl": target_root / "train" / "queries.jsonl",
         "qrels/train.tsv": target_root / "qrels" / "train.tsv",
     }
-    with zipfile.ZipFile(source) as archive:
-        selected = choose_train_only_members(archive)
-        for label, info in selected.items():
-            destination = outputs[label]
-            if destination.exists() and destination.stat().st_size == info.file_size:
-                continue
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            temporary = destination.with_name(destination.name + ".part")
-            with archive.open(info, "r") as src, temporary.open("wb") as dst:
-                shutil.copyfileobj(src, dst, length=8 * 1024 * 1024)
-                dst.flush()
-                os.fsync(dst.fileno())
-            if temporary.stat().st_size != info.file_size:
-                raise IOError(f"Incomplete extraction for {label}")
-            temporary.replace(destination)
+    archive_specs = {
+        "test": {"corpus.jsonl": ("corpus.jsonl",)},
+        "train": {
+            "queries.jsonl": ("queries.jsonl",),
+            "qrels/train.tsv": ("qrels", "train.tsv"),
+        },
+    }
+    selected_sources: dict[str, str] = {}
+    for archive_name, suffixes in archive_specs.items():
+        with zipfile.ZipFile(sources[archive_name]) as archive:
+            selected = choose_members(archive, suffixes)
+            for label, info in selected.items():
+                selected_sources[label] = archive_name
+                destination = outputs[label]
+                if destination.exists() and destination.stat().st_size == info.file_size:
+                    continue
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                temporary = destination.with_name(destination.name + ".part")
+                with archive.open(info, "r") as src, temporary.open("wb") as dst:
+                    shutil.copyfileobj(src, dst, length=8 * 1024 * 1024)
+                    dst.flush()
+                    os.fsync(dst.fileno())
+                if temporary.stat().st_size != info.file_size:
+                    raise IOError(f"Incomplete extraction for {label}")
+                temporary.replace(destination)
     manifest = {
         "protocol_id": PROTOCOL_ID,
-        "extraction_policy": "corpus_queries_and_train_qrels_only",
+        "extraction_policy": "test_corpus_plus_train_queries_and_train_qrels_only",
+        "member_sources": selected_sources,
         "files": {label: file_record(path) for label, path in outputs.items()},
+        "test_queries_extracted": False,
         "test_qrels_extracted": False,
         "test_qrels_opened": False,
         "completed_utc": utc_now(),
@@ -964,7 +1024,7 @@ def main() -> None:
     else:
         verify_gate(args.artifact_root, args.repo, args.protocol)
         if args.command == "download":
-            result = download_archive(args.artifact_root, args.protocol)
+            result = download_archives(args.artifact_root, args.protocol)
         elif args.command == "extract-train-only":
             result = extract_train_only(args.artifact_root)
         elif args.command == "scan-corpus":

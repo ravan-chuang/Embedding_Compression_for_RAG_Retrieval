@@ -210,7 +210,8 @@ def build_manifest(
     reject_unsafe_flags(rars)
 
     paths = {
-        "dataset_archive": artifact_root / "source" / "nq.zip",
+        "test_dataset_archive": artifact_root / "source" / "nq.zip",
+        "train_dataset_archive": artifact_root / "source" / "nq-train.zip",
         "corpus_manifest": corpus_manifest_path,
         "document_embeddings": Path(corpus_manifest["document_embeddings"]["path"]),
         "doc_ids": Path(corpus_manifest["doc_ids"]["path"]),
@@ -275,7 +276,7 @@ def build_manifest(
             path,
             artifact_root=artifact_root,
             repo=repo,
-            include_md5=(label == "dataset_archive"),
+            include_md5=(label in {"test_dataset_archive", "train_dataset_archive"}),
         )
         for label, path in paths.items()
     }

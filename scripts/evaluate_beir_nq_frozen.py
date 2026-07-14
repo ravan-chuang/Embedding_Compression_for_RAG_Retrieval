@@ -201,17 +201,23 @@ def safe_zip_member(value: str) -> PurePosixPath:
     return path
 
 
-def extract_test_qrels(archive_path: Path, output_path: Path) -> Path:
+def extract_unique_member(
+    archive_path: Path,
+    suffix: tuple[str, ...],
+    output_path: Path,
+) -> Path:
     if output_path.exists():
         return output_path
     matches = []
     with zipfile.ZipFile(archive_path) as archive:
         for info in archive.infolist():
             path = safe_zip_member(info.filename)
-            if tuple(path.parts[-2:]) == ("qrels", "test.tsv"):
+            if tuple(path.parts[-len(suffix):]) == suffix:
                 matches.append(info)
         if len(matches) != 1:
-            raise ValueError(f"Expected one qrels/test.tsv member, found {len(matches)}")
+            raise ValueError(
+                f"Expected one {'/'.join(suffix)} member, found {len(matches)}"
+            )
         output_path.parent.mkdir(parents=True, exist_ok=True)
         temporary = output_path.with_name(output_path.name + ".part")
         with archive.open(matches[0], "r") as source, temporary.open("wb") as output:
@@ -224,6 +230,22 @@ def extract_test_qrels(archive_path: Path, output_path: Path) -> Path:
             os.fsync(output.fileno())
         temporary.replace(output_path)
     return output_path
+
+
+def extract_test_qrels(archive_path: Path, output_path: Path) -> Path:
+    return extract_unique_member(
+        archive_path,
+        ("qrels", "test.tsv"),
+        output_path,
+    )
+
+
+def extract_test_queries(archive_path: Path, output_path: Path) -> Path:
+    return extract_unique_member(
+        archive_path,
+        ("queries.jsonl",),
+        output_path,
+    )
 
 
 def load_positive_qrels(path: Path) -> dict[str, set[str]]:
@@ -359,7 +381,13 @@ def run_audit(
         repo,
     )
     protocol = read_json(protocol_path)
-    archive = resolve_entry(manifest, "dataset_archive", validator, artifact_root, repo)
+    archive = resolve_entry(
+        manifest,
+        "test_dataset_archive",
+        validator,
+        artifact_root,
+        repo,
+    )
     registry_path = resolve_entry(
         manifest,
         "prior_query_registry",
@@ -369,7 +397,10 @@ def run_audit(
     )
     qrels_path = extract_test_qrels(archive, output_dir / "qrels" / "test.tsv")
     qrels = load_positive_qrels(qrels_path)
-    query_path = artifact_root / "stage1" / "data" / "nq" / "queries.jsonl"
+    query_path = extract_test_queries(
+        archive,
+        output_dir / "queries" / "test_queries.jsonl",
+    )
     query_texts = load_query_texts(query_path, set(qrels))
     prior_nq_ids, prior_texts, registry = load_prior_registry(
         registry_path,

@@ -2,8 +2,14 @@
 
 ## Status
 
-The design is ready to freeze in Git. No BEIR NQ test qrels were downloaded,
-opened, parsed, summarized, or evaluated while preparing this protocol.
+This pre-test-access design correction is ready to freeze in Git. The official
+archives were downloaded only to verify their registered bytes/hashes and ZIP
+member structure. The BEIR NQ test query and qrels members were not extracted,
+opened, parsed, summarized, or evaluated while preparing this correction.
+
+The correction separates the official `nq.zip` and `nq-train.zip` roles. The
+original freeze incorrectly assumed that `qrels/train.tsv` was inside
+`nq.zip`; Stage 1 stopped at member discovery before extracting any member.
 
 Machine-readable specification:
 [`protocols/beir_nq_rars_pca_confirmation_v1.json`](../protocols/beir_nq_rars_pca_confirmation_v1.json)
@@ -28,11 +34,14 @@ and 3,452 test queries. This is a useful middle ground:
 Sources:
 
 - [BEIR repository and dataset table](https://github.com/beir-cellar/beir#available-datasets)
-- [BEIR NQ archive](https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nq.zip)
+- [BEIR NQ test archive](https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nq.zip)
+- [BEIR NQ train archive](https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nq-train.zip)
 - [DPR Natural Questions data documentation](https://github.com/facebookresearch/DPR#retriever-input-data-format)
 
-The registered archive MD5 is
-`d4d3d2e48787a744b6f6e691ff534307`, as published by BEIR.
+The registered test-archive MD5 is
+`d4d3d2e48787a744b6f6e691ff534307`; the train-archive MD5 is
+`966435435932347d5513f56fed19161c`. Both are published by BEIR. The frozen
+protocol also registers exact byte counts and SHA-256 hashes for both files.
 
 ## Scientific question
 
@@ -115,7 +124,7 @@ Test query IDs, qrels, retrieval outputs, and metrics may not influence:
 
 ### Stage 0 — design freeze
 
-Commit before downloading or opening test qrels:
+Commit before extracting or opening test queries or test qrels:
 
 - the machine-readable protocol;
 - this document;
@@ -126,18 +135,21 @@ Commit before downloading or opening test qrels:
 
 Permitted:
 
-- download the official archive and verify its MD5;
-- extract and encode the full corpus;
-- read the NQ train split and query texts;
+- download both official archives and verify their byte counts, MD5, and
+  SHA-256 hashes;
+- extract and encode the full corpus from `nq.zip` only;
+- read NQ train membership and query texts from `nq-train.zip` only;
 - build the base index;
 - create deterministic fit/validation query manifests;
 - fit PCA and RARS;
 - select each sidecar using the validation proxy;
 - implement and test the selection-free evaluator on synthetic fixtures.
 
-The Stage-1 extractor materializes only `corpus.jsonl`, `queries.jsonl`, and
-`qrels/train.tsv`. It deliberately leaves `qrels/test.tsv` inside the verified
-source archive until the Stage-2 Git freeze is complete.
+The Stage-1 extractor materializes only `corpus.jsonl` from `nq.zip`, plus
+`queries.jsonl` and `qrels/train.tsv` from `nq-train.zip`. It never extracts the
+separate corpus bundled in `nq-train.zip`. The official test queries and
+`qrels/test.tsv` remain inside the verified `nq.zip` until the Stage-2 Git
+freeze is complete.
 
 Prohibited:
 
@@ -149,7 +161,7 @@ The registered train-only split is generated with:
 
 ```bash
 python scripts/create_beir_nq_train_validation_splits.py \
-  --queries <nq-dir>/queries.jsonl \
+  --queries <nq-dir>/train/queries.jsonl \
   --train-qrels <nq-dir>/qrels/train.tsv \
   --output-dir <artifact-dir>/query_splits
 ```
@@ -179,7 +191,7 @@ PCA/RARS configs, evaluator, and hashes must be committed before Stage 3.
 
 Only after the Stage-2 commit:
 
-1. read the official test qrels;
+1. extract the official test queries and test qrels from `nq.zip`;
 2. verify every positive qrel document exists in the full indexed corpus;
 3. audit query-ID and normalized-text overlap against every previous project
    query manifest;

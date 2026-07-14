@@ -7,8 +7,30 @@
     "benchmark": "BEIR",
     "dataset_id": "nq",
     "dataset_name": "Natural Questions",
-    "source_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nq.zip",
-    "source_archive_md5": "d4d3d2e48787a744b6f6e691ff534307",
+    "test_archive": {
+      "url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nq.zip",
+      "bytes": 498307926,
+      "md5": "d4d3d2e48787a744b6f6e691ff534307",
+      "sha256": "2553bf7bfbab47b1436ca00a34bce57320e18e611fd00999a2a3a1b4714be752",
+      "stage1_members_allowed": [
+        "corpus.jsonl"
+      ],
+      "stage3_members_allowed": [
+        "queries.jsonl",
+        "qrels/test.tsv"
+      ]
+    },
+    "train_archive": {
+      "url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nq-train.zip",
+      "bytes": 1405702846,
+      "md5": "966435435932347d5513f56fed19161c",
+      "sha256": "3aa8eec8d67174d85c055fce6971fa3127e830335842696756373f491bf391c9",
+      "stage1_members_allowed": [
+        "queries.jsonl",
+        "qrels/train.tsv"
+      ],
+      "corpus_member_prohibited": true
+    },
     "reference_corpus_documents": 2680000,
     "reference_test_queries": 3452,
     "available_splits": [

@@ -23,7 +23,8 @@ DEFAULT_PROTOCOL = (
 
 EXPECTED_FILE_LABELS = frozenset(
     {
-        "dataset_archive",
+        "test_dataset_archive",
+        "train_dataset_archive",
         "corpus_manifest",
         "document_embeddings",
         "doc_ids",
@@ -80,6 +81,18 @@ FORBIDDEN_PRE_QRELS_PATH_FRAGMENTS = (
 )
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 MD5_RE = re.compile(r"^[0-9a-f]{32}$")
+EXPECTED_ARCHIVES = {
+    "test_dataset_archive": {
+        "md5": "d4d3d2e48787a744b6f6e691ff534307",
+        "sha256": "2553bf7bfbab47b1436ca00a34bce57320e18e611fd00999a2a3a1b4714be752",
+        "bytes": 498_307_926,
+    },
+    "train_dataset_archive": {
+        "md5": "966435435932347d5513f56fed19161c",
+        "sha256": "3aa8eec8d67174d85c055fce6971fa3127e830335842696756373f491bf391c9",
+        "bytes": 1_405_702_846,
+    },
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -160,10 +173,34 @@ def validate_protocol(protocol: dict[str, Any]) -> None:
     dataset = protocol.get("dataset", {})
     require_equal(dataset.get("benchmark"), "BEIR", "dataset benchmark")
     require_equal(dataset.get("dataset_id"), "nq", "dataset ID")
+    for name, label in (("test", "test_dataset_archive"), ("train", "train_dataset_archive")):
+        archive = dataset.get(f"{name}_archive", {})
+        expected_archive = EXPECTED_ARCHIVES[label]
+        for key in ("md5", "sha256", "bytes"):
+            require_equal(
+                archive.get(key),
+                expected_archive[key],
+                f"dataset {name} archive {key}",
+            )
     require_equal(
-        dataset.get("source_archive_md5"),
-        "d4d3d2e48787a744b6f6e691ff534307",
-        "dataset MD5",
+        dataset.get("test_archive", {}).get("stage1_members_allowed"),
+        ["corpus.jsonl"],
+        "test archive Stage-1 members",
+    )
+    require_equal(
+        dataset.get("test_archive", {}).get("stage3_members_allowed"),
+        ["queries.jsonl", "qrels/test.tsv"],
+        "test archive Stage-3 members",
+    )
+    require_equal(
+        dataset.get("train_archive", {}).get("stage1_members_allowed"),
+        ["queries.jsonl", "qrels/train.tsv"],
+        "train archive Stage-1 members",
+    )
+    require_equal(
+        dataset.get("train_archive", {}).get("corpus_member_prohibited"),
+        True,
+        "train archive corpus prohibition",
     )
     require_equal(
         dataset.get("qrels_policy"),
@@ -308,14 +345,24 @@ def validate_file_entry(
     if not isinstance(sha_value, str) or not SHA256_RE.fullmatch(sha_value):
         raise ValueError(f"File entry {label} has invalid SHA-256")
 
-    if label == "dataset_archive":
+    if label in EXPECTED_ARCHIVES:
+        require_equal(
+            bytes_value,
+            EXPECTED_ARCHIVES[label]["bytes"],
+            f"{label} bytes",
+        )
+        require_equal(
+            sha_value,
+            EXPECTED_ARCHIVES[label]["sha256"],
+            f"{label} SHA-256",
+        )
         md5_value = entry.get("md5")
         if not isinstance(md5_value, str) or not MD5_RE.fullmatch(md5_value):
             raise ValueError("Dataset archive has invalid MD5")
         require_equal(
             md5_value,
-            "d4d3d2e48787a744b6f6e691ff534307",
-            "dataset archive MD5",
+            EXPECTED_ARCHIVES[label]["md5"],
+            f"{label} MD5",
         )
 
 
@@ -468,8 +515,8 @@ def validate_manifest(
                 raise FileNotFoundError(f"Missing {label}: {path}")
             require_equal(path.stat().st_size, entry["bytes"], f"{label} bytes")
             require_equal(sha256_file(path), entry["sha256"], f"{label} SHA-256")
-            if label == "dataset_archive":
-                require_equal(md5_file(path), entry["md5"], "dataset archive MD5")
+            if label in EXPECTED_ARCHIVES:
+                require_equal(md5_file(path), entry["md5"], f"{label} MD5")
 
     return {
         "protocol_id": protocol["protocol_id"],

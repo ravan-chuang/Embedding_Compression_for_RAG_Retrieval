@@ -24,19 +24,40 @@ def test_registered_protocol_matches_colab_runner() -> None:
     assert protocol["base_index"]["gpu_float16_lookup_tables"] is False
 
 
-def test_train_only_zip_selection_never_selects_test_qrels(tmp_path: Path) -> None:
-    archive_path = tmp_path / "nq.zip"
-    with zipfile.ZipFile(archive_path, "w") as archive:
+def test_split_archive_selection_never_selects_test_queries_or_qrels(
+    tmp_path: Path,
+) -> None:
+    test_archive_path = tmp_path / "nq.zip"
+    with zipfile.ZipFile(test_archive_path, "w") as archive:
         archive.writestr("nq/corpus.jsonl", "{}\n")
-        archive.writestr("nq/queries.jsonl", "{}\n")
-        archive.writestr("nq/qrels/train.tsv", "q\td\t1\n")
+        archive.writestr("nq/queries.jsonl", "test query secret\n")
         archive.writestr("nq/qrels/test.tsv", "secret\td\t1\n")
+    train_archive_path = tmp_path / "nq-train.zip"
+    with zipfile.ZipFile(train_archive_path, "w") as archive:
+        archive.writestr("nq-train/corpus.jsonl", "must not be selected\n")
+        archive.writestr("nq-train/queries.jsonl", "{}\n")
+        archive.writestr("nq-train/qrels/train.tsv", "q\td\t1\n")
 
-    with zipfile.ZipFile(archive_path) as archive:
-        selected = MODULE.choose_train_only_members(archive)
+    with zipfile.ZipFile(test_archive_path) as archive:
+        test_selected = MODULE.choose_members(
+            archive, {"corpus.jsonl": ("corpus.jsonl",)}
+        )
+    with zipfile.ZipFile(train_archive_path) as archive:
+        train_selected = MODULE.choose_members(
+            archive,
+            {
+                "queries.jsonl": ("queries.jsonl",),
+                "qrels/train.tsv": ("qrels", "train.tsv"),
+            },
+        )
 
-    assert set(selected) == {"corpus.jsonl", "queries.jsonl", "qrels/train.tsv"}
-    assert all("test.tsv" not in info.filename for info in selected.values())
+    assert set(test_selected) == {"corpus.jsonl"}
+    assert set(train_selected) == {"queries.jsonl", "qrels/train.tsv"}
+    selected_names = [
+        info.filename for info in [*test_selected.values(), *train_selected.values()]
+    ]
+    assert all("test.tsv" not in name for name in selected_names)
+    assert all("nq/queries.jsonl" != name for name in selected_names)
 
 
 def test_scan_corpus_records_string_safe_ids_and_text_rule(tmp_path: Path) -> None:
