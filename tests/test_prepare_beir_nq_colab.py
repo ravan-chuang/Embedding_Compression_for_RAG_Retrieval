@@ -77,6 +77,9 @@ def test_scan_corpus_records_string_safe_ids_and_text_rule(tmp_path: Path) -> No
     assert result["max_doc_id_utf8_bytes"] == len("doc-α".encode("utf-8"))
     assert result["test_qrels_accessed"] is False
     assert MODULE.corpus_text({"title": "T", "text": "X"}) == "T\nX"
+    assert MODULE.corpus_text({"title": "Title only", "text": ""}) == "Title only\n"
+    with pytest.raises(ValueError, match="empty title and text"):
+        MODULE.corpus_text({"title": "", "text": ""})
 
 
 def test_scan_corpus_rejects_duplicate_document_ids(tmp_path: Path) -> None:

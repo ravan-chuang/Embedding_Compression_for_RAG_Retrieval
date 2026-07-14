@@ -427,9 +427,11 @@ def extract_train_only(artifact_root: Path) -> dict[str, Any]:
 def corpus_text(item: dict[str, Any]) -> str:
     title = str(item.get("title", "") or "").strip()
     text = str(item.get("text", "") or "").strip()
-    if not text:
-        raise ValueError("Corpus row has empty text")
-    return f"{title}\n{text}" if title else text
+    if title:
+        return f"{title}\n{text}"
+    if text:
+        return text
+    raise ValueError("Corpus row has empty title and text")
 
 
 def corpus_id(item: dict[str, Any]) -> str:
