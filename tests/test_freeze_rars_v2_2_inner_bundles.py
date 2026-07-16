@@ -82,6 +82,7 @@ def _fixture(tmp_path: Path):
         train_split=train_split,
         outer_validation_split=outer_split,
         clean_test_split=test_split,
+        source_commit="0" * 40,
     )
     return args
 

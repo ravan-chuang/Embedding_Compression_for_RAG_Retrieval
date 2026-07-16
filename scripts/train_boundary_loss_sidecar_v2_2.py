@@ -202,6 +202,9 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         == selection_bundle["manifest"]["query_ids_sha256"]
     ):
         raise ValueError("Train and selection query identities are identical")
+    for bundle in (train_bundle, selection_bundle):
+        if bundle["manifest"]["source_commit"] != args.source_commit:
+            raise ValueError("Bundle source commit does not match trainer HEAD")
 
     dimension = int(train_bundle["queries"].shape[1])
     query_init, document_init, pca_alpha = load_pca_warm_start(

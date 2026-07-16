@@ -120,6 +120,18 @@ def _verify_source_bundle(bundle_dir: Path) -> tuple[dict[str, Any], str]:
 
 
 def freeze(args: argparse.Namespace) -> dict[str, Any]:
+    if len(args.source_commit) != 40 or any(
+        value not in "0123456789abcdef" for value in args.source_commit
+    ):
+        raise ValueError("--source-commit must be exact lowercase 40-hex")
+    repo_root = Path(__file__).resolve().parents[1]
+    source_builder_sha256 = sha256_file(
+        repo_root / "scripts/build_msmarco_rars_v2_boundary_bundles.py"
+    )
+    bundle_freezer_sha256 = sha256_file(Path(__file__).resolve())
+    protocol_sha256 = sha256_file(
+        repo_root / "protocols/rars_v2_2_boundary_loss_development_v1.json"
+    )
     train_qids, train_rows = load_split(args.train_split)
     outer_qids, outer_rows = load_split(args.outer_validation_split)
     test_qids, test_rows = load_split(args.clean_test_split)
@@ -157,6 +169,10 @@ def freeze(args: argparse.Namespace) -> dict[str, Any]:
     split_audit = {
         "schema_version": 1,
         "protocol_id": PROTOCOL_ID,
+        "source_commit": args.source_commit,
+        "source_builder_sha256": source_builder_sha256,
+        "bundle_freezer_sha256": bundle_freezer_sha256,
+        "protocol_sha256": protocol_sha256,
         "source_train_split": file_record(args.train_split),
         "source_outer_validation_split": file_record(args.outer_validation_split),
         "source_clean_test_split": file_record(args.clean_test_split),
@@ -221,6 +237,10 @@ def freeze(args: argparse.Namespace) -> dict[str, Any]:
         v2_manifest = {
             "schema_version": 1,
             "protocol_id": PROTOCOL_ID,
+            "source_commit": args.source_commit,
+            "source_builder_sha256": source_builder_sha256,
+            "bundle_freezer_sha256": bundle_freezer_sha256,
+            "protocol_sha256": protocol_sha256,
             "role_id": role_id,
             "split_role": split_role,
             "evidence_status": "DEVELOPMENT_ONLY",
@@ -257,6 +277,7 @@ def freeze(args: argparse.Namespace) -> dict[str, Any]:
     result = {
         "schema_version": 1,
         "protocol_id": PROTOCOL_ID,
+        "source_commit": args.source_commit,
         "status": "INNER_BUNDLES_FROZEN",
         "split_audit": file_record(audit_path),
         "roles": frozen_roles,
@@ -274,6 +295,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train-split", required=True, type=Path)
     parser.add_argument("--outer-validation-split", required=True, type=Path)
     parser.add_argument("--clean-test-split", required=True, type=Path)
+    parser.add_argument("--source-commit", required=True)
     return parser.parse_args()
 
 

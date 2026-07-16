@@ -115,7 +115,8 @@ python scripts/freeze_rars_v2_2_inner_bundles.py \
   --query-vectors /path/to/query_vectors.fp32.npy \
   --train-split splits/msmarco_rars_train_split.json \
   --outer-validation-split splits/msmarco_rars_validation_split.json \
-  --clean-test-split splits/msmarco_rars_test_split.json
+  --clean-test-split splits/msmarco_rars_test_split.json \
+  --source-commit FULL_40_CHARACTER_COMMIT
 ```
 
 The freezer verifies:

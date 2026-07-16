@@ -103,11 +103,19 @@ def validate_bundle_manifest(
         raise ValueError("role_id and split_role disagree")
     if manifest.get("evidence_status") != "DEVELOPMENT_ONLY":
         raise ValueError("Inner bundle must be labeled DEVELOPMENT_ONLY")
+    source_commit = str(manifest.get("source_commit", ""))
+    if len(source_commit) != 40 or any(
+        value not in "0123456789abcdef" for value in source_commit
+    ):
+        raise ValueError("Bundle manifest lacks an exact source_commit")
     for field in (
         "query_ids_sha256",
         "query_rows_sha256",
         "split_audit_sha256",
         "source_bundle_manifest_sha256",
+        "source_builder_sha256",
+        "bundle_freezer_sha256",
+        "protocol_sha256",
     ):
         value = manifest.get(field)
         if not isinstance(value, str) or len(value) != 64:
@@ -397,6 +405,8 @@ def build_run_fingerprint(payload: dict[str, Any]) -> str:
     if payload["protocol_id"] != PROTOCOL_ID:
         raise ValueError("Run fingerprint uses the wrong protocol")
     source_commit = str(payload["source_commit"])
-    if len(source_commit) != 40 or any(c not in "0123456789abcdef" for c in source_commit):
+    if len(source_commit) != 40 or any(
+        value not in "0123456789abcdef" for value in source_commit
+    ):
         raise ValueError("source_commit must be an exact lowercase 40-hex commit")
     return canonical_sha256(payload)
