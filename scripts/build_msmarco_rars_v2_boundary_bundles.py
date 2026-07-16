@@ -205,12 +205,6 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         candidate_k=args.candidate_k,
     )
     inner_train, inner_development = inner_partition(train_qids)
-    outer_qids, outer_query_rows = load_split(args.validation_split)
-    outer_queries = np.asarray(query_vectors[outer_query_rows], dtype=np.float32)
-    outer_ann_rows, outer_ann_scores = search_or_load(
-        index, outer_queries, args.cache_root / "validation",
-        candidate_k=args.candidate_k,
-    )
     roles = {
         "inner_train": (
             [train_qids[i] for i in inner_train], train_queries[inner_train],
@@ -221,11 +215,25 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             train_queries[inner_development], train_ann_rows[inner_development],
             train_ann_scores[inner_development], "validation",
         ),
-        "outer_validation": (
-            outer_qids, outer_queries, outer_ann_rows, outer_ann_scores,
-            "validation",
-        ),
     }
+    if not args.inner_only:
+        outer_qids, outer_query_rows = load_split(args.validation_split)
+        outer_queries = np.asarray(
+            query_vectors[outer_query_rows], dtype=np.float32
+        )
+        outer_ann_rows, outer_ann_scores = search_or_load(
+            index,
+            outer_queries,
+            args.cache_root / "validation",
+            candidate_k=args.candidate_k,
+        )
+        roles["outer_validation"] = (
+            outer_qids,
+            outer_queries,
+            outer_ann_rows,
+            outer_ann_scores,
+            "validation",
+        )
     summaries: dict[str, Any] = {}
     for role, (qids, queries, ann_rows, ann_scores, manifest_role) in roles.items():
         if ann_rows.shape != (len(qids), args.candidate_k):
@@ -262,6 +270,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         paths[residual_path.name] = residual_path
         manifest = {
             "protocol_id": PROTOCOL_ID,
+            "role_id": role,
             "split_role": manifest_role,
             "source": "MS MARCO 1M clean deterministic development split",
             "query_count": len(qids),
@@ -284,6 +293,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "roles": summaries,
         "epoch_selection_source": "inner_validation only",
         "outer_validation_used_for_epoch_selection": False,
+        "outer_validation_built": not args.inner_only,
         "test_qrels_accessed": False,
         "nq_test_retuning_authorized": False,
     }
@@ -307,6 +317,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--candidate-k", type=int, default=100)
     p.add_argument("--nprobe", type=int, default=16)
     p.add_argument("--residual-batch-size", type=int, default=20_000)
+    p.add_argument(
+        "--inner-only",
+        action="store_true",
+        help=(
+            "Build only inner_train and inner_validation. This is required for "
+            "v2.2 development so the burned outer outcomes stay unavailable."
+        ),
+    )
     return p.parse_args()
 
 
