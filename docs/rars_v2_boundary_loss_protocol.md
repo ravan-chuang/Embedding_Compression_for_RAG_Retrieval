@@ -39,7 +39,7 @@ Each train or validation bundle is a directory containing:
 The training script rejects any split role other than `train` or `validation`
 and rejects manifests that reference closed-test markers.
 
-Build the compact bundles from the completed NQ train/validation artifacts:
+Build the compact bundles from the completed MS MARCO clean-split artifacts:
 
 ```bash
 python scripts/build_msmarco_rars_v2_boundary_bundles.py \
@@ -61,11 +61,12 @@ validation go/no-go gate passes.
 
 ```bash
 python scripts/train_boundary_loss_sidecar.py \
-  --bundle-dir /path/to/nq-train-development-bundle \
-  --validation-bundle-dir /path/to/nq-validation-development-bundle \
+  --bundle-dir /path/to/inner_train \
+  --selection-bundle-dir /path/to/inner_validation \
+  --validation-bundle-dir /path/to/outer_validation \
   --output-dir /path/to/rars-v2-boundary-loss/run-001 \
   --rank 16 \
-  --epochs 5 \
+  --epochs 10 \
   --skip-full-encoding \
   --device cuda
 ```
@@ -107,6 +108,32 @@ v2.1 makes the implementation match the registered serving budget:
   train/validation; best epoch is chosen only on inner validation;
 - the original 1,000-query validation is an outer diagnostic and cannot select
   epochs or optimizer settings.
+
+The frozen seed-42 v2.1 run selected epoch 9. On the 1,000-query outer
+validation split it obtained `0.67867` Recall@10, a `+0.0020` gain over Base,
+with 4 improved, 2 harmed, and 994 unchanged queries. FP32 and int8 results were
+identical, but the model remained `-0.02567` below the storage-matched PCA
+sidecar. The registered decision is therefore `NO_GO_OR_REVISE`.
+
+## v2.2 intervention diagnosis
+
+No additional seeds or outer-validation tuning are authorized after the v2.1
+no-go result. Before defining another model, run the fixed v2.1 checkpoint on
+the **inner validation split only** with:
+
+```bash
+python scripts/diagnose_rars_v2_intervention.py \
+  --bundle-dir /path/to/inner_validation \
+  --model-dir /path/to/v2.1-seed42-max10epochs \
+  --output-dir /path/to/v2.1-seed42-max10epochs/inner_validation_diagnostic
+```
+
+The diagnostic performs no fitting, search, parameter sweep, or selection. It
+reports Top-40 relevance-oracle headroom, gate and correction distributions,
+Top-10 membership changes, and a gate-equals-one counterfactual. These values
+distinguish insufficient candidate headroom from gate suppression and wrong-way
+correction signals. The outer validation split remains frozen and is not read
+by this analysis.
 
 ## Required decomposition before a v2 claim
 

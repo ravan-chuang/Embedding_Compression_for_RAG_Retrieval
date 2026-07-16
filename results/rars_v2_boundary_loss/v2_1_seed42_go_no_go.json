@@ -1,0 +1,34 @@
+{
+  "protocol_id": "rars_v2_boundary_loss_feasibility_v1",
+  "implementation_revision": "v2.1",
+  "status": "NO_GO_OR_REVISE",
+  "evidence_source": "executed Colab notebook output supplied after the registered maximum-10-epoch run",
+  "artifact_ingest_status": "summary recorded; large Drive artifacts remain external",
+  "selected_epoch": 9,
+  "selection_best_int8_recall_at_10": 0.6947988223748773,
+  "checks": {
+    "gain_over_base_at_least_0.01": false,
+    "beats_storage_matched_pca": false,
+    "retains_70pct_fp32_gain": true,
+    "improved_exceeds_harmed": true
+  },
+  "outer_validation": {
+    "query_count": 1000,
+    "base_recall_at_10": 0.6766666666666667,
+    "boundary_fp32_recall_at_10": 0.6786666666666668,
+    "boundary_int8_recall_at_10": 0.6786666666666668,
+    "fp32_gain_over_base": 0.002,
+    "int8_gain_over_base": 0.002,
+    "int8_fraction_of_fp32_gain": 1.0,
+    "improved_queries": 4,
+    "harmed_queries": 2,
+    "unchanged_queries": 994,
+    "pca_recall_at_10": 0.7043333333333334,
+    "int8_gain_over_pca": -0.025666666666666667,
+    "rars_recall_at_10": 0.704,
+    "int8_gain_over_rars": -0.025333333333333333,
+    "beats_storage_matched_pca": false
+  },
+  "test_qrels_accessed": false,
+  "nq_test_retuning_authorized": false
+}

@@ -55,6 +55,21 @@
     "inner_split": "deterministic hash 80/20 partition inside the original 4980-query train split",
     "original_1000_query_validation_role": "outer diagnostic only; never selects epoch or optimizer settings"
   },
+  "post_v2_1_diagnostic_policy": {
+    "status": "diagnosis_before_any_v2.2_method_definition",
+    "script": "scripts/diagnose_rars_v2_intervention.py",
+    "allowed_bundle": "inner_validation only",
+    "outer_validation_accessed": false,
+    "operations": [
+      "Top-40 relevance-oracle headroom measurement",
+      "gate and bounded-correction distribution measurement",
+      "Top-10 membership-change accounting",
+      "gate-equals-one decomposition"
+    ],
+    "fitting_allowed": false,
+    "parameter_sweep_allowed": false,
+    "additional_seed_runs_before_diagnosis": false
+  },
   "required_baselines": [
     "base_m32",
     "pca_r16_fp32",
