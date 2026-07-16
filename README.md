@@ -43,6 +43,7 @@ The subsequent full-corpus BEIR NQ confirmation fitted and selected both sidecar
 | Larger independent BEIR NQ confirmation | Complete on 3,452 queries; RARS-over-PCA primary hypothesis unsupported; no retuning |
 | Post-hoc NQ sidecar diagnosis | Complete; exact Top-40 has material headroom, proxy/relevance alignment is weak |
 | RARS-v2 boundary-loss feasibility | [Development protocol](docs/rars_v2_boundary_loss_protocol.md) and training scaffold added; closed NQ test remains prohibited |
+| RARS-v2.2 FP32 development gate | [Frozen protocol](docs/rars_v2_2_boundary_loss_protocol.md) and [Colab notebook](notebooks/MSMARCO_RARS_v2_2_FP32_Development.ipynb) added; no outcome is claimed until the pinned seed-42 run completes, and the historical outer validation is recorded as burned development data |
 | Deployable rank-16 int8 sidecar artifact | Complete |
 | FastAPI sidecar serving path | Complete |
 | Artifact-backed and live-Faiss benchmarks | Complete |
