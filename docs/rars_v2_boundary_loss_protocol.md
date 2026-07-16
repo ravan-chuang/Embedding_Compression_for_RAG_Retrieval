@@ -28,6 +28,7 @@ Each train or validation bundle is a directory containing:
 | `ann_rows.int64.npy` | `[Q, 100]` | Frozen-index internal document rows |
 | `ann_scores.float32.npy` | `[Q, 100]` | Frozen IVF-PQ scores |
 | `candidate_relevance.uint8.npy` | `[Q, 100]` | Binary relevance within the candidate pool |
+| `relevant_counts.int32.npy` | `[Q]` | Full-qrels relevant count; required for validation Recall@10 |
 | `document_residuals.float32.npy` | `[N, D]` | Original minus frozen-index reconstructed document vectors |
 
 The training script rejects any split role other than `train` or `validation`
@@ -38,6 +39,7 @@ and rejects manifests that reference closed-test markers.
 ```bash
 python scripts/train_boundary_loss_sidecar.py \
   --bundle-dir /path/to/nq-train-development-bundle \
+  --validation-bundle-dir /path/to/nq-validation-development-bundle \
   --output-dir /path/to/rars-v2-boundary-loss/run-001 \
   --rank 16 \
   --epochs 5 \
@@ -45,9 +47,21 @@ python scripts/train_boundary_loss_sidecar.py \
 ```
 
 The first run learns untied query/document rank-16 projections plus a query
-confidence gate. Document projections use fake symmetric int8 quantization
-during training. The primary loss is pairwise softplus loss between candidate
-relevant documents and non-relevant documents near the frozen Top-10 boundary.
+confidence gate. Document projections use learned, fixed per-coefficient int8
+scales during QAT. The same scales are written to the artifact, used to encode
+the complete document residual matrix, and reused unchanged on validation; no
+batch-dependent or validation recalibration is allowed. The primary loss is
+pairwise softplus loss between candidate relevant documents and non-relevant
+documents near the frozen Top-10 boundary.
+
+`scripts/train_boundary_aware_sidecar.py` is retained as a secondary qrels-free
+exact-score distillation ablation. It is not the registered primary method and
+must be reported separately rather than silently mixed with relevance training.
+
+The trainer writes portable NumPy artifacts for the query projection, document
+projection, query gate, fixed int8 scales, and full-corpus int8 document codes.
+When a validation bundle is supplied it also writes Base, FP32, and int8
+Recall@10 plus improved/harmed/unchanged query counts.
 
 ## Required decomposition before a v2 claim
 

@@ -25,8 +25,16 @@
     "primary_loss": "pairwise softplus loss over relevant candidates and hard non-relevant Top-10 boundary candidates",
     "positive_source": "development qrels only",
     "negative_source": "non-relevant candidates nearest the frozen Top-10 boundary",
-    "exact_score_distillation_role": "optional regularizer only",
-    "quantization": "symmetric per-coefficient fake int8 quantization during training"
+    "exact_score_distillation_role": "secondary qrels-free ablation only",
+    "quantization": "learned fixed per-coefficient symmetric int8 scales reused unchanged for full-corpus encoding and validation",
+    "quantization_scale_selection": "initialized from a deterministic train-residual sample and optimized by QAT; validation does not recalibrate scales",
+    "primary_trainer": "scripts/train_boundary_loss_sidecar.py",
+    "secondary_ablation_trainer": "scripts/train_boundary_aware_sidecar.py"
+  },
+  "validation_bundle": {
+    "requires_full_qrels_relevant_counts": true,
+    "relevant_counts_file": "relevant_counts.int32.npy",
+    "selection_metrics": ["Recall@10", "improved_queries", "harmed_queries", "FP32-to-int8 gain retention"]
   },
   "required_baselines": [
     "base_m32",
