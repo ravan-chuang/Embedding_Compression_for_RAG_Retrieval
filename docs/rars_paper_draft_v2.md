@@ -8,7 +8,7 @@
 
 This version replaces the method-superiority framing in v1. The committed evidence supports a frozen-index retrofit result, but it does not support a general claim that retrieval-aware basis learning is better than ordinary residual PCA.
 
-A stronger SIGIR short-paper submission should add one larger, preregistered independent evaluation before submission. The two existing evaluation sets are closed to further method selection. The selected next gate is the [BEIR Natural Questions confirmation protocol](beir_nq_confirmation_protocol.md), whose 3,452-query test split remains unopened by this project.
+The larger preregistered [BEIR Natural Questions confirmation](beir_nq_confirmation_protocol.md) is now complete. Its 3,452-query one-shot test result does not support RARS superiority over PCA, and neither sidecar improves Recall@10 over the frozen base. All three existing evaluation sets are closed to further method selection.
 
 ## Abstract
 
@@ -18,7 +18,9 @@ On a deterministic one-million-passage MS MARCO benchmark, RARS is fitted on 4,9
 
 We then preregister a storage-matched RARS-versus-PCA comparison on an external TREC DL 2019 query set restricted to the same frozen one-million-passage corpus. Across 42 eligible queries, RARS minus PCA Recall@10 is -0.0181 with a 95% confidence interval of [-0.0735, +0.0168], so the primary external hypothesis is not supported. RARS has higher MRR@10 and nDCG@10 point estimates, but their intervals also cross zero. Query-level tracing shows that the Recall result depends on five boundary-changing queries and is especially sensitive to one sparsely judged query.
 
-These results show that compact residual correction can improve a frozen index in a controlled in-distribution pipeline, while retrieval-aware basis learning has not yet demonstrated robust superiority over PCA. We release the frozen protocols, artifact hashes, paired outputs, negative external result, and serving implementation.
+Finally, a newly fitted full-corpus BEIR NQ experiment freezes Base, PCA, RARS, configuration selection, and evaluator before opening official test qrels. Across 3,452 eligible test queries, RARS minus PCA Recall@10 is -0.000410 with a 95% confidence interval of [-0.005987, +0.004972]. Base, PCA, and RARS obtain Recall@10 of 0.37973, 0.37811, and 0.37770, respectively. The primary hypothesis is again unsupported, and no post-result retuning is performed.
+
+These results show that compact residual correction can improve a frozen index in a controlled in-distribution pipeline, while score-error-weighted residual basis learning does not reliably outperform PCA or the frozen base under independent confirmation. A locked post-hoc analysis finds material exact-rescoring headroom inside the same candidate pool but weak alignment between the exact-overlap selection proxy and relevance gain, motivating future relevance-boundary objectives without changing the frozen results.
 
 ## Research questions
 
@@ -33,6 +35,8 @@ These results show that compact residual correction can improve a frozen index i
 | MS MARCO 4,980 / 1,000 / 1,000 split | Clean-pipeline base comparison | RARS minus base Recall@10 `+0.0240`, CI `[+0.0105, +0.0378]` | Positive within the frozen clean pipeline |
 | 863-query overlap-excluded subset | Post-hoc sensitivity | RARS minus base Recall@10 `+0.0168`, CI `[+0.0029, +0.0303]` | Robustness to known prior-query overlap, not a new test |
 | TREC DL 2019 / frozen 1M restriction | Preregistered external comparator | RARS minus PCA Recall@10 `-0.0181`, CI `[-0.0735, +0.0168]` | Primary RARS-over-PCA hypothesis unsupported |
+| BEIR NQ / full 2.68M corpus | Preregistered one-shot comparator | RARS minus PCA Recall@10 `-0.000410`, CI `[-0.005987, +0.004972]` | Large independent confirmation does not support superiority |
+| BEIR NQ locked post-hoc diagnosis | Exploratory failure analysis only | Exact Top-40 minus Base `+0.08379`; RARS proxy/relevance Pearson `0.150` | Headroom exists, but NQ retuning remains prohibited |
 | Earlier same-query MS MARCO and FiQA runs | Developmental diagnostics | Mixed, often positive versus base; PCA remains strong | Ablations and motivation only |
 
 ## Contributions

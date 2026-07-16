@@ -13,7 +13,7 @@ The repository separates three questions that are often conflated:
 2. **Compressed-domain efficiency:** What latency and throughput are obtained when Faiss searches PQ codes directly?
 3. **Frozen-index recovery:** How much ranking quality can be recovered by attaching a compact residual sidecar without rebuilding or rewriting an existing IVF-PQ index?
 
-The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The evidence now has two distinct layers: a positive MS MARCO clean-pipeline result against the frozen base index, and a preregistered external RARS-versus-PCA comparison whose primary hypothesis was not supported.
+The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The completed evidence now has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority.
 
 On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improves:
 
@@ -25,6 +25,8 @@ On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improv
 All four confidence intervals are strictly above zero on the full 1,000-query clean-pipeline held-out split. A project-history audit subsequently found that 137 of those queries had appeared in an earlier exploratory query set. After excluding those 137 queries by ID, the remaining 863 prior-unseen queries retain statistically positive gains for Recall@10, Success@10, and nDCG@10; MRR@10 remains directionally positive but its 95% confidence interval narrowly crosses zero. The base IVF-PQ index and its existing PQ codes remain unchanged.
 
 The later external comparison froze a storage-matched PCA sidecar and RARS before evaluating 42 eligible TREC DL 2019 queries against the same frozen 1M corpus. RARS minus PCA Recall@10 was `-0.0181`, with a 95% paired-bootstrap CI of `[-0.0735, +0.0168]`. The external primary hypothesis was therefore **not supported**. This 42-query result is a corpus-restricted sensitivity analysis, not an official full-corpus TREC benchmark, but it is the latest confirmatory evidence and is reported without retuning.
+
+The subsequent full-corpus BEIR NQ confirmation fitted and selected both sidecars using NQ train queries before a one-shot evaluation on 3,452 official test queries. RARS minus PCA Recall@10 was `-0.000410`, with a 95% paired-bootstrap CI of `[-0.005987, +0.004972]`; neither sidecar improved Recall@10 over the frozen M32 base. A locked post-hoc diagnosis found substantial recoverable headroom from exact Top-40 candidate rescoring (`+0.08379` Recall@10 over base), while the exact-overlap proxy correlated only weakly with relevance gain (`r≈0.15` for RARS). These diagnostics motivate a separately versioned, relevance-supervised boundary-loss feasibility study; they do not authorize NQ test retuning.
 
 ## Research Status
 
@@ -38,7 +40,9 @@ The later external comparison froze a storage-matched PCA sidecar and RARS befor
 | Storage-matched PCA comparator and validation freeze | Complete |
 | Preregistered external RARS-versus-PCA evaluation | Complete; primary hypothesis unsupported |
 | External query-level and rank-flip diagnostics | Complete; post-hoc and non-tuning |
-| Larger independent BEIR NQ confirmation | [Protocol](docs/beir_nq_confirmation_protocol.md) and [Colab T4 + Drive runbook](docs/beir_nq_colab_runbook.md) ready for design freeze; test qrels not accessed |
+| Larger independent BEIR NQ confirmation | Complete on 3,452 queries; RARS-over-PCA primary hypothesis unsupported; no retuning |
+| Post-hoc NQ sidecar diagnosis | Complete; exact Top-40 has material headroom, proxy/relevance alignment is weak |
+| RARS-v2 boundary-loss feasibility | [Development protocol](docs/rars_v2_boundary_loss_protocol.md) and training scaffold added; closed NQ test remains prohibited |
 | Deployable rank-16 int8 sidecar artifact | Complete |
 | FastAPI sidecar serving path | Complete |
 | Artifact-backed and live-Faiss benchmarks | Complete |

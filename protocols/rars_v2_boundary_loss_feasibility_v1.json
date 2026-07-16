@@ -1,0 +1,47 @@
+{
+  "protocol_id": "rars_v2_boundary_loss_feasibility_v1",
+  "status": "development_only_before_new_external_test_freeze",
+  "research_question": "Can a relevance-supervised rank-16 int8 sidecar recover Top-10 boundary errors under the same document-byte budget as PCA and RARS-v1?",
+  "allowed_data": {
+    "development_source": "BEIR NQ train archive only",
+    "allowed_split_roles": ["train", "validation"],
+    "forbidden_sources": ["BEIR NQ official test queries", "BEIR NQ official test qrels", "stage3/evaluation", "stage3/posthoc_diagnosis"],
+    "nq_test_retuning_authorized": false,
+    "new_external_test": "TBD and unopened until the v2 method and evaluator are frozen"
+  },
+  "base_index": {
+    "frozen": true,
+    "candidate_k": 100,
+    "final_k": 10
+  },
+  "sidecar": {
+    "rank": 16,
+    "document_code_dtype": "int8",
+    "document_payload_bytes": 16,
+    "correction_depth": 40,
+    "score": "ann_score + sigmoid(query_gate) * dot(query_projection, quantized_document_residual_code)"
+  },
+  "training": {
+    "primary_loss": "pairwise softplus loss over relevant candidates and hard non-relevant Top-10 boundary candidates",
+    "positive_source": "development qrels only",
+    "negative_source": "non-relevant candidates nearest the frozen Top-10 boundary",
+    "exact_score_distillation_role": "optional regularizer only",
+    "quantization": "symmetric per-coefficient fake int8 quantization during training"
+  },
+  "required_baselines": [
+    "base_m32",
+    "pca_r16_fp32",
+    "pca_r16_int8",
+    "rars_v1_r16_fp32",
+    "rars_v1_r16_int8",
+    "exact_top40"
+  ],
+  "go_criteria": {
+    "minimum_validation_recall_at_10_gain_over_base": 0.01,
+    "must_beat_storage_matched_pca": true,
+    "minimum_int8_fraction_of_fp32_gain": 0.7,
+    "improved_queries_must_exceed_harmed_queries": true
+  },
+  "method_revision_allowed": true,
+  "test_informed_revision_allowed": false
+}
