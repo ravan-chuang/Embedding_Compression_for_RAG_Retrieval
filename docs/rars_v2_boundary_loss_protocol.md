@@ -29,10 +29,25 @@ Each train or validation bundle is a directory containing:
 | `ann_scores.float32.npy` | `[Q, 100]` | Frozen IVF-PQ scores |
 | `candidate_relevance.uint8.npy` | `[Q, 100]` | Binary relevance within the candidate pool |
 | `relevant_counts.int32.npy` | `[Q]` | Full-qrels relevant count; required for validation Recall@10 |
-| `document_residuals.float32.npy` | `[N, D]` | Original minus frozen-index reconstructed document vectors |
+| `candidate_residuals.float32.npy` | `[U, D]` | Residuals for the union of development candidates only |
+| `candidate_doc_rows.int64.npy` | `[U]` | Frozen-index document row for each candidate residual |
+| `ann_residual_rows.int64.npy` | `[Q, 100]` | Maps every ANN position to its local candidate-residual row |
 
 The training script rejects any split role other than `train` or `validation`
 and rejects manifests that reference closed-test markers.
+
+Build the compact bundles from the completed NQ train/validation artifacts:
+
+```bash
+python scripts/build_rars_v2_boundary_bundles.py \
+  --artifact-root /content/drive/MyDrive/rars-beir-nq-confirmation-v2 \
+  --output-root /content/drive/MyDrive/rars-v2-boundary-loss/bundles
+```
+
+Only candidate-union residuals are materialized. This avoids another full
+multi-gigabyte FP32 residual matrix on Drive. The feasibility trainer therefore
+runs with `--skip-full-encoding`; full-corpus codes are exported only after the
+validation go/no-go gate passes.
 
 ## First feasibility run
 
@@ -43,6 +58,7 @@ python scripts/train_boundary_loss_sidecar.py \
   --output-dir /path/to/rars-v2-boundary-loss/run-001 \
   --rank 16 \
   --epochs 5 \
+  --skip-full-encoding \
   --device cuda
 ```
 

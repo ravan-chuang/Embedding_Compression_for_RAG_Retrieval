@@ -128,12 +128,26 @@ def load_bundle(
         "ann_rows": "ann_rows.int64.npy",
         "ann_scores": "ann_scores.float32.npy",
         "labels": "candidate_relevance.uint8.npy",
-        "residuals": "document_residuals.float32.npy",
     }
     arrays = {
         name: np.load(bundle_dir / filename, mmap_mode="r")
         for name, filename in filenames.items()
     }
+    full_residuals = bundle_dir / "document_residuals.float32.npy"
+    candidate_residuals = bundle_dir / "candidate_residuals.float32.npy"
+    if full_residuals.exists():
+        arrays["residuals"] = np.load(full_residuals, mmap_mode="r")
+        arrays["residual_lookup"] = arrays["ann_rows"]
+        arrays["residual_scope"] = np.asarray("full_corpus")
+    elif candidate_residuals.exists():
+        arrays["residuals"] = np.load(candidate_residuals, mmap_mode="r")
+        arrays["residual_lookup"] = np.load(
+            bundle_dir / "ann_residual_rows.int64.npy", mmap_mode="r"
+        )
+        arrays["residual_scope"] = np.asarray("candidate_union")
+    else:
+        raise ValueError("Bundle has no document or candidate residual array")
+
     counts_path = bundle_dir / "relevant_counts.int32.npy"
     if counts_path.exists():
         arrays["relevant_counts"] = np.load(counts_path, mmap_mode="r")
@@ -146,6 +160,8 @@ def load_bundle(
         raise ValueError("Query and candidate array shapes do not agree")
     if arrays["labels"].shape != (q, c):
         raise ValueError("Candidate relevance labels do not match ANN candidates")
+    if arrays["residual_lookup"].shape != (q, c):
+        raise ValueError("Residual lookup does not match ANN candidates")
     if arrays["residuals"].ndim != 2:
         raise ValueError("Document residuals must be a [documents, dimension] array")
     if "relevant_counts" in arrays:
@@ -226,7 +242,7 @@ def corrected_candidate_scores(
     rows = np.asarray(arrays["ann_rows"], dtype=np.int64)
     scores = np.asarray(arrays["ann_scores"], dtype=np.float32).copy()
     depth = min(top_b, rows.shape[1])
-    candidate_rows = rows[:, :depth]
+    candidate_rows = np.asarray(arrays["residual_lookup"][:, :depth], dtype=np.int64)
     if np.any(candidate_rows < 0):
         raise ValueError("Top-b candidates contain invalid document rows")
     residual = np.asarray(arrays["residuals"][candidate_rows], dtype=np.float32)
@@ -352,8 +368,12 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         for start in range(0, len(pairs), args.batch_size):
             batch = pairs[start:start + args.batch_size]
             qi, pi, ni = batch.T
-            positive_rows = np.asarray(arrays["ann_rows"][qi, pi], dtype=np.int64)
-            negative_rows = np.asarray(arrays["ann_rows"][qi, ni], dtype=np.int64)
+            positive_rows = np.asarray(
+                arrays["residual_lookup"][qi, pi], dtype=np.int64
+            )
+            negative_rows = np.asarray(
+                arrays["residual_lookup"][qi, ni], dtype=np.int64
+            )
             if np.any(positive_rows < 0) or np.any(negative_rows < 0):
                 raise ValueError("Boundary pairs contain invalid document rows")
             q = torch.as_tensor(
@@ -417,6 +437,12 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     atomic_write_json(args.output_dir / "training_history.json", history)
 
     codes_path = args.output_dir / "document_codes.int8.npy"
+    residual_scope = str(np.asarray(arrays["residual_scope"]).item())
+    if not args.skip_full_encoding and residual_scope != "full_corpus":
+        raise ValueError(
+            "Candidate-union bundles require --skip-full-encoding; export full "
+            "codes later by streaming the frozen index and corpus embeddings"
+        )
     if not args.skip_full_encoding:
         encode_document_codes(
             arrays["residuals"],
@@ -464,6 +490,7 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "final_loss": history[-1]["loss"],
         "quantization": "learned_fixed_per_coefficient_int8_scales",
         "document_codes_written": not args.skip_full_encoding,
+        "training_residual_scope": residual_scope,
         "validation": validation_metrics,
         "test_qrels_accessed": False,
         "nq_test_retuning_authorized": False,

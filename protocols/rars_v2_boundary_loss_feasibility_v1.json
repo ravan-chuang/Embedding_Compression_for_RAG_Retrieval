@@ -36,6 +36,12 @@
     "relevant_counts_file": "relevant_counts.int32.npy",
     "selection_metrics": ["Recall@10", "improved_queries", "harmed_queries", "FP32-to-int8 gain retention"]
   },
+  "development_artifact_policy": {
+    "residual_scope": "union of train or validation Top-100 candidate rows",
+    "full_corpus_residual_materialization_required": false,
+    "full_corpus_int8_encoding_before_validation_go_gate": false,
+    "bundle_builder": "scripts/build_rars_v2_boundary_bundles.py"
+  },
   "required_baselines": [
     "base_m32",
     "pca_r16_fp32",

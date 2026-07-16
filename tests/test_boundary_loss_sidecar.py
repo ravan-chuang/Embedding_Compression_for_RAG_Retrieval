@@ -88,3 +88,22 @@ def test_recall_and_validation_summary_use_full_relevant_counts() -> None:
     assert summary["int8_gain_over_base"] == 0.25
     assert summary["improved_queries"] == 1
     assert summary["harmed_queries"] == 0
+
+
+def test_candidate_union_bundle_maps_ann_rows_to_local_residuals(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "manifest.json").write_text(
+        '{"split_role":"train","test_qrels_accessed":false,'
+        '"nq_test_retuning_authorized":false}',
+        encoding="utf-8",
+    )
+    np.save(tmp_path / "query_vectors.float32.npy", np.zeros((1, 2), np.float32))
+    np.save(tmp_path / "ann_rows.int64.npy", np.asarray([[10, 20]], np.int64))
+    np.save(tmp_path / "ann_scores.float32.npy", np.asarray([[0.2, 0.1]], np.float32))
+    np.save(tmp_path / "candidate_relevance.uint8.npy", np.asarray([[1, 0]], np.uint8))
+    np.save(tmp_path / "candidate_residuals.float32.npy", np.eye(2, dtype=np.float32))
+    np.save(tmp_path / "ann_residual_rows.int64.npy", np.asarray([[1, 0]], np.int64))
+    bundle = MODULE.load_bundle(tmp_path, expected_role="train")
+    assert bundle["residual_scope"].item() == "candidate_union"
+    assert bundle["residual_lookup"].tolist() == [[1, 0]]
