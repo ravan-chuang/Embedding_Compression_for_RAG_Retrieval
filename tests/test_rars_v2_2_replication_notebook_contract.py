@@ -49,6 +49,11 @@ def test_replication_notebook_is_clean_ordered_and_dual_pinned() -> None:
     checkout = _cell_source(notebook, "v22r-checkout")
     assert "tests/test_aggregate_rars_v2_2_fp32_replication.py" in checkout
     assert "'-m', 'pytest', '-q']" not in checkout
+    setup = _cell_source(notebook, "v22r-setup")
+    assert "'numpy==1.26.4'" in setup
+    assert "installed_numpy_version == '1.26.4'" in setup
+    assert "NumPy was already loaded before the pin took effect" in setup
+    assert setup.index("'numpy==1.26.4'") < setup.index("from google.colab import drive")
 
 
 def test_replication_notebook_trains_only_sealed_heldout_seeds() -> None:
