@@ -77,6 +77,21 @@ def load_split(path: Path) -> tuple[list[str], np.ndarray]:
     return qids, rows
 
 
+def inner_partition(qids: list[str]) -> tuple[np.ndarray, np.ndarray]:
+    """Deterministic 80/20 split used only inside the original train split."""
+
+    is_dev = np.asarray([
+        int(hashlib.sha256(f"rars-v2.1-inner:{qid}".encode()).hexdigest()[:16], 16)
+        % 5 == 0
+        for qid in qids
+    ])
+    train = np.flatnonzero(~is_dev)
+    development = np.flatnonzero(is_dev)
+    if not len(train) or not len(development):
+        raise ValueError("Inner split is empty")
+    return train, development
+
+
 def labels_and_counts(
     qids: list[str], ann_rows: np.ndarray, doc_ids: np.ndarray,
     qrels: dict[str, set[int]],
@@ -183,17 +198,36 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         args.rars_codes, dtype=np.int8, mode="r", shape=(args.n_docs, args.rank)
     )
 
+    train_qids, train_query_rows = load_split(args.train_split)
+    train_queries = np.asarray(query_vectors[train_query_rows], dtype=np.float32)
+    train_ann_rows, train_ann_scores = search_or_load(
+        index, train_queries, args.cache_root / "train",
+        candidate_k=args.candidate_k,
+    )
+    inner_train, inner_development = inner_partition(train_qids)
+    outer_qids, outer_query_rows = load_split(args.validation_split)
+    outer_queries = np.asarray(query_vectors[outer_query_rows], dtype=np.float32)
+    outer_ann_rows, outer_ann_scores = search_or_load(
+        index, outer_queries, args.cache_root / "validation",
+        candidate_k=args.candidate_k,
+    )
     roles = {
-        "train": (args.train_split, args.cache_root / "train"),
-        "validation": (args.validation_split, args.cache_root / "validation"),
+        "inner_train": (
+            [train_qids[i] for i in inner_train], train_queries[inner_train],
+            train_ann_rows[inner_train], train_ann_scores[inner_train], "train",
+        ),
+        "inner_validation": (
+            [train_qids[i] for i in inner_development],
+            train_queries[inner_development], train_ann_rows[inner_development],
+            train_ann_scores[inner_development], "validation",
+        ),
+        "outer_validation": (
+            outer_qids, outer_queries, outer_ann_rows, outer_ann_scores,
+            "validation",
+        ),
     }
     summaries: dict[str, Any] = {}
-    for role, (split_path, cache_dir) in roles.items():
-        qids, query_rows = load_split(split_path)
-        queries = np.asarray(query_vectors[query_rows], dtype=np.float32)
-        ann_rows, ann_scores = search_or_load(
-            index, queries, cache_dir, candidate_k=args.candidate_k
-        )
+    for role, (qids, queries, ann_rows, ann_scores, manifest_role) in roles.items():
         if ann_rows.shape != (len(qids), args.candidate_k):
             raise ValueError(f"Unexpected {role} candidate shape {ann_rows.shape}")
         labels, counts = labels_and_counts(qids, ann_rows, doc_ids, qrels)
@@ -228,7 +262,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         paths[residual_path.name] = residual_path
         manifest = {
             "protocol_id": PROTOCOL_ID,
-            "split_role": role,
+            "split_role": manifest_role,
             "source": "MS MARCO 1M clean deterministic development split",
             "query_count": len(qids),
             "candidate_count": args.candidate_k,
@@ -248,6 +282,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "protocol_id": PROTOCOL_ID,
         "status": "msmarco_development_bundles_complete",
         "roles": summaries,
+        "epoch_selection_source": "inner_validation only",
+        "outer_validation_used_for_epoch_selection": False,
         "test_qrels_accessed": False,
         "nq_test_retuning_authorized": False,
     }

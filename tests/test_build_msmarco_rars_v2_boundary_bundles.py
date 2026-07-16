@@ -37,3 +37,13 @@ def test_sidecar_scoring_changes_only_top_b() -> None:
         np.ones(2, np.float32), alpha=0.5, top_b=2,
     )
     assert np.allclose(result, [[0.6, 1.2, 0.3]])
+
+
+def test_inner_partition_is_deterministic_and_disjoint() -> None:
+    qids = [str(value) for value in range(100)]
+    first_train, first_dev = MODULE.inner_partition(qids)
+    second_train, second_dev = MODULE.inner_partition(qids)
+    assert np.array_equal(first_train, second_train)
+    assert np.array_equal(first_dev, second_dev)
+    assert set(first_train).isdisjoint(first_dev)
+    assert sorted(np.concatenate([first_train, first_dev]).tolist()) == list(range(100))

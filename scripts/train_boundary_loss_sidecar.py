@@ -78,6 +78,7 @@ def build_boundary_pairs(
     final_k: int = 10,
     negative_window: int = 10,
     max_negatives_per_positive: int = 8,
+    correction_depth: int = 40,
 ) -> np.ndarray:
     """Return deterministic (query, positive, negative) relevance pairs.
 
@@ -93,23 +94,35 @@ def build_boundary_pairs(
         raise ValueError(
             "labels and ann_scores must be matching [queries, candidates] arrays"
         )
-    if final_k <= 0 or negative_window <= 0 or max_negatives_per_positive <= 0:
+    if (
+        final_k <= 0
+        or negative_window <= 0
+        or max_negatives_per_positive <= 0
+        or not final_k < correction_depth <= scores.shape[1]
+    ):
         raise ValueError("Boundary-pair parameters must be positive")
     pairs: list[tuple[int, int, int]] = []
     for query_index in range(len(labels)):
         order = np.argsort(-scores[query_index], kind="stable")
-        positives = np.flatnonzero(labels[query_index] > 0)
-        boundary = order[: min(len(order), final_k + negative_window)]
-        negatives = boundary[labels[query_index, boundary] <= 0]
+        correctable = np.arange(scores.shape[1]) < correction_depth
+        positives = np.flatnonzero((labels[query_index] > 0) & correctable)
         # Hardest negatives are closest to the final-k score cutoff.
         cutoff_position = min(final_k - 1, len(order) - 1)
         cutoff = scores[query_index, order[cutoff_position]]
-        negatives = negatives[
-            np.argsort(np.abs(scores[query_index, negatives] - cutoff), kind="stable")
-        ][:max_negatives_per_positive]
-        if not len(positives) or not len(negatives):
+        if not len(positives):
             continue
         for positive in positives:
+            positive_rank = int(np.flatnonzero(order == positive)[0])
+            if positive_rank >= final_k:
+                pool = order[:final_k]
+            else:
+                pool = order[final_k:correction_depth]
+            negatives = pool[labels[query_index, pool] <= 0]
+            negatives = negatives[
+                np.argsort(
+                    np.abs(scores[query_index, negatives] - cutoff), kind="stable"
+                )
+            ][:max_negatives_per_positive]
             for negative in negatives:
                 pairs.append((query_index, int(positive), int(negative)))
     return np.asarray(pairs, dtype=np.int64).reshape(-1, 3)
@@ -242,6 +255,7 @@ def corrected_candidate_scores(
     *,
     top_b: int,
     scales: np.ndarray | None,
+    max_correction: float,
 ) -> np.ndarray:
     """Score validation candidates in FP32 or with fixed int8 scales."""
 
@@ -258,7 +272,8 @@ def corrected_candidate_scores(
         codes = quantize_coefficients(coefficients, scales)
         coefficients = codes.astype(np.float32) * scales
     q_projection = queries @ query_projection
-    correction = np.einsum("qr,qcr->qc", q_projection, coefficients)
+    raw_correction = np.einsum("qr,qcr->qc", q_projection, coefficients)
+    correction = max_correction * np.tanh(raw_correction / max_correction)
     gate = 1.0 / (1.0 + np.exp(-(queries @ gate_weight + gate_bias)))
     scores[:, :depth] += gate[:, None] * correction
     return scores
@@ -327,6 +342,15 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     import torch.nn.functional as functional
 
     arrays = load_bundle(args.bundle_dir, expected_role="train")
+    selection = (
+        load_bundle(
+            args.selection_bundle_dir,
+            expected_role="validation",
+            require_relevant_counts=True,
+        )
+        if args.selection_bundle_dir is not None
+        else None
+    )
     validation = (
         load_bundle(
             args.validation_bundle_dir,
@@ -342,6 +366,7 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         final_k=args.final_k,
         negative_window=args.negative_window,
         max_negatives_per_positive=args.max_negatives_per_positive,
+        correction_depth=args.top_b,
     )
     if not len(pairs):
         raise ValueError("No relevance-boundary training pairs were found")
@@ -357,6 +382,8 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     query_gate = torch.nn.Linear(dimension, 1, device=device)
     torch.nn.init.orthogonal_(query_projection.weight)
     torch.nn.init.orthogonal_(document_projection.weight)
+    torch.nn.init.zeros_(query_gate.weight)
+    torch.nn.init.constant_(query_gate.bias, args.initial_gate_bias)
     initial_document_projection = document_projection.weight.detach().cpu().numpy().T
     initial_scales = calibrate_scales(
         arrays["residuals"],
@@ -383,7 +410,19 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         rounded = normalized + (torch.round(normalized) - normalized).detach()
         return torch.clamp(rounded, -127, 127) * scales
 
+    def model_arrays() -> tuple[np.ndarray, np.ndarray, np.ndarray, float, np.ndarray]:
+        return (
+            query_projection.weight.detach().cpu().numpy().T.astype(np.float32),
+            document_projection.weight.detach().cpu().numpy().T.astype(np.float32),
+            query_gate.weight.detach().cpu().numpy().reshape(-1).astype(np.float32),
+            float(query_gate.bias.detach().cpu().numpy()[0]),
+            np.exp(log_scales.detach().cpu().numpy()).clip(1e-8, 1.0).astype(np.float32),
+        )
+
     history: list[dict[str, float]] = []
+    best_state: dict[str, Any] | None = None
+    best_selection_recall = -np.inf
+    selected_epoch = args.epochs
     for epoch in range(args.epochs):
         rng.shuffle(pairs)
         losses: list[float] = []
@@ -418,8 +457,10 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             )
             zq = query_projection(q)
             gate = torch.sigmoid(query_gate(q)).squeeze(1)
-            cp = (zq * fake_int8(document_projection(rp))).sum(dim=1)
-            cn = (zq * fake_int8(document_projection(rn))).sum(dim=1)
+            raw_cp = (zq * fake_int8(document_projection(rp))).sum(dim=1)
+            raw_cn = (zq * fake_int8(document_projection(rn))).sum(dim=1)
+            cp = args.max_correction * torch.tanh(raw_cp / args.max_correction)
+            cn = args.max_correction * torch.tanh(raw_cn / args.max_correction)
             corrected_margin = base_margin + gate * (cp - cn)
             loss = functional.softplus(args.margin - corrected_margin).mean()
             loss = loss + args.correction_l2 * (cp.square() + cn.square()).mean()
@@ -436,16 +477,49 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             )
             optimizer.step()
             losses.append(float(loss.detach().cpu()))
-        history.append({"epoch": epoch + 1, "loss": float(np.mean(losses))})
+        epoch_record: dict[str, float] = {
+            "epoch": epoch + 1,
+            "loss": float(np.mean(losses)),
+        }
+        if selection is not None:
+            qm, dm, gw, gb, current_scales = model_arrays()
+            selection_scores = corrected_candidate_scores(
+                selection, qm, dm, gw, gb, top_b=args.top_b,
+                scales=current_scales, max_correction=args.max_correction,
+            )
+            selection_recall = float(np.mean(recall_at_k_per_query(
+                selection_scores, selection["labels"],
+                selection["relevant_counts"], k=args.final_k,
+            )))
+            epoch_record["selection_int8_recall_at_10"] = selection_recall
+            if selection_recall > best_selection_recall + 1e-12:
+                best_selection_recall = selection_recall
+                selected_epoch = epoch + 1
+                best_state = {
+                    "query_projection": {
+                        key: value.detach().cpu().clone()
+                        for key, value in query_projection.state_dict().items()
+                    },
+                    "document_projection": {
+                        key: value.detach().cpu().clone()
+                        for key, value in document_projection.state_dict().items()
+                    },
+                    "query_gate": {
+                        key: value.detach().cpu().clone()
+                        for key, value in query_gate.state_dict().items()
+                    },
+                    "log_scales": log_scales.detach().cpu().clone(),
+                }
+        history.append(epoch_record)
         print(f"epoch {epoch + 1}/{args.epochs}: loss={history[-1]['loss']:.6f}")
 
-    query_matrix = query_projection.weight.detach().cpu().numpy().T.astype(np.float32)
-    document_matrix = (
-        document_projection.weight.detach().cpu().numpy().T.astype(np.float32)
-    )
-    gate_weight = query_gate.weight.detach().cpu().numpy().reshape(-1).astype(np.float32)
-    gate_bias = float(query_gate.bias.detach().cpu().numpy()[0])
-    scales = np.exp(log_scales.detach().cpu().numpy()).clip(1e-8, 1.0).astype(np.float32)
+    if best_state is not None:
+        query_projection.load_state_dict(best_state["query_projection"])
+        document_projection.load_state_dict(best_state["document_projection"])
+        query_gate.load_state_dict(best_state["query_gate"])
+        with torch.no_grad():
+            log_scales.copy_(best_state["log_scales"].to(device))
+    query_matrix, document_matrix, gate_weight, gate_bias, scales = model_arrays()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     atomic_save_npy(args.output_dir / "query_projection.float32.npy", query_matrix)
@@ -484,6 +558,7 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             gate_bias,
             top_b=args.top_b,
             scales=None,
+            max_correction=args.max_correction,
         )
         int8_scores = corrected_candidate_scores(
             validation,
@@ -493,6 +568,7 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             gate_bias,
             top_b=args.top_b,
             scales=scales,
+            max_correction=args.max_correction,
         )
         validation_metrics = validation_summary(
             validation, fp32_scores, int8_scores, final_k=args.final_k
@@ -508,6 +584,11 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "top_b": args.top_b,
         "pair_count": int(len(pairs)),
         "epochs": args.epochs,
+        "selected_epoch": selected_epoch,
+        "selection_best_int8_recall_at_10": (
+            None if selection is None else float(best_selection_recall)
+        ),
+        "max_correction": args.max_correction,
         "initial_loss": history[0]["loss"],
         "final_loss": history[-1]["loss"],
         "quantization": "learned_fixed_per_coefficient_int8_scales",
@@ -525,6 +606,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--bundle-dir", type=Path, required=True)
     parser.add_argument("--validation-bundle-dir", type=Path)
+    parser.add_argument("--selection-bundle-dir", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--rank", type=int, default=16)
     parser.add_argument("--top-b", type=int, default=40)
@@ -537,9 +619,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--encode-batch-size", type=int, default=50_000)
     parser.add_argument("--scale-sample-rows", type=int, default=100_000)
     parser.add_argument("--scale-percentile", type=float, default=99.9)
-    parser.add_argument("--learning-rate", type=float, default=1e-3)
+    parser.add_argument("--learning-rate", type=float, default=1e-4)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
-    parser.add_argument("--correction-l2", type=float, default=1e-4)
+    parser.add_argument("--correction-l2", type=float, default=1e-3)
+    parser.add_argument("--max-correction", type=float, default=0.05)
+    parser.add_argument("--initial-gate-bias", type=float, default=-2.0)
     parser.add_argument("--max-grad-norm", type=float, default=5.0)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", default="cuda")

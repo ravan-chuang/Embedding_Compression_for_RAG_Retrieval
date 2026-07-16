@@ -87,6 +87,27 @@ projection, query gate, fixed int8 scales, and full-corpus int8 document codes.
 When a validation bundle is supplied it also writes Base, FP32, and int8
 Recall@10 plus improved/harmed/unchanged query counts.
 
+## v2.1 implementation correction after run-0
+
+Run-0 used relevant positives from the complete Top-100 candidate cache even
+though inference corrected only Top-40. Its one-epoch model gained `+0.0100`
+Recall@10 over Base but remained below PCA; five epochs collapsed to `-0.2922`
+because correction magnitude was not bounded. That run is retained as a
+negative feasibility result and is not used as paper evidence.
+
+v2.1 makes the implementation match the registered serving budget:
+
+- pairs may reference only documents in the correctable Top-40;
+- relevant ranks 11--40 are paired against non-relevant Top-10 documents;
+- relevant Top-10 documents are paired against non-relevant ranks 11--40;
+- each per-document correction is bounded to `[-0.05, +0.05]`;
+- the query gate starts near 0.12 (`bias=-2`), learning rate is `1e-4`, and
+  correction L2 is `1e-3`;
+- the original 4,980-query train split is deterministically divided into inner
+  train/validation; best epoch is chosen only on inner validation;
+- the original 1,000-query validation is an outer diagnostic and cannot select
+  epochs or optimizer settings.
+
 ## Required decomposition before a v2 claim
 
 Run the following under the same candidate pool and query split:

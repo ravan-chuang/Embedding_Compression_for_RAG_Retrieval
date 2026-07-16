@@ -1,6 +1,7 @@
 {
   "protocol_id": "rars_v2_boundary_loss_feasibility_v1",
   "status": "development_only_before_new_external_test_freeze",
+  "implementation_revision": "v2.1_after_run0_train_inference_mismatch_audit",
   "research_question": "Can a relevance-supervised rank-16 int8 sidecar recover Top-10 boundary errors under the same document-byte budget as PCA and RARS-v1?",
   "allowed_data": {
     "development_source": "MS MARCO 1M clean deterministic train and validation splits",
@@ -31,7 +32,15 @@
     "quantization": "learned fixed per-coefficient symmetric int8 scales reused unchanged for full-corpus encoding and validation",
     "quantization_scale_selection": "initialized from a deterministic train-residual sample and optimized by QAT; validation does not recalibrate scales",
     "primary_trainer": "scripts/train_boundary_loss_sidecar.py",
-    "secondary_ablation_trainer": "scripts/train_boundary_aware_sidecar.py"
+    "secondary_ablation_trainer": "scripts/train_boundary_aware_sidecar.py",
+    "correctable_pair_depth": 40,
+    "uncorrectable_rank_41_to_100_positives_used": false,
+    "maximum_absolute_per_document_correction": 0.05,
+    "initial_query_gate_bias": -2.0,
+    "learning_rate": 0.0001,
+    "correction_l2": 0.001,
+    "maximum_epochs": 10,
+    "epoch_selection": "highest inner-validation int8 Recall@10; ties choose earliest epoch"
   },
   "validation_bundle": {
     "requires_full_qrels_relevant_counts": true,
@@ -42,7 +51,9 @@
     "residual_scope": "union of train or validation Top-100 candidate rows",
     "full_corpus_residual_materialization_required": false,
     "full_corpus_int8_encoding_before_validation_go_gate": false,
-    "bundle_builder": "scripts/build_msmarco_rars_v2_boundary_bundles.py"
+    "bundle_builder": "scripts/build_msmarco_rars_v2_boundary_bundles.py",
+    "inner_split": "deterministic hash 80/20 partition inside the original 4980-query train split",
+    "original_1000_query_validation_role": "outer diagnostic only; never selects epoch or optimizer settings"
   },
   "required_baselines": [
     "base_m32",

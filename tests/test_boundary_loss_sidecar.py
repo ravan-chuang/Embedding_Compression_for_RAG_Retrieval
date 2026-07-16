@@ -44,15 +44,28 @@ def test_manifest_rejects_closed_test_marker() -> None:
 def test_boundary_pairs_use_relevant_positive_and_boundary_negative() -> None:
     scores = np.asarray([[0.9, 0.8, 0.7, 0.6]], dtype=np.float32)
     labels = np.asarray([[0, 0, 1, 0]], dtype=np.uint8)
-    pairs = MODULE.build_boundary_pairs(labels, scores, final_k=2, negative_window=1)
+    pairs = MODULE.build_boundary_pairs(
+        labels, scores, final_k=2, negative_window=1, correction_depth=4
+    )
     assert pairs.tolist() == [[0, 2, 1], [0, 2, 0]]
 
 
 def test_boundary_pairs_skip_queries_without_candidate_positive() -> None:
     scores = np.asarray([[0.9, 0.8], [0.7, 0.6]], dtype=np.float32)
     labels = np.asarray([[0, 0], [1, 0]], dtype=np.uint8)
-    pairs = MODULE.build_boundary_pairs(labels, scores, final_k=1, negative_window=1)
+    pairs = MODULE.build_boundary_pairs(
+        labels, scores, final_k=1, negative_window=1, correction_depth=2
+    )
     assert pairs.tolist() == [[1, 0, 1]]
+
+
+def test_boundary_pairs_exclude_uncorrectable_positive() -> None:
+    scores = np.asarray([[0.9, 0.8, 0.7, 0.6, 0.5]], dtype=np.float32)
+    labels = np.asarray([[0, 0, 0, 0, 1]], dtype=np.uint8)
+    pairs = MODULE.build_boundary_pairs(
+        labels, scores, final_k=2, correction_depth=4
+    )
+    assert pairs.shape == (0, 3)
 
 
 def test_fixed_int8_scales_are_deterministic_and_reused() -> None:
@@ -110,3 +123,25 @@ def test_candidate_union_bundle_maps_ann_rows_to_local_residuals(
     bundle = MODULE.load_bundle(tmp_path, expected_role="train")
     assert bundle["residual_scope"].item() == "candidate_union"
     assert bundle["residual_lookup"].tolist() == [[1, 0]]
+
+
+def test_corrected_scores_bound_per_document_correction() -> None:
+    arrays = {
+        "queries": np.asarray([[10.0, 0.0]], dtype=np.float32),
+        "ann_rows": np.asarray([[0, 1]], dtype=np.int64),
+        "ann_scores": np.asarray([[0.2, 0.1]], dtype=np.float32),
+        "residual_lookup": np.asarray([[0, 1]], dtype=np.int64),
+        "residuals": np.asarray([[10.0, 0.0], [-10.0, 0.0]], dtype=np.float32),
+    }
+    corrected = MODULE.corrected_candidate_scores(
+        arrays,
+        np.eye(2, dtype=np.float32),
+        np.eye(2, dtype=np.float32),
+        np.zeros(2, dtype=np.float32),
+        20.0,
+        top_b=2,
+        scales=None,
+        max_correction=0.05,
+    )
+    delta = corrected - arrays["ann_scores"]
+    assert np.max(np.abs(delta)) <= 0.05 + 1e-7
