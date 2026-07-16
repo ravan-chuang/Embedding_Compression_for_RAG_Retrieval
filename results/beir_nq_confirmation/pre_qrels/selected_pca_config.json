@@ -1,0 +1,39 @@
+{
+  "protocol_id": "beir_nq_rars_pca_confirmation_v1",
+  "method_id": "pca_r16_int8",
+  "selection_split": "validation",
+  "basis_training": {
+    "basis": "unweighted_residual_pca",
+    "sampling": "uniform document rows without replacement, then residual covariance eigendecomposition",
+    "sample_count": 300000,
+    "sample_seed": 42,
+    "query_labels_used": false,
+    "qrels_used": false
+  },
+  "rank": 16,
+  "coefficient_dtype": "int8",
+  "quantizer": "per_coefficient_symmetric_maxabs",
+  "alpha": 0.75,
+  "top_b": 40,
+  "candidate_k": 100,
+  "final_k": 10,
+  "base_index": {
+    "nlist": 2048,
+    "nprobe": 32,
+    "m": 32,
+    "nbits": 8
+  },
+  "validation_proxy": {
+    "base_top10_overlap": 0.4598655386009971,
+    "corrected_top10_overlap": 0.4980057410484967,
+    "overlap_gain": 0.038140202447499605,
+    "mse_reduction_pct": 7.468824008563106,
+    "maximum_overlap_gain": 0.039983381175404176,
+    "selection_threshold": 0.03598504305786376
+  },
+  "train_qrels_relevance_values_used": false,
+  "validation_qrels_used": false,
+  "test_qrels_accessed": false,
+  "test_retrieval_performed": false,
+  "test_outcomes_observed": false
+}
