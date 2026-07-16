@@ -8,7 +8,7 @@ NOTEBOOK = (
     Path(__file__).resolve().parents[1]
     / "notebooks/MSMARCO_RARS_v2_2_FP32_Development.ipynb"
 )
-PINNED_IMPLEMENTATION = "b5607e6e13e63015af7b93ff42247419e3a81079"
+PINNED_IMPLEMENTATION = "bb9b106e69b9a453756fd800665f701614ce67b3"
 
 
 def test_v2_2_notebook_is_clean_ordered_and_pinned() -> None:
