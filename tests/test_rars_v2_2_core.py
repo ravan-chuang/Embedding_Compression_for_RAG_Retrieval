@@ -82,7 +82,9 @@ def test_pca_fp32_comparator_uses_residual_direct_formula() -> None:
         arrays, basis, alpha=0.5, top_b=3, batch_size=1
     )
     assert np.allclose(result[0, :3], [0.9, 0.3, -0.3])
-    assert result[0, 3] == 0.1
+    np.testing.assert_array_equal(
+        result[:, 3:], arrays["ann_scores"][:, 3:]
+    )
 
 
 def test_dynamic_miner_builds_promotion_and_protection_pairs() -> None:
