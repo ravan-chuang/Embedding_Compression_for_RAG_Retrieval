@@ -168,6 +168,13 @@ def load_bundle(
         counts = np.asarray(arrays["relevant_counts"])
         if counts.shape != (q,) or np.any(counts <= 0):
             raise ValueError("Relevant counts must be positive and match query count")
+    for name in ("pca", "rars"):
+        path = bundle_dir / f"{name}_scores.float32.npy"
+        if path.exists():
+            values = np.load(path, mmap_mode="r")
+            if values.shape != (q, c):
+                raise ValueError(f"{name} baseline scores do not match candidates")
+            arrays[f"{name}_scores"] = values
     return arrays
 
 
@@ -286,7 +293,7 @@ def validation_summary(
     int8_gain = float(np.mean(int8 - base))
     retained = None if fp32_gain <= 0 else int8_gain / fp32_gain
     delta = int8 - base
-    return {
+    summary = {
         "query_count": len(base),
         "base_recall_at_10": float(np.mean(base)),
         "boundary_fp32_recall_at_10": float(np.mean(fp32)),
@@ -298,6 +305,21 @@ def validation_summary(
         "harmed_queries": int(np.sum(delta < 0)),
         "unchanged_queries": int(np.sum(delta == 0)),
     }
+    for name in ("pca", "rars"):
+        key = f"{name}_scores"
+        if key not in arrays:
+            continue
+        baseline = recall_at_k_per_query(
+            arrays[key], arrays["labels"], counts, k=final_k
+        )
+        recall = float(np.mean(baseline))
+        summary[f"{name}_recall_at_10"] = recall
+        summary[f"int8_gain_over_{name}"] = float(np.mean(int8 - baseline))
+    if "pca_recall_at_10" in summary:
+        summary["beats_storage_matched_pca"] = bool(
+            summary["boundary_int8_recall_at_10"] > summary["pca_recall_at_10"]
+        )
+    return summary
 
 
 def train(args: argparse.Namespace) -> dict[str, Any]:

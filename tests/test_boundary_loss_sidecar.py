@@ -79,6 +79,7 @@ def test_recall_and_validation_summary_use_full_relevant_counts() -> None:
         "ann_scores": np.asarray([[0.9, 0.8, 0.7], [0.9, 0.8, 0.7]], dtype=np.float32),
         "labels": np.asarray([[0, 1, 0], [1, 0, 0]], dtype=np.uint8),
         "relevant_counts": np.asarray([2, 1], dtype=np.int32),
+        "pca_scores": np.asarray([[0.8, 0.9, 0.7], [0.9, 0.8, 0.7]], dtype=np.float32),
     }
     fp32 = np.asarray([[0.8, 0.9, 0.7], [0.9, 0.8, 0.7]], dtype=np.float32)
     int8 = fp32.copy()
@@ -88,6 +89,8 @@ def test_recall_and_validation_summary_use_full_relevant_counts() -> None:
     assert summary["int8_gain_over_base"] == 0.25
     assert summary["improved_queries"] == 1
     assert summary["harmed_queries"] == 0
+    assert summary["pca_recall_at_10"] == 0.75
+    assert summary["beats_storage_matched_pca"] is False
 
 
 def test_candidate_union_bundle_maps_ann_rows_to_local_residuals(

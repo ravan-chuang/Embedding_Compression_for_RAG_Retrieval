@@ -134,6 +134,36 @@ def candidate_labels(
     return labels, counts
 
 
+def sidecar_candidate_scores(
+    queries: np.ndarray,
+    ann_rows: np.ndarray,
+    ann_scores: np.ndarray,
+    basis: np.ndarray,
+    codes: np.ndarray,
+    scales: np.ndarray,
+    *,
+    alpha: float,
+    top_b: int,
+) -> np.ndarray:
+    """Reproduce a frozen rank-16 PCA/RARS validation score matrix."""
+
+    rows = np.asarray(ann_rows, dtype=np.int64)
+    result = np.asarray(ann_scores, dtype=np.float32).copy()
+    depth = min(int(top_b), rows.shape[1])
+    selected = rows[:, :depth]
+    if np.any(selected < 0):
+        raise ValueError("Frozen baseline candidates contain invalid rows")
+    query_projection = np.asarray(queries, dtype=np.float32) @ np.asarray(
+        basis, dtype=np.float32
+    )
+    coefficients = codes[selected].astype(np.float32) * np.asarray(
+        scales, dtype=np.float32
+    )
+    correction = np.einsum("qr,qcr->qc", query_projection, coefficients)
+    result[:, :depth] += float(alpha) * correction
+    return result
+
+
 def verify_relevant_documents_exist(
     doc_ids: np.ndarray, qrels: dict[str, set[str]]
 ) -> None:
@@ -249,6 +279,32 @@ def build_bundles(
     if hasattr(index, "make_direct_map"):
         index.make_direct_map()
 
+    sidecar_manifest = read_json(
+        artifact_root / "stage2/sidecars/sidecar_training_manifest.json"
+    )
+    if sidecar_manifest.get("test_qrels_accessed") is not False:
+        raise ValueError("Unsafe frozen sidecar manifest test flag")
+    rank = 16
+    frozen_baselines: dict[str, dict[str, Any]] = {}
+    for name in ("pca", "rars"):
+        config = read_json(
+            artifact_root / "stage2/sidecars" / name / "selected_config.json"
+        )
+        basis = np.load(Path(sidecar_manifest["files"][f"{name}_basis"]["path"]))
+        scales = np.load(Path(sidecar_manifest["files"][f"{name}_scales"]["path"]))
+        codes = np.memmap(
+            Path(sidecar_manifest["files"][f"{name}_codes"]["path"]),
+            dtype=np.int8,
+            mode="r",
+            shape=(n_docs, rank),
+        )
+        frozen_baselines[name] = {
+            "config": config,
+            "basis": basis,
+            "scales": scales,
+            "codes": codes,
+        }
+
     role_specs = {
         "train": ("fit", "train_query_manifest.json"),
         "validation": ("validation", "validation_query_manifest.json"),
@@ -286,6 +342,22 @@ def build_bundles(
         atomic_save_npy(output_scores_path, np.asarray(scores, dtype=np.float32))
         atomic_save_npy(labels_path, labels)
         atomic_save_npy(counts_path, counts)
+        baseline_paths: dict[str, Path] = {}
+        for name, baseline in frozen_baselines.items():
+            config = baseline["config"]
+            baseline_scores = sidecar_candidate_scores(
+                queries,
+                rows,
+                scores,
+                baseline["basis"],
+                baseline["codes"],
+                baseline["scales"],
+                alpha=float(config["alpha"]),
+                top_b=int(config["top_b"]),
+            )
+            baseline_path = role_dir / f"{name}_scores.float32.npy"
+            atomic_save_npy(baseline_path, baseline_scores)
+            baseline_paths[name] = baseline_path
         unique_path, lookup_path, residual_path = candidate_residual_table(
             index,
             embeddings,
@@ -312,6 +384,8 @@ def build_bundles(
                 "candidate_doc_rows": file_record(unique_path),
                 "ann_residual_rows": file_record(lookup_path),
                 "candidate_residuals": file_record(residual_path),
+                "pca_scores": file_record(baseline_paths["pca"]),
+                "rars_scores": file_record(baseline_paths["rars"]),
             },
             "development_qrels_used": True,
             "test_qrels_accessed": False,

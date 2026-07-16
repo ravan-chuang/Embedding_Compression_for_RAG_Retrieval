@@ -58,3 +58,16 @@ def test_relevant_document_coverage_guard() -> None:
     MODULE.verify_relevant_documents_exist(doc_ids, {"q1": {"d1"}})
     with pytest.raises(ValueError, match="absent"):
         MODULE.verify_relevant_documents_exist(doc_ids, {"q1": {"d2"}})
+
+
+def test_frozen_sidecar_candidate_scores_respect_top_b() -> None:
+    queries = np.asarray([[1.0, 0.0]], dtype=np.float32)
+    rows = np.asarray([[0, 1, 2]], dtype=np.int64)
+    ann = np.asarray([[0.1, 0.2, 0.3]], dtype=np.float32)
+    basis = np.eye(2, dtype=np.float32)
+    codes = np.asarray([[1, 0], [2, 0], [3, 0]], dtype=np.int8)
+    scales = np.ones(2, dtype=np.float32)
+    result = MODULE.sidecar_candidate_scores(
+        queries, rows, ann, basis, codes, scales, alpha=0.5, top_b=2
+    )
+    assert np.allclose(result, [[0.6, 1.2, 0.3]])
