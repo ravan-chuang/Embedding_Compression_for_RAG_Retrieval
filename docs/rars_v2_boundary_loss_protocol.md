@@ -6,9 +6,12 @@ This is a new development protocol. It does not revise RARS-v1 and must not read
 the closed BEIR NQ test queries, qrels, Stage-3 evaluation arrays, or post-hoc
 per-query outputs. The NQ post-hoc summary motivates the hypothesis only.
 
-Development uses a fresh deterministic split of the BEIR NQ **train** archive.
-A different, unopened collection must be selected and frozen before final v2
-testing.
+Development uses the existing deterministic MS MARCO 1M clean train/validation
+split, whose qrels and document IDs match the frozen corpus. BEIR NQ train qrels
+cannot supervise this method: they refer to a different corpus and a coverage
+audit found 117,750 positive documents absent from the frozen 2.68M confirmation
+corpus. A different, unopened collection must be selected and frozen before
+final v2 testing.
 
 ## Hypothesis
 
@@ -39,9 +42,14 @@ and rejects manifests that reference closed-test markers.
 Build the compact bundles from the completed NQ train/validation artifacts:
 
 ```bash
-python scripts/build_rars_v2_boundary_bundles.py \
-  --artifact-root /content/drive/MyDrive/rars-beir-nq-confirmation-v2 \
-  --output-root /content/drive/MyDrive/rars-v2-boundary-loss/bundles
+python scripts/build_msmarco_rars_v2_boundary_bundles.py \
+  --embeddings /path/to/msmarco_basis_gate0_cache/embeddings.fp16.memmap \
+  --doc-ids /path/to/msmarco_basis_gate0_cache/doc_ids.int64.memmap \
+  --query-vectors /path/to/msmarco_basis_gate0_cache/query_vectors.fp32.npy \
+  --index /path/to/frozen_ivfpq_m32_nlist512.index \
+  --qrels /path/to/msmarco_basis_gate0_cache/qrels_subset.json \
+  --output-root /content/rars-v2-boundary-work/bundles \
+  ...
 ```
 
 Only candidate-union residuals are materialized. This avoids another full

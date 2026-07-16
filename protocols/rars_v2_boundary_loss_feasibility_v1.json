@@ -3,11 +3,13 @@
   "status": "development_only_before_new_external_test_freeze",
   "research_question": "Can a relevance-supervised rank-16 int8 sidecar recover Top-10 boundary errors under the same document-byte budget as PCA and RARS-v1?",
   "allowed_data": {
-    "development_source": "BEIR NQ train archive only",
+    "development_source": "MS MARCO 1M clean deterministic train and validation splits",
     "allowed_split_roles": ["train", "validation"],
     "forbidden_sources": ["BEIR NQ official test queries", "BEIR NQ official test qrels", "stage3/evaluation", "stage3/posthoc_diagnosis"],
     "nq_test_retuning_authorized": false,
-    "new_external_test": "TBD and unopened until the v2 method and evaluator are frozen"
+    "new_external_test": "TBD and unopened until the v2 method and evaluator are frozen",
+    "beir_nq_train_relevance_supervision_allowed": false,
+    "beir_nq_train_exclusion_reason": "its qrels reference a different corpus; 117750 positive documents were absent from the frozen 2.68M NQ confirmation corpus"
   },
   "base_index": {
     "frozen": true,
@@ -40,7 +42,7 @@
     "residual_scope": "union of train or validation Top-100 candidate rows",
     "full_corpus_residual_materialization_required": false,
     "full_corpus_int8_encoding_before_validation_go_gate": false,
-    "bundle_builder": "scripts/build_rars_v2_boundary_bundles.py"
+    "bundle_builder": "scripts/build_msmarco_rars_v2_boundary_bundles.py"
   },
   "required_baselines": [
     "base_m32",
