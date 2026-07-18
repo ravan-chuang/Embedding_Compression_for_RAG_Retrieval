@@ -13,7 +13,7 @@ The repository separates three questions that are often conflated:
 2. **Compressed-domain efficiency:** What latency and throughput are obtained when Faiss searches PQ codes directly?
 3. **Frozen-index recovery:** How much ranking quality can be recovered by attaching a compact residual sidecar without rebuilding or rewriting an existing IVF-PQ index?
 
-The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The completed v1 evidence has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority. A separately versioned v2.2 FP32 development replication is also complete; it is development-only optimizer-seed evidence, not independent confirmation.
+The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The completed v1 evidence has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority. A separately versioned v2.2 FP32 development replication is also complete; it is development-only optimizer-seed evidence, not independent confirmation. A pre-result RARS-v3 oracle-first gate is now frozen to test counterfactual Recall gain per accessed byte before any new allocator is built; it has no reported outcome yet.
 
 On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improves:
 
@@ -46,6 +46,7 @@ On the same 1,019 MS MARCO inner-validation queries, held-out optimizer seeds 43
 | Post-hoc NQ sidecar diagnosis | Complete; exact Top-40 has material headroom, proxy/relevance alignment is weak |
 | RARS-v2 boundary-loss feasibility | Superseded by the completed v2.2 FP32 development replication; closed NQ test remains prohibited |
 | RARS-v2.2 FP32 development replication | [Development protocol](docs/rars_v2_2_boundary_loss_protocol.md), [replication protocol](docs/rars_v2_2_fp32_replication_protocol.md), [replication notebook](notebooks/MSMARCO_RARS_v2_2_FP32_Replication.ipynb), and [closure packet](results/rars_v2_2_fp32_replication/README.md) complete. Held-out seeds 43/44 reach mean Recall@10 `0.714426` (`+0.021099` vs Base; `+0.007687` vs direct PCA), but seed 44 has 10 improved queries vs the required 11; formal decision `UNSTABLE_NO_QAT`, and QAT is not authorized. |
+| RARS-v3 oracle-first matched-access feasibility | [Frozen protocol](docs/rars_v3_oracle_first_feasibility_protocol.md), [machine-readable contract](protocols/rars_v3_oracle_first_feasibility_v1.json), and [commit-pinned notebook](notebooks/MSMARCO_RARS_v3_Oracle_First_Feasibility.ipynb) are ready for first execution. No oracle result has been observed or committed. This is a non-deployable, development-only gate and cannot support a persistent-storage claim. |
 | Deployable rank-16 int8 sidecar artifact | Complete |
 | FastAPI sidecar serving path | Complete |
 | Artifact-backed and live-Faiss benchmarks | Complete |
@@ -1660,8 +1661,8 @@ Immediate priorities:
    the support threshold, or run QAT under the frozen v2.2 protocol;
 3. finish the manuscript around mixed evidence, sparse query support, and the
    frozen-index retrofit boundary rather than a universal superiority claim;
-4. open a separately versioned oracle-first study of counterfactual Recall gain
-   per byte, with explicit stop criteria before learned allocation or QAT;
+4. execute the frozen RARS-v3 oracle-first notebook without changing its
+   comparator set, 0/320/640/1280-byte curve, audit split, or stop criteria;
 5. freeze any future method and evaluator before opening a new independent
    dataset, and keep developmental, sensitivity, and confirmatory tables separate.
 
@@ -1682,6 +1683,7 @@ FiQA / SciFact compression benchmarks
 → preregistered TREC and full-corpus BEIR NQ confirmations and diagnostics
 → v2.2 three-seed FP32 development replication (`UNSTABLE_NO_QAT`)
 → immutable replication closure packet and generated v2.2 paper table
+→ frozen pre-result v3 counterfactual Recall-per-accessed-byte oracle gate
 → reproducible CSV / LaTeX paper tables
 → automated tests and CI
 ```
