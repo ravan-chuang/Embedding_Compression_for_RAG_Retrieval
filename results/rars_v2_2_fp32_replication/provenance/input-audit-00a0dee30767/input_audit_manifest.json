@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_fp32_replication_v1",
+  "training_source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+  "control_commit": "00a0dee30767b04b8c650c28d63f4f662ef61517",
+  "records": [
+    {
+      "relative_path": "bundle_build_summary.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/bundle_build_summary.json",
+        "bytes": 553,
+        "sha256": "068216de0fdd58950573fb86545a0799fefcd0fa1c5cca7e2b6fbbd1fcc8357f"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/bundle_build_summary.json",
+        "bytes": 553,
+        "sha256": "068216de0fdd58950573fb86545a0799fefcd0fa1c5cca7e2b6fbbd1fcc8357f"
+      }
+    },
+    {
+      "relative_path": "v2_2_split_audit.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/v2_2_split_audit.json",
+        "bytes": 2937,
+        "sha256": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/v2_2_split_audit.json",
+        "bytes": 2937,
+        "sha256": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f"
+      }
+    },
+    {
+      "relative_path": "v2_2_freeze_summary.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/v2_2_freeze_summary.json",
+        "bytes": 1093,
+        "sha256": "79784c44f5ce0914b62fe08c5fbcc07b51583479c7be7dcaa15b892102d5e1b3"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/v2_2_freeze_summary.json",
+        "bytes": 1093,
+        "sha256": "79784c44f5ce0914b62fe08c5fbcc07b51583479c7be7dcaa15b892102d5e1b3"
+      }
+    },
+    {
+      "relative_path": "inner_train/manifest.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/manifest.json",
+        "bytes": 2873,
+        "sha256": "084b31bf280e919380520a6b88ed5e27b880b473e87dda31132e33e1463dba17"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/inner_train/manifest.json",
+        "bytes": 2873,
+        "sha256": "084b31bf280e919380520a6b88ed5e27b880b473e87dda31132e33e1463dba17"
+      }
+    },
+    {
+      "relative_path": "inner_train/query_manifest.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/query_manifest.json",
+        "bytes": 95715,
+        "sha256": "57a3f543387443d8cd68c0c0ba57f7af77969b85dcb0b527b1de045e70d4b832"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/inner_train/query_manifest.json",
+        "bytes": 95715,
+        "sha256": "57a3f543387443d8cd68c0c0ba57f7af77969b85dcb0b527b1de045e70d4b832"
+      }
+    },
+    {
+      "relative_path": "inner_train/v2_2_manifest.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/v2_2_manifest.json",
+        "bytes": 4124,
+        "sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/inner_train/v2_2_manifest.json",
+        "bytes": 4124,
+        "sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e"
+      }
+    },
+    {
+      "relative_path": "inner_validation/manifest.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/manifest.json",
+        "bytes": 2925,
+        "sha256": "21b3f2a0d13c1a6d797352662040f59b71b9582e627545be52e0dc6ef008c348"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/inner_validation/manifest.json",
+        "bytes": 2925,
+        "sha256": "21b3f2a0d13c1a6d797352662040f59b71b9582e627545be52e0dc6ef008c348"
+      }
+    },
+    {
+      "relative_path": "inner_validation/query_manifest.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/query_manifest.json",
+        "bytes": 24694,
+        "sha256": "a1e46416720edf5ae2690793fbc55bdb0eaaa717e22a507cedb955f722506e79"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/inner_validation/query_manifest.json",
+        "bytes": 24694,
+        "sha256": "a1e46416720edf5ae2690793fbc55bdb0eaaa717e22a507cedb955f722506e79"
+      }
+    },
+    {
+      "relative_path": "inner_validation/v2_2_manifest.json",
+      "source": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/v2_2_manifest.json",
+        "bytes": 4182,
+        "sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d"
+      },
+      "persisted_copy": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/inner_validation/v2_2_manifest.json",
+        "bytes": 4182,
+        "sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d"
+      }
+    }
+  ]
+}

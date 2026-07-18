@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+  "source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+  "source_builder_sha256": "148470ddb115bcb9f9f6101924897293bc395b47297f00840450dbbe5dd6b175",
+  "bundle_freezer_sha256": "d416d769f005efe62bbcef8308beef25379c2f3a4c30ead5d42dda5e2b7357f2",
+  "protocol_sha256": "dbe5914e7cf7c6cbc6c811bcf8846e74dc4bee41ff9878371a3f193c9bced23e",
+  "role_id": "inner_validation",
+  "split_role": "validation",
+  "evidence_status": "DEVELOPMENT_ONLY",
+  "query_count": 1019,
+  "candidate_count": 100,
+  "query_ids_sha256": "7190141944e1c95f074909f9c2919fc71be8e1dd633a8c0b70a3714c31f8c7ba",
+  "query_rows_sha256": "d75e496368117cc8381608359e7116a59d0a90ee8536a4d9e66892fd052c45fa",
+  "split_audit_sha256": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f",
+  "source_bundle_manifest_sha256": "21b3f2a0d13c1a6d797352662040f59b71b9582e627545be52e0dc6ef008c348",
+  "source_bundle_protocol_id": "rars_v2_boundary_loss_feasibility_v1",
+  "query_manifest": {
+    "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/query_manifest.json",
+    "bytes": 24694,
+    "sha256": "a1e46416720edf5ae2690793fbc55bdb0eaaa717e22a507cedb955f722506e79"
+  },
+  "files": {
+    "query_vectors.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/query_vectors.float32.npy",
+      "bytes": 1565312,
+      "sha256": "d9884c7efdd1fa8a34a53ef63af4bcebd013272caa3b502e602076787a472d20"
+    },
+    "ann_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/ann_rows.int64.npy",
+      "bytes": 815328,
+      "sha256": "5e969f69c61143256b7380af26d5d0e74a4e15e27aaaa823dad7ef58bcc00912"
+    },
+    "ann_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/ann_scores.float32.npy",
+      "bytes": 407728,
+      "sha256": "0b8cc17837ab6a9de62f831cd4b7f75694281098cfa62232719d6d00c66c4819"
+    },
+    "candidate_relevance.uint8.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/candidate_relevance.uint8.npy",
+      "bytes": 102028,
+      "sha256": "08c182adce42b3332ef14b1ed19a529390afe37efa0517137e5535e040186b18"
+    },
+    "relevant_counts.int32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/relevant_counts.int32.npy",
+      "bytes": 4204,
+      "sha256": "7c448e69db14739e5b2c16f041a66769c2d96125d35b5243cd0e83f97d82ae4f"
+    },
+    "candidate_doc_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/candidate_doc_rows.int64.npy",
+      "bytes": 684464,
+      "sha256": "b10b84c253e1cebba7cf68533fb1e68442f6301f0a788e88bc3746ca41a89d1a"
+    },
+    "ann_residual_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/ann_residual_rows.int64.npy",
+      "bytes": 815328,
+      "sha256": "73e9707982b329e727866123e41f10cc6abfebb41ae653bce42d4919c643a5d0"
+    },
+    "pca_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/pca_scores.float32.npy",
+      "bytes": 407728,
+      "sha256": "61205c426819753d2522aa2b65539559c85ee45ffab423cab9e3f181db1569f7"
+    },
+    "rars_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/rars_scores.float32.npy",
+      "bytes": 407728,
+      "sha256": "2812d071b479ba39be88a695778dd8e95c712b7de0db69a214a2ad19a96b6492"
+    },
+    "candidate_residuals.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/candidate_residuals.float32.npy",
+      "bytes": 131392640,
+      "sha256": "4deb59ae8eac71b08087a80d2b9c7903fe3ad2e51358b5eac2736042c03fad21"
+    }
+  },
+  "data_access": {
+    "shared_6980_qrels_container_opened_by_source_builder": true,
+    "closed_test_query_ids_loaded_by_source_builder": true,
+    "closed_test_relevance_values_parsed_by_source_builder": true,
+    "closed_test_relevance_values_used": false,
+    "closed_test_outcomes_computed": false,
+    "outer_query_ids_loaded_for_split_audit": true,
+    "outer_relevance_values_used": false,
+    "outer_outcomes_used": false
+  }
+}

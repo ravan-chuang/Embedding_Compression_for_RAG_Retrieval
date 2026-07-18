@@ -40,3 +40,19 @@ def test_external_primary_contrast_remains_negative_and_unsupported() -> None:
     assert primary["95% CI low"] < 0.0 < primary["95% CI high"]
     assert int(primary["Bootstrap samples"]) == 20_000
     assert int(primary["Seed"]) == 20_260_712
+
+
+def test_v2_2_fp32_table_preserves_failed_support_gate() -> None:
+    table = MODULE.build_v2_2_fp32_replication_table().set_index("System / seed")
+
+    assert np.isclose(
+        table.loc["RARS-v2.2 held-out mean", "Recall@10"],
+        0.7144259077526987,
+    )
+    assert np.isclose(
+        table.loc["RARS-v2.2 held-out mean", "Gain vs PCA"],
+        0.007687275106313379,
+    )
+    assert table.loc["RARS-v2.2 seed 43", "Support gate"] == "Pass"
+    assert table.loc["RARS-v2.2 seed 44", "Support gate"] == "Fail"
+    assert table.loc["RARS-v2.2 held-out mean", "Support gate"] == "Overall fail"

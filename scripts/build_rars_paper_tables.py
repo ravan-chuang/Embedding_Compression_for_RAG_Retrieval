@@ -701,6 +701,105 @@ def build_storage_table() -> pd.DataFrame:
     )
 
 
+def build_v2_2_fp32_replication_table() -> pd.DataFrame:
+    result_root = ROOT / "results" / "rars_v2_2_fp32_replication"
+    aggregate = result_root / "aggregate-00a0dee30767"
+    summary = load_json(aggregate / "replication_summary.json")
+    decision = load_json(aggregate / "replication_decision.json")
+
+    assert summary["decision"] == "UNSTABLE_NO_QAT"
+    assert decision["decision"] == "UNSTABLE_NO_QAT"
+    assert decision["qat_protocol_definition_authorized"] is False
+    required_support = int(
+        decision[
+            "positive_support_queries_required_per_heldout_seed_and_contrast"
+        ]
+    )
+    comparators = summary["comparators"]
+    base = float(comparators["base_recall_at_10"])
+    pca = float(comparators["direct_pca_fp32_recall_at_10"])
+
+    rows: list[dict[str, Any]] = [
+        {
+            "System / seed": "Frozen Base",
+            "Role": "Comparator",
+            "Recall@10": base,
+            "Gain vs Base": 0.0,
+            "Gain vs PCA": np.nan,
+            "Improved vs PCA": np.nan,
+            "Harmed vs PCA": np.nan,
+            "Support gate": "N/A",
+        },
+        {
+            "System / seed": "Direct PCA FP32",
+            "Role": "Decision comparator",
+            "Recall@10": pca,
+            "Gain vs Base": pca - base,
+            "Gain vs PCA": 0.0,
+            "Improved vs PCA": np.nan,
+            "Harmed vs PCA": np.nan,
+            "Support gate": "N/A",
+        },
+    ]
+
+    for item in summary["per_seed"]:
+        seed = int(item["seed"])
+        improved = int(item["vs_pca_fp32"]["improved_queries"])
+        rows.append(
+            {
+                "System / seed": f"RARS-v2.2 seed {seed}",
+                "Role": (
+                    "Observed anchor" if seed == 42 else "Held-out optimizer seed"
+                ),
+                "Recall@10": float(item["v2_2_fp32_recall_at_10"]),
+                "Gain vs Base": float(item["gain_over_base"]),
+                "Gain vs PCA": float(item["gain_over_pca_fp32"]),
+                "Improved vs PCA": improved,
+                "Harmed vs PCA": int(item["vs_pca_fp32"]["harmed_queries"]),
+                "Support gate": (
+                    "N/A"
+                    if seed == 42
+                    else ("Pass" if improved >= required_support else "Fail")
+                ),
+            }
+        )
+
+    heldout = summary["groups"]["heldout_replication_seeds"]
+    all_seeds = summary["groups"]["all_seeds"]
+    rows.extend(
+        [
+            {
+                "System / seed": "RARS-v2.2 held-out mean",
+                "Role": "Seeds 43/44",
+                "Recall@10": float(
+                    heldout["v2_2_fp32_recall_at_10"]["mean"]
+                ),
+                "Gain vs Base": float(heldout["gain_over_base"]["mean"]),
+                "Gain vs PCA": float(heldout["gain_over_pca_fp32"]["mean"]),
+                "Improved vs PCA": np.nan,
+                "Harmed vs PCA": np.nan,
+                "Support gate": "Overall fail",
+            },
+            {
+                "System / seed": "RARS-v2.2 all-seed mean",
+                "Role": "Descriptive seeds 42/43/44",
+                "Recall@10": float(
+                    all_seeds["v2_2_fp32_recall_at_10"]["mean"]
+                ),
+                "Gain vs Base": float(all_seeds["gain_over_base"]["mean"]),
+                "Gain vs PCA": float(all_seeds["gain_over_pca_fp32"]["mean"]),
+                "Improved vs PCA": np.nan,
+                "Harmed vs PCA": np.nan,
+                "Support gate": "Descriptive",
+            },
+        ]
+    )
+    frame = pd.DataFrame(rows)
+    for column in ("Improved vs PCA", "Harmed vs PCA"):
+        frame[column] = frame[column].astype("Int64")
+    return frame
+
+
 def main() -> None:
     args = parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -757,6 +856,15 @@ def main() -> None:
             "Serialized RARS storage accounting.",
             "tab:rars-storage",
         ),
+        "paper_rars_v2_2_fp32_table": (
+            build_v2_2_fp32_replication_table(),
+            (
+                "RARS-v2.2 FP32 optimizer-seed replication on the same "
+                "1,019 development queries. Held-out refers to seeds, not "
+                "queries or datasets; the formal decision is UNSTABLE_NO_QAT."
+            ),
+            "tab:rars-v2-2-fp32",
+        ),
     }
 
     for stem, (frame, caption, label) in tables.items():
@@ -787,6 +895,10 @@ python scripts/build_rars_paper_tables.py
 - `paper_external_system_table.*`: frozen external aggregate metrics
 - `paper_external_contrast_table.*`: frozen external RARS-minus-PCA contrasts
 - `paper_storage_table.*`: serialized storage accounting
+- `paper_rars_v2_2_fp32_table.*`: three-seed FP32 development replication
+- `paper_clean_rars_main.*`: static frozen clean-pipeline held-out metrics
+- `paper_clean_rars_significance.*`: static frozen clean-pipeline bootstrap
+- `paper_rars_overlap_sensitivity.*`: static project-history overlap audit
 
 ## Interpretation constraints
 
@@ -805,6 +917,11 @@ python scripts/build_rars_paper_tables.py
   interval crosses zero; the external primary hypothesis was not supported.
 - The external set contains 42 eligible queries and only the judgments covered
   by the frozen 1M corpus. It is not an official full-corpus TREC result.
+- The clean-pipeline held-out split is not untouched across complete project
+  history; 137 queries overlapped with an earlier exploratory query set.
+- The v2.2 table is development-only optimizer-seed evidence. Seed 44 has 10
+  positive-support queries versus PCA, below the frozen requirement of 11, so
+  the formal decision is `UNSTABLE_NO_QAT` and QAT is not authorized.
 """
     (args.output_dir / "README.md").write_text(readme, encoding="utf-8")
 

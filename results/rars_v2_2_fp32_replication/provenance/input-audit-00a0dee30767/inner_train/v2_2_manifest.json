@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+  "source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+  "source_builder_sha256": "148470ddb115bcb9f9f6101924897293bc395b47297f00840450dbbe5dd6b175",
+  "bundle_freezer_sha256": "d416d769f005efe62bbcef8308beef25379c2f3a4c30ead5d42dda5e2b7357f2",
+  "protocol_sha256": "dbe5914e7cf7c6cbc6c811bcf8846e74dc4bee41ff9878371a3f193c9bced23e",
+  "role_id": "inner_train",
+  "split_role": "train",
+  "evidence_status": "DEVELOPMENT_ONLY",
+  "query_count": 3961,
+  "candidate_count": 100,
+  "query_ids_sha256": "c4d1a4403bef12ff4cbf8022b70d32d74aa231acab2a55fd856d1d56c58b6678",
+  "query_rows_sha256": "cfb88551c324d32fe5a9aaba9ff5cd0bb6686094802471868d42469b7732c1af",
+  "split_audit_sha256": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f",
+  "source_bundle_manifest_sha256": "084b31bf280e919380520a6b88ed5e27b880b473e87dda31132e33e1463dba17",
+  "source_bundle_protocol_id": "rars_v2_boundary_loss_feasibility_v1",
+  "query_manifest": {
+    "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/query_manifest.json",
+    "bytes": 95715,
+    "sha256": "57a3f543387443d8cd68c0c0ba57f7af77969b85dcb0b527b1de045e70d4b832"
+  },
+  "files": {
+    "query_vectors.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/query_vectors.float32.npy",
+      "bytes": 6084224,
+      "sha256": "763c2365a58ee24ae98666dab5ae3092b52f4fb6dcf1124947ee52222e7f7c32"
+    },
+    "ann_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/ann_rows.int64.npy",
+      "bytes": 3168928,
+      "sha256": "f84c715e8143cb640ec982a87414ebee3abfbe31c47f39b6d10d1b6b7c317a4c"
+    },
+    "ann_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/ann_scores.float32.npy",
+      "bytes": 1584528,
+      "sha256": "20a27d35ff2209cc488e206062c6a228c44ef50fe7ac0af4450ffe95dfe7fc4d"
+    },
+    "candidate_relevance.uint8.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/candidate_relevance.uint8.npy",
+      "bytes": 396228,
+      "sha256": "989e127425b26ce5ad0294c38874c26b82274e46628239f41b22e15e24245ec7"
+    },
+    "relevant_counts.int32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/relevant_counts.int32.npy",
+      "bytes": 15972,
+      "sha256": "0b67a344d7392889ec8ae88679c1f4955f776dc7ffc409028861c70ff33bd9c0"
+    },
+    "candidate_doc_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/candidate_doc_rows.int64.npy",
+      "bytes": 1924920,
+      "sha256": "4e9e371d118e57b4268cbbd9cab6b86bb8c628d47fc0a8ff3a85b86a4fb3856c"
+    },
+    "ann_residual_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/ann_residual_rows.int64.npy",
+      "bytes": 3168928,
+      "sha256": "3fd8cda475c0219211fba88073f7fa8b3967e8ec14c1a3f38428336fce5593f5"
+    },
+    "pca_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/pca_scores.float32.npy",
+      "bytes": 1584528,
+      "sha256": "23f4625aca00dcd36c3678ebfe3db587069a9c440967571b6aa702b4d8c80796"
+    },
+    "rars_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/rars_scores.float32.npy",
+      "bytes": 1584528,
+      "sha256": "fde5047aedb511da17be57656b8611679c1ff09def35aaaccda2077eb9058b86"
+    },
+    "candidate_residuals.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/candidate_residuals.float32.npy",
+      "bytes": 369560192,
+      "sha256": "396a2d8190e8aa7cab3c14226d9da541110f96100aca8121118151f9b30c1b24"
+    }
+  },
+  "data_access": {
+    "shared_6980_qrels_container_opened_by_source_builder": true,
+    "closed_test_query_ids_loaded_by_source_builder": true,
+    "closed_test_relevance_values_parsed_by_source_builder": true,
+    "closed_test_relevance_values_used": false,
+    "closed_test_outcomes_computed": false,
+    "outer_query_ids_loaded_for_split_audit": true,
+    "outer_relevance_values_used": false,
+    "outer_outcomes_used": false
+  }
+}

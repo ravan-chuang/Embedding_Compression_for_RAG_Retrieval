@@ -1,0 +1,3 @@
+# Preserve byte-exact, hash-registered Colab result exports.
+results/rars_v2_2_fp32_replication/aggregate-00a0dee30767/per_query_replication.csv -diff
+results/rars_v2_2_fp32_replication/aggregate-00a0dee30767/per_seed_metrics.csv -diff

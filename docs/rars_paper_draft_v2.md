@@ -2,13 +2,15 @@
 
 ## Working title
 
-**Residual Sidecars for Frozen IVF-PQ Retrieval: Clean Gains, Strong PCA Baselines, and External Fragility**
+**Residual Sidecars for Frozen IVF-PQ Retrieval: Development Gains, Sparse Query Support, and External Fragility**
 
 ## Current submission status
 
 This version replaces the method-superiority framing in v1. The committed evidence supports a frozen-index retrofit result, but it does not support a general claim that retrieval-aware basis learning is better than ordinary residual PCA.
 
 The larger preregistered [BEIR Natural Questions confirmation](beir_nq_confirmation_protocol.md) is now complete. Its 3,452-query one-shot test result does not support RARS superiority over PCA, and neither sidecar improves Recall@10 over the frozen base. All three existing evaluation sets are closed to further method selection.
+
+A later three-seed v2.2 FP32 development replication is also complete. Its two previously unseen optimizer seeds have a positive mean effect over Base and direct PCA, but seed 44 fails the preregistered positive-query-support condition. The formal decision is `UNSTABLE_NO_QAT`; this is development-only evidence and does not reopen any closed evaluation set.
 
 ## Abstract
 
@@ -20,13 +22,16 @@ We then preregister a storage-matched RARS-versus-PCA comparison on an external 
 
 Finally, a newly fitted full-corpus BEIR NQ experiment freezes Base, PCA, RARS, configuration selection, and evaluator before opening official test qrels. Across 3,452 eligible test queries, RARS minus PCA Recall@10 is -0.000410 with a 95% confidence interval of [-0.005987, +0.004972]. Base, PCA, and RARS obtain Recall@10 of 0.37973, 0.37811, and 0.37770, respectively. The primary hypothesis is again unsupported, and no post-result retuning is performed.
 
-These results show that compact residual correction can improve a frozen index in a controlled in-distribution pipeline, while score-error-weighted residual basis learning does not reliably outperform PCA or the frozen base under independent confirmation. A locked post-hoc analysis finds material exact-rescoring headroom inside the same candidate pool but weak alignment between the exact-overlap selection proxy and relevance gain, motivating future relevance-boundary objectives without changing the frozen results.
+We then evaluate the separately frozen RARS-v2.2 FP32 boundary-loss objective on the same 1,019 inner-validation queries. Previously unseen optimizer seeds 43 and 44 obtain mean Recall@10 0.714426, improving Base by +0.021099 and direct PCA by +0.007687; both paired-query bootstrap lower bounds are above zero. However, seed 44 improves only 10 queries over PCA, below the preregistered requirement of 11. The formal decision is `UNSTABLE_NO_QAT`. Held-out here means optimizer seeds, not queries or datasets.
+
+These results show that compact residual correction can improve a frozen index in a controlled in-distribution pipeline, while neither score-error weighting nor the completed boundary-loss study establishes reliable superiority over strong PCA under independent confirmation. The boundary-loss objective raises the development mean but does not broaden query-level support enough to pass its frozen robustness gate.
 
 ## Research questions
 
 1. Can a compact residual sidecar improve a frozen low-rate IVF-PQ index without rewriting its PQ codes?
 2. Under matched storage and serving constraints, does RARS outperform ordinary residual PCA on independent queries?
 3. What storage and online correction cost is required, and when is rebuilding a higher-rate index still preferable?
+4. Can a relevance-boundary FP32 objective broaden query-level gains enough to justify a later quantized stage?
 
 ## Evidence hierarchy
 
@@ -37,6 +42,7 @@ These results show that compact residual correction can improve a frozen index i
 | TREC DL 2019 / frozen 1M restriction | Preregistered external comparator | RARS minus PCA Recall@10 `-0.0181`, CI `[-0.0735, +0.0168]` | Primary RARS-over-PCA hypothesis unsupported |
 | BEIR NQ / full 2.68M corpus | Preregistered one-shot comparator | RARS minus PCA Recall@10 `-0.000410`, CI `[-0.005987, +0.004972]` | Large independent confirmation does not support superiority |
 | BEIR NQ locked post-hoc diagnosis | Exploratory failure analysis only | Exact Top-40 minus Base `+0.08379`; RARS proxy/relevance Pearson `0.150` | Headroom exists, but NQ retuning remains prohibited |
+| RARS-v2.2 / 1,019 development selection queries | Held-out optimizer-seed replication, development only | Held-out mean `+0.007687` vs PCA; seed 44 support `10 < 11` | Mean effect passes, robustness condition fails; no QAT or external claim |
 | Earlier same-query MS MARCO and FiQA runs | Developmental diagnostics | Mixed, often positive versus base; PCA remains strong | Ablations and motivation only |
 
 ## Contributions
@@ -44,8 +50,9 @@ These results show that compact residual correction can improve a frozen index i
 1. **Frozen-index retrofit.** A rank-16 int8 residual sidecar improves scores for a fixed Top-100 candidate set without changing the coarse quantizer, inverted lists, codebooks, or PQ codes.
 2. **Storage-matched basis comparison.** RARS and unweighted PCA share the same document payload, quantizer, candidate pool, correction path, and validation selection rule.
 3. **Auditable evaluation.** The repository records deterministic query splits, pre-evaluation freezes, artifact hashes, per-query metrics, and paired-bootstrap outputs, including a project-history overlap audit.
-4. **Negative external evidence.** The preregistered external result is retained even though it fails the primary hypothesis, with query-level influence and rank-flip diagnostics that do not change the frozen conclusion.
-5. **Deployment boundary.** The sidecar costs `16.025 B/document` for the residual representation (`24.028 B/document` including external IDs), while a rebuilt M48 index remains stronger when re-encoding is allowed.
+4. **Negative external evidence.** The preregistered TREC and BEIR NQ external results are retained even though they fail the primary hypothesis, with diagnostics that do not change either frozen conclusion.
+5. **Development robustness boundary.** The v2.2 optimizer-seed mean effect is positive, but its preregistered query-support gate fails and blocks QAT, showing why mean effects and positive confidence intervals are insufficient on their own.
+6. **Deployment boundary.** The v1 sidecar costs `16.025 B/document` for the residual representation (`24.028 B/document` including external IDs), while a rebuilt M48 index remains stronger when re-encoding is allowed. The v2.2 result is FP32-only.
 
 ## Main results to report
 
@@ -67,6 +74,29 @@ These results show that compact residual correction can improve a frozen index i
 
 The primary paired contrast is RARS minus PCA Recall@10: `-0.0181`, 95% CI `[-0.0735, +0.0168]`. This result must appear in the abstract, results, limitations, and conclusion.
 
+### Full-corpus BEIR NQ comparison
+
+| System | Recall@10 |
+|---|---:|
+| Frozen IVF-PQ M32 | 0.37973 |
+| PCA rank-16 int8 | 0.37811 |
+| RARS rank-16 int8 | 0.37770 |
+
+The primary paired contrast is RARS minus PCA Recall@10: `-0.000410`, 95% CI `[-0.005987, +0.004972]`. This result is independent confirmation evidence but does not support superiority.
+
+### RARS-v2.2 FP32 development replication
+
+| System / seed | Recall@10 | Gain vs Base | Gain vs direct PCA | Improved / harmed vs PCA |
+|---|---:|---:|---:|---:|
+| Frozen Base | 0.693327 | -- | -- | -- |
+| Direct PCA FP32 | 0.706739 | +0.013412 | -- | -- |
+| Seed 42, observed anchor | 0.713935 | +0.020608 | +0.007197 | 10 / 2 |
+| Seed 43, held-out optimizer seed | 0.714917 | +0.021590 | +0.008178 | 12 / 3 |
+| Seed 44, held-out optimizer seed | 0.713935 | +0.020608 | +0.007197 | 10 / 2 |
+| Held-out seed mean | **0.714426** | **+0.021099** | **+0.007687** | -- |
+
+The registered requirement is at least 11 improved queries for every held-out seed and contrast. Seed 44 has 10 versus PCA, so the formal decision is `UNSTABLE_NO_QAT`. This table is development-only and must remain separate from the two external comparisons.
+
 ## Claim boundary
 
 The paper may claim that:
@@ -76,6 +106,8 @@ The paper may claim that:
 - known prior-query overlap does not fully explain the clean-pipeline Recall gain;
 - the external experiment does not establish RARS superiority over PCA;
 - sparse judgments and a small external query count make that external estimate unstable.
+- the BEIR NQ result also does not support RARS superiority over PCA or Base;
+- v2.2 has a positive held-out-optimizer-seed mean over PCA but fails its frozen query-support condition, so QAT is not authorized.
 
 The paper must not claim that:
 
@@ -84,27 +116,34 @@ The paper must not claim that:
 - the restricted 42-query result is an official full-corpus TREC benchmark;
 - post-hoc removal of the influential query reverses the preregistered result;
 - the sidecar is storage-optimal when rebuilding a higher-rate index is possible.
+- v2.2 is an independent-query, test-set, cross-dataset, or external confirmation;
+- the v2.2 support gate passed, or its query bootstrap includes optimizer-seed uncertainty;
+- v2.2 provides int8, latency, storage, serving, or deployment evidence.
 
 ## Four-page short-paper structure
 
 1. **Introduction and deployment setting (0.5 page).** Frozen-index upgrade constraint, question, and mixed headline result.
 2. **Method and matched comparator (0.75 page).** Residual correction equation, PCA and RARS basis construction, identical storage and serving path.
-3. **Protocol (0.75 page).** Clean split, project-history audit, external preregistration, one-shot rule, paired statistics.
-4. **Results (1.25 pages).** Clean base comparison, PCA/RARS external comparison, storage/latency, one compact rank-flip analysis.
-5. **Limitations and conclusion (0.75 page).** Corpus restriction, 42-query uncertainty, negative primary result, rebuild boundary, required broader confirmation.
+3. **Protocol (0.75 page).** Clean split, project-history audit, TREC/NQ one-shot rules, v2.2 optimizer-seed/support gate, paired statistics.
+4. **Results (1.25 pages).** Clean base comparison, TREC and NQ external comparisons, one compact v2.2 sparse-support table, storage/latency.
+5. **Limitations and conclusion (0.75 page).** Corpus restriction, external null/negative results, development-only v2.2 evidence, rebuild boundary, required new confirmation.
 
-## Next confirmatory gate
+## Post-v2.2 research gate
 
-The registered target is BEIR Natural Questions: fit and validation use only
-its train queries, while the full official test split is reserved for one-shot
-Base/PCA/RARS evaluation after method-artifact freeze.
+BEIR NQ confirmation and v2.2 replication are complete. The MS MARCO clean
+split and inner-validation pool, TREC set, and NQ test are closed. Under v2.2,
+no added seed, threshold change, method revision, or QAT is authorized.
 
-Before another test-qrels evaluation:
+Any new method must be separately versioned and start with an oracle study on
+development-only data. The oracle must test whether counterfactual Recall gain
+per byte can expand positive-query support under matched storage and accessed-
+byte budgets. If the matched-byte oracle cannot materially exceed fixed-rate
+PCA/uniform correction, or the recoverable gain remains concentrated in about
+1% of queries, the adaptive-allocation line should stop before learned routing,
+QAT, or a new external corpus is opened.
 
-1. choose a larger query set with substantially better corpus judgment coverage;
-2. freeze the indexed corpus, Base/PCA/RARS artifacts, configuration, primary contrast, and exclusion policy;
-3. record overlap audits and input hashes;
-4. run the three systems once and publish all paired outcomes;
-5. do not revise RARS using either existing closed evaluation set.
-
-If the next independent result favors RARS with a positive primary confidence interval, the paper can return to a qualified method-advantage framing. If it is null or negative, the stronger contribution is an empirical study of when retrieval-aware residual weighting fails to generalize beyond ordinary PCA.
+Only after the new method, budgets, comparators, evaluator, support metrics,
+and stop rules are frozen may a new independent dataset be opened once. Until
+that happens, the strongest manuscript is a mixed-evidence empirical study of
+frozen-index residual sidecars, sparse boundary gains, and failure to establish
+general superiority over ordinary PCA.

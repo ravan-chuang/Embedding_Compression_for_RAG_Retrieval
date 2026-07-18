@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+  "source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+  "status": "INNER_BUNDLES_FROZEN",
+  "split_audit": {
+    "path": "/content/rars-v2.2-bb9b106e69b9/bundles/v2_2_split_audit.json",
+    "bytes": 2937,
+    "sha256": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f"
+  },
+  "roles": {
+    "inner_train": {
+      "manifest": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/v2_2_manifest.json",
+        "bytes": 4124,
+        "sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e"
+      },
+      "query_count": 3961
+    },
+    "inner_validation": {
+      "manifest": {
+        "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/v2_2_manifest.json",
+        "bytes": 4182,
+        "sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d"
+      },
+      "query_count": 1019
+    }
+  },
+  "outer_validation_built_or_read_by_freezer": false,
+  "outer_validation_evidence_status": "BURNED_DEVELOPMENT_ONLY"
+}

@@ -1,0 +1,17 @@
+\begin{table}[t]
+\caption{RARS-v2.2 FP32 optimizer-seed replication on the same 1,019 development queries. Held-out refers to seeds, not queries or datasets; the formal decision is UNSTABLE_NO_QAT.}
+\label{tab:rars-v2-2-fp32}
+\begin{tabular}{llrrrrrl}
+\toprule
+System / seed & Role & Recall@10 & Gain vs Base & Gain vs PCA & Improved vs PCA & Harmed vs PCA & Support gate \\
+\midrule
+Frozen Base & Comparator & 0.693327 & 0.000000 & -- & -- & -- & N/A \\
+Direct PCA FP32 & Decision comparator & 0.706739 & 0.013412 & 0.000000 & -- & -- & N/A \\
+RARS-v2.2 seed 42 & Observed anchor & 0.713935 & 0.020608 & 0.007197 & 10 & 2 & N/A \\
+RARS-v2.2 seed 43 & Held-out optimizer seed & 0.714917 & 0.021590 & 0.008178 & 12 & 3 & Pass \\
+RARS-v2.2 seed 44 & Held-out optimizer seed & 0.713935 & 0.020608 & 0.007197 & 10 & 2 & Fail \\
+RARS-v2.2 held-out mean & Seeds 43/44 & 0.714426 & 0.021099 & 0.007687 & -- & -- & Overall fail \\
+RARS-v2.2 all-seed mean & Descriptive seeds 42/43/44 & 0.714262 & 0.020936 & 0.007524 & -- & -- & Descriptive \\
+\bottomrule
+\end{tabular}
+\end{table}

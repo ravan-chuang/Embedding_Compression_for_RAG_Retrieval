@@ -13,7 +13,7 @@ The repository separates three questions that are often conflated:
 2. **Compressed-domain efficiency:** What latency and throughput are obtained when Faiss searches PQ codes directly?
 3. **Frozen-index recovery:** How much ranking quality can be recovered by attaching a compact residual sidecar without rebuilding or rewriting an existing IVF-PQ index?
 
-The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The completed evidence now has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority.
+The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The completed v1 evidence has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority. A separately versioned v2.2 FP32 development replication is also complete; it is development-only optimizer-seed evidence, not independent confirmation.
 
 On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improves:
 
@@ -26,7 +26,9 @@ All four confidence intervals are strictly above zero on the full 1,000-query cl
 
 The later external comparison froze a storage-matched PCA sidecar and RARS before evaluating 42 eligible TREC DL 2019 queries against the same frozen 1M corpus. RARS minus PCA Recall@10 was `-0.0181`, with a 95% paired-bootstrap CI of `[-0.0735, +0.0168]`. The external primary hypothesis was therefore **not supported**. This 42-query result is a corpus-restricted sensitivity analysis, not an official full-corpus TREC benchmark, but it is the latest confirmatory evidence and is reported without retuning.
 
-The subsequent full-corpus BEIR NQ confirmation fitted and selected both sidecars using NQ train queries before a one-shot evaluation on 3,452 official test queries. RARS minus PCA Recall@10 was `-0.000410`, with a 95% paired-bootstrap CI of `[-0.005987, +0.004972]`; neither sidecar improved Recall@10 over the frozen M32 base. A locked post-hoc diagnosis found substantial recoverable headroom from exact Top-40 candidate rescoring (`+0.08379` Recall@10 over base), while the exact-overlap proxy correlated only weakly with relevance gain (`r≈0.15` for RARS). These diagnostics motivate a separately versioned, relevance-supervised boundary-loss feasibility study; they do not authorize NQ test retuning.
+The subsequent full-corpus BEIR NQ confirmation fitted and selected both sidecars using NQ train queries before a one-shot evaluation on 3,452 official test queries. RARS minus PCA Recall@10 was `-0.000410`, with a 95% paired-bootstrap CI of `[-0.005987, +0.004972]`; neither sidecar improved Recall@10 over the frozen M32 base. A locked post-hoc diagnosis found substantial recoverable headroom from exact Top-40 candidate rescoring (`+0.08379` Recall@10 over base), while the exact-overlap proxy correlated only weakly with relevance gain (`r≈0.15` for RARS). These diagnostics motivated the now-completed, separately versioned RARS-v2.2 FP32 development replication; they do not authorize NQ test retuning.
+
+On the same 1,019 MS MARCO inner-validation queries, held-out optimizer seeds 43 and 44 reach mean Recall@10 `0.714426`, a gain of `+0.021099` over Base and `+0.007687` over direct PCA. Both held-out paired-query bootstrap intervals have positive lower bounds. However, seed 44 improves only 10 queries over PCA, below the preregistered requirement of 11. The formal decision is therefore **`UNSTABLE_NO_QAT`**: the mean effect replicates, but the positive-query support is too sparse to authorize QAT.
 
 ## Research Status
 
@@ -42,13 +44,13 @@ The subsequent full-corpus BEIR NQ confirmation fitted and selected both sidecar
 | External query-level and rank-flip diagnostics | Complete; post-hoc and non-tuning |
 | Larger independent BEIR NQ confirmation | Complete on 3,452 queries; RARS-over-PCA primary hypothesis unsupported; no retuning |
 | Post-hoc NQ sidecar diagnosis | Complete; exact Top-40 has material headroom, proxy/relevance alignment is weak |
-| RARS-v2 boundary-loss feasibility | [Development protocol](docs/rars_v2_boundary_loss_protocol.md) and training scaffold added; closed NQ test remains prohibited |
-| RARS-v2.2 FP32 development gate | [Frozen protocol](docs/rars_v2_2_boundary_loss_protocol.md) and [Colab notebook](notebooks/MSMARCO_RARS_v2_2_FP32_Development.ipynb) added; no outcome is claimed until the pinned seed-42 run completes, and the historical outer validation is recorded as burned development data |
+| RARS-v2 boundary-loss feasibility | Superseded by the completed v2.2 FP32 development replication; closed NQ test remains prohibited |
+| RARS-v2.2 FP32 development replication | [Development protocol](docs/rars_v2_2_boundary_loss_protocol.md), [replication protocol](docs/rars_v2_2_fp32_replication_protocol.md), [replication notebook](notebooks/MSMARCO_RARS_v2_2_FP32_Replication.ipynb), and [closure packet](results/rars_v2_2_fp32_replication/README.md) complete. Held-out seeds 43/44 reach mean Recall@10 `0.714426` (`+0.021099` vs Base; `+0.007687` vs direct PCA), but seed 44 has 10 improved queries vs the required 11; formal decision `UNSTABLE_NO_QAT`, and QAT is not authorized. |
 | Deployable rank-16 int8 sidecar artifact | Complete |
 | FastAPI sidecar serving path | Complete |
 | Artifact-backed and live-Faiss benchmarks | Complete |
-| Paper-ready CSV / LaTeX table pipeline | Complete, including external tables |
-| SIGIR short-paper manuscript | [Draft v2](docs/rars_paper_draft_v2.md) reframes the mixed evidence |
+| Paper-ready CSV / LaTeX table pipeline | Complete for committed source packets, including the v2.2 development closure table; the BEIR NQ primary result still lacks a committed machine-readable result packet |
+| SIGIR short-paper manuscript | [Draft v2](docs/rars_paper_draft_v2.md) includes the v2.2 closure and reframes the mixed evidence; final four-page typesetting remains pending |
 
 ## Highlights
 
@@ -62,6 +64,7 @@ The subsequent full-corpus BEIR NQ confirmation fitted and selected both sidecar
 - Improves clean-pipeline held-out Recall@10 from `0.6833` to `0.7073`; all four paired-bootstrap confidence intervals are above zero on the full 1,000-query split. After excluding 137 queries used in earlier exploratory work, Recall@10 improves from `0.6956` to `0.7124` (`+0.0168`, 95% CI `[+0.0029, +0.0303]`).
 - Freezes an ordinary unweighted rank-16 int8 PCA comparator under the same candidate pool, correction depth, selection rule, and storage budget as RARS.
 - Reports the negative preregistered external result without retuning: on 42 eligible TREC DL 2019 queries restricted to the frozen 1M corpus, RARS minus PCA Recall@10 is `-0.0181` with 95% CI `[-0.0735, +0.0168]`.
+- Preserves the completed v2.2 FP32 replication without post-hoc rescue: the held-out-seed mean gain over direct PCA is `+0.007687`, but seed 44 misses the frozen positive-support gate by one query, so the formal decision is `UNSTABLE_NO_QAT` and no QAT stage is run.
 - Packages the 1M-document RARS sidecar with a `16.025 B/document` residual-representation cost and `24.028 B/document` complete artifact cost including external document IDs.
 - Adds vectorized live-Faiss correction; the previously recorded 14-thread Top40 implementation requires `1.325 µs/query`, equal to `4.41%` of independently timed Faiss search cost. These timing measurements come from the earlier artifact benchmark and are reported separately from the clean-split quality result.
 - Verifies clean-split artifacts with SHA-256 hashes for the selected configuration, basis, scales, evaluator inputs, test results, and per-query outputs.
@@ -1650,16 +1653,17 @@ evaluation, diagnostic analysis, and paper-table generation.
 
 Immediate priorities:
 
-1. treat both the 1,000-query clean-pipeline test and 42-query external result
-   as closed; do not tune the method against either outcome;
-2. restructure the manuscript around mixed evidence rather than a universal
-   RARS-superiority claim;
-3. freeze and execute the [BEIR NQ confirmation protocol](docs/beir_nq_confirmation_protocol.md)
-   with full corpus coverage and Base/PCA/RARS before loading its test qrels;
-4. use enough independent queries to reduce sensitivity to a handful of Top-10
-   boundary flips, and report per-query paired statistics;
-5. add a compact protocol/evidence diagram and keep developmental, sensitivity,
-   and confirmatory tables visually separate.
+1. treat the 1,000-query clean-pipeline split, 42-query TREC result, 3,452-query
+   NQ test, and 1,019-query v2.2 development split as closed; do not tune a new
+   method against any of these outcomes;
+2. preserve the v2.2 `UNSTABLE_NO_QAT` classification; do not add seeds, relax
+   the support threshold, or run QAT under the frozen v2.2 protocol;
+3. finish the manuscript around mixed evidence, sparse query support, and the
+   frozen-index retrofit boundary rather than a universal superiority claim;
+4. open a separately versioned oracle-first study of counterfactual Recall gain
+   per byte, with explicit stop criteria before learned allocation or QAT;
+5. freeze any future method and evaluator before opening a new independent
+   dataset, and keep developmental, sensitivity, and confirmatory tables separate.
 
 ## Release Readiness
 
@@ -1675,14 +1679,16 @@ FiQA / SciFact compression benchmarks
 → FastAPI optional sidecar serving
 → vectorized live-Faiss benchmark
 → storage-matched PCA comparator freeze
-→ preregistered external confirmation and diagnostics
+→ preregistered TREC and full-corpus BEIR NQ confirmations and diagnostics
+→ v2.2 three-seed FP32 development replication (`UNSTABLE_NO_QAT`)
+→ immutable replication closure packet and generated v2.2 paper table
 → reproducible CSV / LaTeX paper tables
 → automated tests and CI
 ```
 
 Current evidence summary:
 
-> RARS Top40 improves Recall@10 from `0.6833` to `0.7073` on the 1,000-query clean-pipeline MS MARCO split (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). However, the preregistered 42-query corpus-restricted external comparison gives RARS minus PCA Recall@10 `-0.0181` with 95% CI `[-0.0735, +0.0168]`, so general superiority over PCA is not established. The rank-16 int8 representation costs `16.025 B/document`.
+> RARS Top40 improves Recall@10 from `0.6833` to `0.7073` on the 1,000-query clean-pipeline MS MARCO split (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). The preregistered 42-query corpus-restricted TREC comparison gives RARS minus PCA `-0.0181`, CI `[-0.0735, +0.0168]`; the 3,452-query BEIR NQ comparison gives `-0.000410`, CI `[-0.005987, +0.004972]`. The later v2.2 development replication has a held-out-seed mean gain of `+0.007687` over FP32 PCA, but seed 44 has 10 positive-support queries versus the required 11, producing `UNSTABLE_NO_QAT`. General superiority over PCA is not established. The deployable v1 rank-16 int8 representation costs `16.025 B/document`; v2.2 remains FP32-only.
 
 The project is ready for an evidence-honest manuscript revision and
 reproducible artifact release. A stronger method-superiority submission still

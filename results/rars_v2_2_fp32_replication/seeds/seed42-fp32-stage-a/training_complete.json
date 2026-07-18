@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+  "status": "TRAINING_COMPLETE",
+  "run_id": "0956f2f51c2183020a9d68ecb6a89987f7bcef99e0587ceb507a05f303a03b83",
+  "outputs": {
+    "training_started.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a/training_started.json",
+      "bytes": 1904,
+      "sha256": "25d23f02f175542a2779fe53a29a52c325eb5dcaa13c573f47310f9cef80cb44"
+    },
+    "query_projection.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a/query_projection.float32.npy",
+      "bytes": 24704,
+      "sha256": "44f4c5f3f895eb3d84c159d4025a97bac4b7913085f272945f9d176d93777bb3"
+    },
+    "document_projection.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a/document_projection.float32.npy",
+      "bytes": 24704,
+      "sha256": "d6c0f610163845418213239833213b3096a0f8d07c58265e15d0aa2e4c4c4f5a"
+    },
+    "selection_base_per_query.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a/selection_base_per_query.float64.npy",
+      "bytes": 8280,
+      "sha256": "31dfd394a2f446848c649a7a3357664a10ff841975be9f31b1e83c0d96b803e8"
+    },
+    "selection_v2_2_per_query.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a/selection_v2_2_per_query.float64.npy",
+      "bytes": 8280,
+      "sha256": "64e80ae359b46dbd77555a5e32269341eecf149fad7d97fac53a21c8ae226059"
+    },
+    "training_history.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a/training_history.json",
+      "bytes": 5449,
+      "sha256": "2d0d8648b860135c8d95ed54317a45f0e83b7947316e0415a46946949c66fac9"
+    },
+    "selection_metrics.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a/selection_metrics.json",
+      "bytes": 629,
+      "sha256": "eea4323e46354cf18f6413643e7c93fcb6a158b12773eb4d8cd06270f366a83a"
+    },
+    "training_summary.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a/training_summary.json",
+      "bytes": 3776,
+      "sha256": "737798792297c3c042c12c869e646eb1864ee6240bb47d20599545299c346800"
+    }
+  }
+}

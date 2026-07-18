@@ -1,0 +1,4 @@
+seed,run_id,selected_epoch,v2_2_fp32_recall_at_10,gain_over_base,gain_over_pca_fp32,passes_base_gain_gate,passes_pca_gain_gate,joint_pass,improved_queries_vs_base,harmed_queries_vs_base,unchanged_queries_vs_base,improved_queries_vs_pca_fp32,harmed_queries_vs_pca_fp32,unchanged_queries_vs_pca_fp32
+42,0956f2f51c2183020a9d68ecb6a89987f7bcef99e0587ceb507a05f303a03b83,9,0.7139352306182531,0.020608439646712464,0.007196597971867844,True,True,True,36,12,971,10,2,1007
+43,4c4de84eb1cd8226371d95f7bf7927970755c98b7765e0e1363c5e4c2b5ae330,10,0.7149165848871443,0.021589793915603533,0.008177952240758913,True,True,True,37,12,970,12,3,1004
+44,31f8dc9f41426d026797bc63864dcce713b475cbcb6c6c226517aa0cba6bc547,8,0.7139352306182531,0.020608439646712464,0.007196597971867844,True,True,True,37,13,969,10,2,1007
