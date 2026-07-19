@@ -1760,6 +1760,7 @@ def run_design_phase(args: argparse.Namespace) -> dict[str, Any]:
         if args.audit_bundle is not None
         else bundle_root / AUDIT_ROLE_ID
     )
+    audit_label_manifest = audit_bundle_dir / "v3_role_labels_manifest.json"
     design_manifest_path = design_bundle_dir / "v3_candidate_manifest.json"
     audit_manifest_path = audit_bundle_dir / "v3_candidate_manifest.json"
     lineage = validate_bundle_root_lineage(

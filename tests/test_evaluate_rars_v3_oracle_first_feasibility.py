@@ -102,6 +102,17 @@ def test_two_phase_dispatch_never_falls_back_to_legacy_runner() -> None:
     assert calls == ["design", "audit"]
 
 
+def test_design_phase_defines_audit_label_path_before_freeze_registration() -> None:
+    source = SCRIPT.read_text(encoding="utf-8")
+    assignment = (
+        'audit_label_manifest = audit_bundle_dir / "v3_role_labels_manifest.json"'
+    )
+    registration = '"audit_role_labels_expected_path": str(audit_label_manifest)'
+    assert assignment in source
+    assert registration in source
+    assert source.index(assignment) < source.index(registration)
+
+
 def test_oracle0_contract_and_gain_per_byte_curve() -> None:
     scores = np.asarray([[0.9, 0.8, 0.7]], dtype=np.float32)
     docids = np.asarray([[1, 2, 3]], dtype=np.int64)
