@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK_PATH = ROOT / "notebooks/MSMARCO_RARS_v3_Oracle_First_Feasibility.ipynb"
 TRAINING_COMMIT = "bb9b106e69b9a453756fd800665f701614ce67b3"
-IMPLEMENTATION_COMMIT = "00cc09426ce98fd60d0d800c80fab0c8fc890f03"
+IMPLEMENTATION_COMMIT = "05c2ae43b7d11783460822d10c590240dab1a399"
 EXPECTED_IDS = [
     "v3-title",
     "v3-context",
