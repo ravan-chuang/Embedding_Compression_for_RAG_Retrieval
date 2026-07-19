@@ -1,0 +1,249 @@
+{
+  "protocol_id": "rars_v4_tristate_action_feasibility_v1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_FIRST_TRISTATE_LABEL_AUDIT",
+  "research_question": "Before training another boundary loss, do preserved explicit non-relevance judgments and the already-frozen post-PQ score actions jointly support broad protection of relevant Top-10 documents, promotion of relevant Top-100 candidates, and demotion of explicit non-relevant Top-10 documents?",
+  "scope": "outcome-informed development feasibility only; no training, QAT, external evaluation, deployment, or method-success claim",
+  "method_rationale_is_outcome_informed": true,
+  "novelty_guard": {
+    "protect_promote_penalize_is_claimed_as_a_new_loss": false,
+    "eligible_future_contribution": "explicit-negative-masked, compression-consistent supervision for a compact residual sidecar over a fully frozen IVF-PQ index",
+    "binary_unjudged_as_negative_is_existing_v2_2_behavior": true,
+    "required_future_ablations": [
+      "matched v2.2 with the same explicit-negative mask",
+      "standard pairwise boundary ranking with the same mask",
+      "full v4 without unary negative penalty",
+      "full v4 without compression-consistency supervision"
+    ]
+  },
+  "parent_lineage": {
+    "closed_v2_2_commit": "32291e2aed75a99999e83e5d168b1133b70cc866",
+    "v3_implementation_commit": "05c2ae43b7d11783460822d10c590240dab1a399",
+    "v3_executed_notebook_commit": "f8d94fea13743df1276e8cc788c65af2edaea5e1",
+    "v3_protocol_id": "rars_v3_oracle_first_feasibility_v1",
+    "v3_protocol_sha256": "31bfc08b04f0a20bf992fd287a91c8f27d2c8cd1985ec445ce884924b5542b0f",
+    "v3_core_sha256": "d62c150ed2455b3f327278a76bf772eab0b1a41d91cca8030849733e122b114d",
+    "v3_observed_formal_decision": "STOP_NO_HEADROOM",
+    "v3_observed_audit_query_count": 851,
+    "v3_observed_primary_comparator": "residual_norm_top20_rank32_else0",
+    "v3_observed_metrics": {
+      "base_recall_at_10": 0.6864473168820995,
+      "primary_comparator_recall_at_10": 0.7152369761065412,
+      "exact40_recall_at_10": 0.754602428515472,
+      "oracle16_recall_at_10": 0.7602820211515864,
+      "oracle16_gain_over_comparator": 0.04504504504504514,
+      "oracle16_comparator_relative_cfr": 0.18181818181818182,
+      "oracle16_exact40_membership_alignment": 0.2608695652173913
+    }
+  },
+  "data_policy": {
+    "dataset": "MS MARCO passage 1M historical development pool",
+    "evidence_status": "OBSERVED_DEVELOPMENT_DIAGNOSTIC_NOT_INDEPENDENT_CONFIRMATION",
+    "roles": {
+      "v4_design_observed": {
+        "source_v3_role": "oracle_design",
+        "query_count": 2307,
+        "v3_positive-label_outcomes_already_observed": true,
+        "allowed_use": "label-schema, support, and action-space design gate"
+      },
+      "v4_diagnostic_audit": {
+        "source_v3_role": "oracle_audit",
+        "query_count": 851,
+        "v3_positive-label_outcomes_already_observed": true,
+        "tristate_labels_materialized_only_after_v4_design_freeze": true,
+        "allowed_use": "one-shot diagnostic replication only"
+      },
+      "future_fp32_holdout": {
+        "source_v3_role": "future_method_holdout",
+        "query_count": 803,
+        "source_order_newline_qid_sha256": "41a1908b386cdf8bcd5e2905b88d99e66e3e1b392916c55643f36bd215ae95a8",
+        "candidate_arrays_allowed_in_phase0": false,
+        "labels_or_support_counts_allowed_in_phase0": false,
+        "metrics_allowed_in_phase0": false,
+        "claim_status": "procedurally sealed development holdout, not independent confirmation"
+      }
+    },
+    "forbidden_outcome_roles": [
+      "future_method_holdout",
+      "MS MARCO outer validation",
+      "MS MARCO clean test",
+      "BEIR NQ",
+      "TREC DL 2019",
+      "FiQA",
+      "SciFact"
+    ],
+    "prior_access_disclosure": "All MS MARCO queries in this phase were used historically for development, and the v3 design/audit positive-label outcomes are known. This phase is a prospective decision rule over a new label-semantics question, not an outcome-blind hypothesis test.",
+    "external_claim_guard": "No dataset may be called sealed or external confirmation until a project-wide repository, notebook, cache, and Drive access registry has been completed."
+  },
+  "judgment_contract": {
+    "state_dtype": "int8",
+    "POSITIVE": 1,
+    "EXPLICIT_NEGATIVE": -1,
+    "UNJUDGED": 0,
+    "positive_rule": "a source judgment row exists and grade > 0",
+    "explicit_negative_rule": "a source judgment row exists and grade <= 0",
+    "unjudged_rule": "no source judgment row exists for the query-document pair",
+    "graded_mapping_required": true,
+    "at_least_one_explicit_negative_source_row_required": true,
+    "binary_candidate_relevance_is_primary_eligible": false,
+    "unjudged_as_negative_primary_eligible": false,
+    "unjudged_as_negative_sensitivity_allowed": true,
+    "sensitivity_can_unlock_next_stage": false,
+    "queries_without_negative_or_swap_support_remain_in_denominator": true
+  },
+  "frozen_retrieval": {
+    "candidate_source": "exact v3 qrels-free candidate bundles inherited from the frozen v2.2 inner-train Top-100 arrays",
+    "candidate_k": 100,
+    "correction_depth": 40,
+    "final_k": 10,
+    "tie_break": "score descending, document_id ascending",
+    "base_index_mutation_allowed": false,
+    "candidate_retrieval_or_reordering_allowed": false
+  },
+  "frozen_action_spaces": {
+    "progressive_primary": {
+      "source": "v3 design-frozen uncentered rank-32 SVD basis and global int8 scales",
+      "alpha": 0.75,
+      "tiers_code_bytes": [0, 8, 16, 32],
+      "variable_candidates": "frozen base ranks 1 through 40",
+      "fixed_candidates": "ranks 41 through 100 use tier 0",
+      "budget_bytes_per_query": 640,
+      "persistent_storage_claim_allowed": false,
+      "rank16_trainer_authorized_directly": false
+    },
+    "selective_exact_diagnostic": {
+      "tiers": ["base", "exact residual correction"],
+      "variable_candidates": "frozen base ranks 1 through 40",
+      "fixed_candidates": "ranks 41 through 100 remain base",
+      "maximum_exact_actions_per_query": 40,
+      "cost_unit": "action count, not bytes and not a deployable representation"
+    },
+    "oracle_objective": [
+      "maximize judged-positive count in final Top-10",
+      "among equal positive count minimize explicit-negative count in final Top-10",
+      "minimum action cost",
+      "deterministic threshold and ascending document-ID traversal"
+    ]
+  },
+  "metric_contract": {
+    "primary_metric": "macro mean Recall@10 over every role query with at least one judged positive",
+    "label_support": [
+      "explicit-negative coverage in Top-100",
+      "explicit-negative coverage in Base Top-10",
+      "actionable promotion pair coverage",
+      "protection pair coverage",
+      "unary penalty queries with a judged-positive replacement",
+      "query-level label-only swap ceiling"
+    ],
+    "action_support": [
+      "downward-feasible explicit-negative queries",
+      "upward-feasible outside-positive queries",
+      "joint explicit-negative-to-positive swap reachability",
+      "selective-exact oracle gain",
+      "progressive oracle gain",
+      "label-ceiling recovery",
+      "explicit-swap attribution",
+      "accessed-byte distribution"
+    ],
+    "bootstrap": {
+      "replicates": 20000,
+      "confidence": 0.95,
+      "rng": "NumPy PCG64",
+      "seed": 20260720,
+      "quantile_method": "linear",
+      "resampling_unit": "query",
+      "same_resample_indices_for_all_contrasts": true
+    },
+    "coverage_interval": "Wilson score interval at 95%"
+  },
+  "phase0_gate": {
+    "minimum_design_queries": 2000,
+    "minimum_audit_queries": 800,
+    "minimum_explicit_negative_top100_coverage": 0.25,
+    "minimum_explicit_negative_top100_wilson_lower": 0.20,
+    "minimum_penalty_query_coverage": 0.10,
+    "minimum_penalty_query_wilson_lower": 0.08,
+    "minimum_promotion_pair_coverage": 0.05,
+    "minimum_promotion_pair_wilson_lower": 0.04,
+    "minimum_protection_pair_coverage": 0.05,
+    "minimum_protection_pair_wilson_lower": 0.04,
+    "minimum_mean_label_swap_ceiling": 0.01,
+    "minimum_label_swap_bootstrap_lower": 0.005,
+    "minimum_positive_support_fraction": 0.05,
+    "minimum_positive_support_queries": 40,
+    "minimum_effective_positive_support": 30.0,
+    "maximum_top_1pct_positive_mass_concentration": 0.4,
+    "minimum_progressive_oracle_gain": 0.01,
+    "minimum_progressive_bootstrap_lower": 0.005,
+    "minimum_label_ceiling_recovery": 0.35,
+    "minimum_explicit_swap_attribution": 0.60,
+    "minimum_joint_swap_reachable_coverage": 0.05,
+    "maximum_accessed_bytes_per_query": 640,
+    "minimum_positive_design_folds": 4,
+    "minimum_worst_design_fold_gain": -0.002,
+    "minimum_nonredundant_actionable_queries": 40,
+    "minimum_nonredundant_actionable_fraction": 0.05,
+    "audit_minimum_explicit_negative_top100_queries": 200,
+    "audit_minimum_penalty_queries": 100,
+    "audit_minimum_promotion_queries": 50,
+    "audit_minimum_protection_queries": 50,
+    "audit_minimum_joint_reachable_queries": 50
+  },
+  "formal_decisions": {
+    "INVALID_LINEAGE_OR_SOLVER": "Any source, artifact, role, hash, candidate mapping, score, solver, chronology, or environment contract fails.",
+    "STOP_UNDERPOWERED": "The registered role does not meet the all-query sample-size floor.",
+    "STOP_NO_EXPLICIT_NEGATIVE_SEMANTICS": "The source does not preserve graded rows with explicit non-relevance, so unjudged candidates cannot be used as primary negatives.",
+    "STOP_NEGATIVE_SUPPORT": "Explicit negatives exist but coverage is below the registered query-level thresholds.",
+    "STOP_NO_NOVEL_ACTION_SUPPORT": "The unary penalty has too few queries with an explicit Top-10 negative and a judged-positive replacement to add supervision beyond v2.2.",
+    "STOP_SWAP_SUPPORT": "The label-only actionable swap ceiling is too small, sparse, or concentrated.",
+    "STOP_NO_COMPRESSION_CONSISTENT_HEADROOM": "The frozen post-PQ action oracle cannot recover broad label-supported gains with the required explicit-swap attribution.",
+    "DESIGN_GO_TO_DIAGNOSTIC_AUDIT": "All design checks pass; only the already-observed v3 audit role may be opened for a one-shot diagnostic.",
+    "GO_FREEZE_FP32_DEVELOPMENT_PROTOCOL": "All design and diagnostic-audit checks pass; this authorizes only a separately frozen FP32 development protocol on development data."
+  },
+  "later_stage_guards": {
+    "training_allowed": false,
+    "qat_allowed": false,
+    "external_evaluation_allowed": false,
+    "deployment_claim_allowed": false,
+    "storage_claim_allowed": false,
+    "go_is_method_success": false,
+    "go_authorizes_only": "a separately frozen, matched-baseline FP32 development protocol",
+    "future_holdout_open_allowed": false
+  },
+  "artifact_policy": {
+    "exact_clean_git_head_required": true,
+    "v3_complete_run_recursive_verification_required": true,
+    "v3_parent_runtime_hash_binding_required": true,
+    "qrels_free_candidate_freeze_required": true,
+    "design_labels_allowed_before_design_freeze": true,
+    "audit_tristate_labels_allowed_before_design_freeze": false,
+    "audit_tristate_labels_allowed_only_after_design_go": true,
+    "future_role_identity_only": true,
+    "partial_run_reuse_allowed": false,
+    "complete_run_reuse_requires_exact_fingerprint_and_recursive_hashes": true,
+    "label_materializer": "scripts/materialize_rars_v4_tristate_labels.py",
+    "core": "scripts/rars_v4_tristate_action_core.py",
+    "evaluator": "scripts/evaluate_rars_v4_tristate_action_feasibility.py",
+    "candidate_builder_dependency": "scripts/build_msmarco_rars_v3_oracle_bundles.py",
+    "numeric_dependency": "scripts/rars_v3_oracle_core.py"
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "numpy_quantile_method": "linear",
+    "faiss_required_by_v4_materializer_or_evaluator": false
+  },
+  "prohibited_actions": [
+    "editing this protocol after any v4 tri-state design result is observed",
+    "calling an absent qrel row an explicit negative",
+    "using binary candidate_relevance as the primary negative mask",
+    "excluding no-negative or no-swap queries from coverage denominators",
+    "materializing diagnostic-audit tri-state labels before a durable design GO freeze",
+    "opening future_method_holdout candidates, labels, support counts, or metrics in phase0",
+    "training, QAT, external evaluation, or deployment from a phase0 result",
+    "claiming protect-promote-penalize itself as a novel loss",
+    "trying unregistered datasets until one passes the label-support gate"
+  ],
+  "method_revision_allowed": false,
+  "outcome_informed_revision_allowed": false
+}
