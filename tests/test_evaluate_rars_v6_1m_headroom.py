@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -93,3 +94,34 @@ def test_output_contract_uses_stable_non_top200_filenames() -> None:
     assert "ivf_exact_top_rows.int64.npy" in required
     assert not any("top200" in name for name in required)
 
+
+def test_faiss_validation_downcasts_generic_ivf_wrapper_before_reading_pq() -> None:
+    generic = SimpleNamespace()
+    concrete = SimpleNamespace(
+        d=384,
+        nlist=512,
+        nprobe=1,
+        pq=SimpleNamespace(M=32, nbits=8),
+        ntotal=1_000_000,
+        metric_type=7,
+        is_trained=True,
+    )
+
+    class FakeFaiss:
+        METRIC_INNER_PRODUCT = 7
+
+        @staticmethod
+        def extract_index_ivf(index: object) -> object:
+            assert index == "frozen-index"
+            return generic
+
+        @staticmethod
+        def downcast_index(index: object) -> object:
+            assert index is generic
+            return concrete
+
+    ivf, observed = MODULE.validate_faiss_index("frozen-index", FakeFaiss)
+    assert ivf is concrete
+    assert observed["subquantizers"] == 32
+    assert observed["nbits"] == 8
+    assert observed["runtime_nprobe"] == 16

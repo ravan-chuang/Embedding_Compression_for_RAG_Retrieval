@@ -390,7 +390,8 @@ def validate_faiss_index(index: Any, faiss_module: Any) -> tuple[Any, dict[str, 
     """Validate the immutable 1M M32 IVF-PQ index before any search."""
 
     try:
-        ivf = faiss_module.extract_index_ivf(index)
+        extracted = faiss_module.extract_index_ivf(index)
+        ivf = faiss_module.downcast_index(extracted)
     except Exception as error:  # pragma: no cover - depends on Faiss wrapper
         raise ValueError("Frozen index is not an IVF index") from error
     pq = getattr(ivf, "pq", None)
