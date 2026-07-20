@@ -43,6 +43,11 @@ def test_v5_notebook_pins_exact_implementation_and_environment() -> None:
     assert "faiss-gpu-cu12==1.12.0" in setup
     assert "CUBLAS_WORKSPACE_CONFIG" in setup
     assert "clone_exact(V5_REPO, V5_IMPLEMENTATION_COMMIT)" in checkout
+    assert (
+        "V3_REPO = Path('/content/Embedding_Compression_for_RAG_Retrieval_rars_v3_oracle')"
+        in setup
+    )
+    assert "Embedding_Compression_for_RAG_Retrieval_rars_v3')" not in setup
     assert "torch_version" in preflight
     assert "gpu_name_must_contain" in preflight
 
