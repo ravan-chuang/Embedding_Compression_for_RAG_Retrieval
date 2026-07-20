@@ -473,7 +473,7 @@ def _merge_torch_topk(
 ) -> tuple[Any, Any]:
     take = min(k, int(scores.shape[1]))
     block_scores, positions = torch.topk(scores, k=take, dim=1, largest=True, sorted=True)
-    block_rows = rows[positions]
+    block_rows = torch.gather(rows, 1, positions)
     if best_scores is None:
         return block_scores, block_rows
     combined_scores = torch.cat((best_scores, block_scores), dim=1)
@@ -525,7 +525,7 @@ def full_exact_topk_torch(
     for query_start in range(0, len(queries), query_batch_size):
         query_end = min(query_start + query_batch_size, len(queries))
         query_tensor = torch.as_tensor(
-            np.asarray(queries[query_start:query_end], dtype=np.float32),
+            np.array(queries[query_start:query_end], dtype=np.float32, copy=True),
             device=corpus_tensor.device,
         )
         scores = query_tensor @ corpus_tensor.T
@@ -554,7 +554,7 @@ def within_ivf_exact_topk_torch(
     rows_out = np.full((len(queries), k), -1, dtype=np.int64)
     for query_index, rows in enumerate(candidates):
         query_tensor = torch.as_tensor(
-            np.asarray(queries[query_index], dtype=np.float32),
+            np.array(queries[query_index], dtype=np.float32, copy=True),
             device=corpus_tensor.device,
         ).reshape(1, -1)
         best_scores = best_rows = None
@@ -665,7 +665,7 @@ def score_flip_candidate_union(
     pq_scores = np.full(rows.shape, -np.inf, dtype=np.float32)
     for query_index, padded in enumerate(rows):
         valid_rows = np.ascontiguousarray(padded[padded >= 0], dtype=np.int64)
-        query = np.asarray(queries[query_index], dtype=np.float32)
+        query = np.array(queries[query_index], dtype=np.float32, copy=True)
         row_tensor = torch.as_tensor(
             valid_rows, dtype=torch.int64, device=corpus_tensor.device
         )

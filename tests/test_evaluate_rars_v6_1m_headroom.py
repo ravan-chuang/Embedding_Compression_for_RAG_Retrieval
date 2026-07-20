@@ -125,3 +125,52 @@ def test_faiss_validation_downcasts_generic_ivf_wrapper_before_reading_pq() -> N
     assert observed["subquantizers"] == 32
     assert observed["nbits"] == 8
     assert observed["runtime_nprobe"] == 16
+
+
+def test_torch_topk_merge_gathers_document_rows_along_candidate_axis() -> None:
+    class FakeTorch:
+        @staticmethod
+        def topk(
+            value: np.ndarray,
+            *,
+            k: int,
+            dim: int,
+            largest: bool,
+            sorted: bool,
+        ) -> tuple[np.ndarray, np.ndarray]:
+            assert dim == 1 and largest and sorted
+            positions = np.argsort(-value, axis=1)[:, :k]
+            return np.take_along_axis(value, positions, axis=1), positions
+
+        @staticmethod
+        def gather(
+            value: np.ndarray, dim: int, positions: np.ndarray
+        ) -> np.ndarray:
+            assert dim == 1
+            return np.take_along_axis(value, positions, axis=1)
+
+        @staticmethod
+        def cat(values: tuple[np.ndarray, ...], dim: int) -> np.ndarray:
+            return np.concatenate(values, axis=dim)
+
+    scores, rows = MODULE._merge_torch_topk(
+        None,
+        None,
+        np.asarray([[0.2, 0.9, 0.5]], dtype=np.float32),
+        np.asarray([[10, 11, 12]], dtype=np.int64),
+        k=2,
+        torch=FakeTorch,
+    )
+    assert np.allclose(scores, [[0.9, 0.5]])
+    assert rows.tolist() == [[11, 12]]
+
+    merged_scores, merged_rows = MODULE._merge_torch_topk(
+        scores,
+        rows,
+        np.asarray([[0.8, 0.1]], dtype=np.float32),
+        np.asarray([[20, 21]], dtype=np.int64),
+        k=2,
+        torch=FakeTorch,
+    )
+    assert np.allclose(merged_scores, [[0.9, 0.8]])
+    assert merged_rows.tolist() == [[11, 20]]
