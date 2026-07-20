@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v5_pq_aware_100k_pilot_v1",
+  "audit_status": "FULL_EXPORTED_ARTIFACT_AUDIT_PASS",
+  "audit_date": "2026-07-21",
+  "source_commit": "93105ae1895974e28b34952c2dd777f037c6e0bf",
+  "run_id": "3820883ba4aae9c5b58f815f9a42ec484d793f171bd22eb45d9f1c70df9b7dd9",
+  "formal_decision": "STOP_PQ_AWARE_100K_PILOT",
+  "registered_file_count": 8,
+  "all_registered_bytes_and_sha256_verified": true,
+  "started_history_result_bytes_and_sha256_verified": true,
+  "run_identity_consistent_across_started_result_complete": true,
+  "environment": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "numpy": "1.26.4",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms": true,
+    "cudnn_benchmark": false
+  },
+  "artifacts": {
+    "query_adapter_down.float32.npy": {
+      "registered_bytes": 12416,
+      "registered_sha256": "3fe2103a983b0ef63a4c7197e1e3dad326af4d35e25e257ca7be5971f973652c",
+      "observed_shape": [
+        384,
+        8
+      ],
+      "observed_dtype": "float32",
+      "all_finite": true,
+      "minimum": -0.07527188211679459,
+      "maximum": 0.09248372167348862,
+      "l2_norm": 1.1925283146650294
+    },
+    "query_adapter_up.float32.npy": {
+      "registered_bytes": 12416,
+      "registered_sha256": "661157272b1c480dfd8581dc796984ac7404348390651975eef372459c3bef2d",
+      "observed_shape": [
+        8,
+        384
+      ],
+      "observed_dtype": "float32",
+      "all_finite": true,
+      "minimum": -0.008821005001664162,
+      "maximum": 0.008805042132735252,
+      "l2_norm": 0.2808633512445994
+    },
+    "document_adapter_down.float32.npy": {
+      "registered_bytes": 12416,
+      "registered_sha256": "cda6d8529221ed4b785e6a1a72ab6d65556431f257a4eccb14d7131de8cad9b5",
+      "observed_shape": [
+        384,
+        8
+      ],
+      "observed_dtype": "float32",
+      "all_finite": true,
+      "minimum": -0.08810948580503464,
+      "maximum": 0.07879867404699326,
+      "l2_norm": 1.1963924156760823
+    },
+    "document_adapter_up.float32.npy": {
+      "registered_bytes": 12416,
+      "registered_sha256": "17fd63f61e7a1ab5ada09ebdaace85bab9280bbbcca54f533cf3fcc97adbd2a9",
+      "observed_shape": [
+        8,
+        384
+      ],
+      "observed_dtype": "float32",
+      "all_finite": true,
+      "minimum": -0.00875045545399189,
+      "maximum": 0.008778542280197144,
+      "l2_norm": 0.3305777064273163
+    },
+    "selection_hard_pq_top_rows.int64.npy": {
+      "registered_bytes": 582528,
+      "registered_sha256": "223d644a9a94207ffbaa5fb7418219edb54ebacd54ce1f1ea47c92b80b1c4ef4",
+      "observed_shape": [
+        728,
+        100
+      ],
+      "observed_dtype": "int64",
+      "all_finite": true,
+      "minimum": 1.0,
+      "maximum": 99997.0,
+      "all_rows_have_100_unique_ids": true,
+      "all_rows_within_100k_local_range": true
+    },
+    "selection_adapted_fp32_top_rows.int64.npy": {
+      "registered_bytes": 582528,
+      "registered_sha256": "553d547d428e9d4e11002acfe9ebcb28618886f9dd489d322c7d43698df7c0ac",
+      "observed_shape": [
+        728,
+        100
+      ],
+      "observed_dtype": "int64",
+      "all_finite": true,
+      "minimum": 2.0,
+      "maximum": 99999.0,
+      "all_rows_have_100_unique_ids": true,
+      "all_rows_within_100k_local_range": true
+    },
+    "selection_base_recall_at_100.float64.npy": {
+      "registered_bytes": 5952,
+      "registered_sha256": "d3f04406de2cfdb702b3af3fa2a4eaad4e7f34365113972fc971b95536b18c2f",
+      "observed_shape": [
+        728
+      ],
+      "observed_dtype": "float64",
+      "all_finite": true,
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "selection_adapter_recall_at_100.float64.npy": {
+      "registered_bytes": 5952,
+      "registered_sha256": "3840af5576b62a1f3410de030a5b1dc5296729e7931f87c1737d8aaea38e4695",
+      "observed_shape": [
+        728
+      ],
+      "observed_dtype": "float64",
+      "all_finite": true,
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "l2_norm": 26.68332812825267
+    }
+  },
+  "recomputed_selection": {
+    "query_count": 728,
+    "base_recall_at_100": 0.9752747252747253,
+    "adapter_recall_at_100": 0.978021978021978,
+    "mean_gain": 0.0027472527472527475,
+    "improved_queries": 2,
+    "harmed_queries": 0,
+    "unchanged_queries": 726,
+    "delta_sum": 2.0,
+    "unique_delta_values": [
+      0.0,
+      1.0
+    ]
+  },
+  "notebook_execution": {
+    "code_cell_execution_counts": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "error_output_count": 0,
+    "fixed_v3_lineage_path_present": true,
+    "implementation_commit_pin_present": true
+  },
+  "limitations": [
+    "The metric is development-only 100K known-positive Recall, not official MS MARCO Recall.",
+    "The selection role was already-observed v3 diagnostic-audit data, not independent confirmation.",
+    "Unjudged candidates are mined negatives and are not explicit non-relevant judgments.",
+    "The committed thin packet preserves JSON, per-query Recall@100, and full external artifact hashes; adapter and Top-100 NPY payloads remain in the durable Drive export."
+  ]
+}

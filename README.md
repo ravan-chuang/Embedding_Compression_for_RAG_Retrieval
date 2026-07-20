@@ -13,7 +13,7 @@ The repository separates three questions that are often conflated:
 2. **Compressed-domain efficiency:** What latency and throughput are obtained when Faiss searches PQ codes directly?
 3. **Frozen-index recovery:** How much ranking quality can be recovered by attaching a compact residual sidecar without rebuilding or rewriting an existing IVF-PQ index?
 
-The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The completed v1 evidence has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority. A separately versioned v2.2 FP32 development replication is also complete; it is development-only optimizer-seed evidence, not independent confirmation. A pre-result RARS-v3 oracle-first gate is now frozen to test counterfactual Recall gain per accessed byte before any new allocator is built; it has no reported outcome yet.
+The current research focus is **Retrieval-Aware Residual Subspace (RARS)**, a rank-16 int8 post-hoc sidecar for frozen IVF-PQ indexes. The completed v1 evidence has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority. The separately versioned v2.2 FP32 development replication ends `UNSTABLE_NO_QAT`, the v3 matched-access oracle ends `STOP_NO_HEADROOM`, and the v5 100K PQ-aware adapter pilot ends `STOP_PQ_AWARE_100K_PILOT`. These later stages are development-only evidence, not independent confirmation.
 
 On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improves:
 
@@ -46,8 +46,8 @@ On the same 1,019 MS MARCO inner-validation queries, held-out optimizer seeds 43
 | Post-hoc NQ sidecar diagnosis | Complete; exact Top-40 has material headroom, proxy/relevance alignment is weak |
 | RARS-v2 boundary-loss feasibility | Superseded by the completed v2.2 FP32 development replication; closed NQ test remains prohibited |
 | RARS-v2.2 FP32 development replication | [Development protocol](docs/rars_v2_2_boundary_loss_protocol.md), [replication protocol](docs/rars_v2_2_fp32_replication_protocol.md), [replication notebook](notebooks/MSMARCO_RARS_v2_2_FP32_Replication.ipynb), and [closure packet](results/rars_v2_2_fp32_replication/README.md) complete. Held-out seeds 43/44 reach mean Recall@10 `0.714426` (`+0.021099` vs Base; `+0.007687` vs direct PCA), but seed 44 has 10 improved queries vs the required 11; formal decision `UNSTABLE_NO_QAT`, and QAT is not authorized. |
-| RARS-v3 oracle-first matched-access feasibility | [Frozen protocol](docs/rars_v3_oracle_first_feasibility_protocol.md), [machine-readable contract](protocols/rars_v3_oracle_first_feasibility_v1.json), and [commit-pinned notebook](notebooks/MSMARCO_RARS_v3_Oracle_First_Feasibility.ipynb) are ready for a clean pre-audit execution. The first attempt ended during design-freeze serialization because of a [documented implementation-only repair](docs/rars_v3_pre_audit_implementation_repair.md); its partial output is invalid and preserved separately. No oracle result has been committed. This is a non-deployable, development-only gate and cannot support a persistent-storage claim. |
-| RARS-v5 PQ-aware 100K pilot | [Frozen development protocol](docs/rars_v5_pq_aware_100k_pilot_protocol.md), [machine-readable contract](protocols/rars_v5_pq_aware_100k_pilot_v1.json), and [commit-pinned Colab notebook](notebooks/MSMARCO_RARS_v5_PQ_Aware_100K_Pilot.ipynb) define a rank-8 hard-PQ adapter gate with end-to-end, label-independent 100K selection retrieval. A [pre-outcome notebook repair](docs/rars_v5_pre_outcome_notebook_repair.md) restores the exact v3 clone path required by the historical design-freeze lineage; no v5 outcome had been opened. The 803-query future role remains sealed, and this stage does not authorize RARS combination, a 1M rebuild, or a paper claim. |
+| RARS-v3 oracle-first matched-access feasibility | [Frozen protocol](docs/rars_v3_oracle_first_feasibility_protocol.md), [machine-readable contract](protocols/rars_v3_oracle_first_feasibility_v1.json), and [commit-pinned notebook](notebooks/MSMARCO_RARS_v3_Oracle_First_Feasibility.ipynb) are complete. After the [documented pre-audit implementation repair](docs/rars_v3_pre_audit_implementation_repair.md), the exact rerun ended `STOP_NO_HEADROOM`; no static-storage allocator or training stage was authorized. This is a non-deployable, development-only gate and cannot support a persistent-storage claim. |
+| RARS-v5 PQ-aware 100K pilot | [Frozen development protocol](docs/rars_v5_pq_aware_100k_pilot_protocol.md), [machine-readable contract](protocols/rars_v5_pq_aware_100k_pilot_v1.json), [commit-pinned Colab notebook](notebooks/MSMARCO_RARS_v5_PQ_Aware_100K_Pilot.ipynb), and [audited closure packet](results/rars_v5_pq_aware_100k_pilot/README.md) are complete. The rank-8 hard-PQ adapter changes known-positive Recall@100 from `0.975275` to `0.978022` (`+0.002747`, 95% CI `[0, +0.006868]`) but improves only 2 of 728 queries and slightly exceeds the Recall@10 loss guardrail. Formal decision: `STOP_PQ_AWARE_100K_PILOT`. Seeds 43/44, RARS combination, a 1M rebuild, external evaluation, and the 803-query future role are not authorized. |
 | Deployable rank-16 int8 sidecar artifact | Complete |
 | FastAPI sidecar serving path | Complete |
 | Artifact-backed and live-Faiss benchmarks | Complete |
@@ -1656,15 +1656,17 @@ evaluation, diagnostic analysis, and paper-table generation.
 Immediate priorities:
 
 1. treat the 1,000-query clean-pipeline split, 42-query TREC result, 3,452-query
-   NQ test, and 1,019-query v2.2 development split as closed; do not tune a new
-   method against any of these outcomes;
-2. preserve the v2.2 `UNSTABLE_NO_QAT` classification; do not add seeds, relax
-   the support threshold, or run QAT under the frozen v2.2 protocol;
+   NQ test, 1,019-query v2.2 development split, and the observed v3/v5
+   development roles as closed; do not tune a new method against these outcomes;
+2. preserve the v2.2 `UNSTABLE_NO_QAT`, v3 `STOP_NO_HEADROOM`, and v5
+   `STOP_PQ_AWARE_100K_PILOT` classifications; do not add seeds, relax gates,
+   combine v5 with RARS, or open the 803-query future role;
 3. finish the manuscript around mixed evidence, sparse query support, and the
    frozen-index retrofit boundary rather than a universal superiority claim;
-4. execute the frozen RARS-v3 oracle-first notebook without changing its
-   comparator set, 0/320/640/1280-byte curve, audit split, or stop criteria;
-5. freeze any future method and evaluator before opening a new independent
+4. use the v5 loss/Recall divergence and 24/8,244 PQ-flip support only as
+   post-hoc diagnosis, not as permission to rescue the stopped configuration;
+5. freeze any future method and evaluator before opening a genuinely new
+   independent
    dataset, and keep developmental, sensitivity, and confirmatory tables separate.
 
 ## Release Readiness
@@ -1684,14 +1686,15 @@ FiQA / SciFact compression benchmarks
 → preregistered TREC and full-corpus BEIR NQ confirmations and diagnostics
 → v2.2 three-seed FP32 development replication (`UNSTABLE_NO_QAT`)
 → immutable replication closure packet and generated v2.2 paper table
-→ frozen pre-result v3 counterfactual Recall-per-accessed-byte oracle gate
+→ v3 counterfactual Recall-per-accessed-byte oracle gate (`STOP_NO_HEADROOM`)
+→ v5 hard-PQ 100K adapter pilot and audited closure (`STOP_PQ_AWARE_100K_PILOT`)
 → reproducible CSV / LaTeX paper tables
 → automated tests and CI
 ```
 
 Current evidence summary:
 
-> RARS Top40 improves Recall@10 from `0.6833` to `0.7073` on the 1,000-query clean-pipeline MS MARCO split (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). The preregistered 42-query corpus-restricted TREC comparison gives RARS minus PCA `-0.0181`, CI `[-0.0735, +0.0168]`; the 3,452-query BEIR NQ comparison gives `-0.000410`, CI `[-0.005987, +0.004972]`. The later v2.2 development replication has a held-out-seed mean gain of `+0.007687` over FP32 PCA, but seed 44 has 10 positive-support queries versus the required 11, producing `UNSTABLE_NO_QAT`. General superiority over PCA is not established. The deployable v1 rank-16 int8 representation costs `16.025 B/document`; v2.2 remains FP32-only.
+> RARS Top40 improves Recall@10 from `0.6833` to `0.7073` on the 1,000-query clean-pipeline MS MARCO split (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). The preregistered 42-query corpus-restricted TREC comparison gives RARS minus PCA `-0.0181`, CI `[-0.0735, +0.0168]`; the 3,452-query BEIR NQ comparison gives `-0.000410`, CI `[-0.005987, +0.004972]`. The later v2.2 development replication has a held-out-seed mean gain of `+0.007687` over FP32 PCA, but seed 44 has 10 positive-support queries versus the required 11, producing `UNSTABLE_NO_QAT`. The v3 oracle and v5 PQ-aware 100K pilot also stop at their frozen gates; v5 gains `+0.002747` Recall@100 on only 2 of 728 queries and slightly exceeds its Recall@10 loss guardrail. General superiority over PCA or a successful PQ-aware extension is not established. The deployable v1 rank-16 int8 representation costs `16.025 B/document`; later development variants are not deployable artifacts.
 
 The project is ready for an evidence-honest manuscript revision and
 reproducible artifact release. A stronger method-superiority submission still
