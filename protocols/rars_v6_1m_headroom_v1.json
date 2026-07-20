@@ -1,0 +1,158 @@
+{
+  "protocol_id": "rars_v6_1m_headroom_v1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_FIRST_1M_HEADROOM_RUN",
+  "method_revision_allowed": false,
+  "outcome_informed_revision_allowed": false,
+  "research_question": "Does the exact frozen 1M M32x8 IVF-PQ deployment index expose enough PQ-specific, query-distributed Recall@100 headroom to justify implementing a new Top-10-protected, Top-100-repair PQ-aware objective?",
+  "scope": "outcome-informed MS MARCO 1M development diagnostic only; no adapter fitting, encoder training, PQ/codebook update, RARS fitting, future-role evaluation, external confirmation, deployment claim, or paper claim",
+  "positioning": {
+    "stage_name": "1M PQ-specific headroom and resource smoke",
+    "method_contribution_claimed": false,
+    "passing_is_method_success": false,
+    "passing_authorizes_only": "implementation and preregistration of a separate v6 loss-development experiment",
+    "failing_means": "the frozen 1M M32x8 setting does not provide the preregistered quantity and breadth of PQ-specific development signal"
+  },
+  "parent_lineage": {
+    "closed_v5_commit": "a46cd28b4f969abf142f6a338636ceb1c4133699",
+    "closed_v5_protocol_id": "rars_v5_pq_aware_100k_pilot_v1",
+    "closed_v5_formal_decision": "STOP_PQ_AWARE_100K_PILOT",
+    "v3_implementation_commit": "05c2ae43b7d11783460822d10c590240dab1a399",
+    "parent_training_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+    "prior_negative_evidence_must_remain_disclosed": true
+  },
+  "data_policy": {
+    "dataset": "deterministic qrels-preserving 1M MS MARCO passage development corpus",
+    "evidence_status": "OUTCOME_INFORMED_DEVELOPMENT_ONLY_NOT_INDEPENDENT_CONFIRMATION",
+    "diagnostic_role": {
+      "role_id": "oracle_design",
+      "source_query_count": 2307,
+      "source_order_newline_qid_sha256": "952219a667ecfcd8cad5e18475531ceba73720054fae3344227dbdd008491fb6",
+      "numeric_sorted_newline_qid_sha256": "fd1d351a848ee9650fb898ef51ce16f64d1712d39179259d52dc94dcf93956b4",
+      "allowed_inputs": [
+        "query_manifest.json",
+        "query_vectors.float32.npy",
+        "positive qrels for exactly these query IDs"
+      ],
+      "allowed_use": "headroom, flip-support, and resource diagnostics only"
+    },
+    "shared_qrels_container": {
+      "historical_container_opened": true,
+      "only_design_query_values_used": true,
+      "non_design_metrics_computed": false,
+      "zero_or_missing_qrels_semantics": "not relevant unless an explicit positive judgment exists"
+    },
+    "forbidden_roles": {
+      "oracle_audit": "no arrays, labels, candidates, or metrics may be opened or computed by v6",
+      "future_method_holdout": "no arrays, labels, candidates, or metrics may be opened or computed by v6",
+      "outer_validation": "forbidden",
+      "clean_test": "forbidden",
+      "external_collections": "forbidden"
+    },
+    "negative_semantics": "a candidate absent from positive qrels is an unjudged mined challenger, never an explicit non-relevant document",
+    "official_msmarco_claim_allowed": false
+  },
+  "input_contract": {
+    "document_count": 1000000,
+    "embedding_dimension": 384,
+    "embedding_dtype": "float16 memmap",
+    "normalized_embeddings_required": true,
+    "doc_ids": {
+      "bytes": 8000000,
+      "sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96"
+    },
+    "frozen_index": {
+      "bytes": 41183924,
+      "sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8",
+      "type": "IndexIVFPQ",
+      "metric": "inner_product",
+      "nlist": 512,
+      "nprobe": 16,
+      "subquantizers": 32,
+      "bits_per_subquantizer": 8,
+      "ntotal": 1000000
+    }
+  },
+  "diagnostic_configuration": {
+    "analysis_k": 200,
+    "pool_k": 100,
+    "final_k": 10,
+    "negative_window": 16,
+    "capped_negatives_per_positive": 4,
+    "margin_temperature": 0.05,
+    "damage_scale": 8.0,
+    "flip_bonus": 2.0,
+    "query_batch_size": 16,
+    "corpus_load_batch_size": 8192,
+    "candidate_batch_size": 32768,
+    "device": "cuda",
+    "full_exact_definition": "FP32 inner-product search over every one of the 1M corpus vectors",
+    "ivf_exact_definition": "FP32 inner-product search restricted to the exact same nprobe=16 IVF lists selected for each query",
+    "base_pq_definition": "canonical frozen Faiss CPU IndexIVFPQ search with nprobe=16; the CPU coarse-quantizer probe IDs are reused by ivf_exact",
+    "routing_gap_definition": "full_exact_recall minus ivf_exact_recall",
+    "pq_specific_gap_definition": "ivf_exact_recall minus base_pq_recall",
+    "flip_triplet_definition": "an explicit-positive versus unjudged challenger around the base rank-100 boundary for which the FP32 same-probe margin is positive and the reconstructed-PQ margin is non-positive"
+  },
+  "signal_gate": {
+    "minimum_qrels_in_corpus_coverage": 1.0,
+    "minimum_pq_specific_recall_at_100_gap": 0.005,
+    "minimum_uncapped_flip_triplets": 500,
+    "minimum_distinct_flip_queries": 100,
+    "minimum_flip_weight_effective_sample_size": 250.0,
+    "maximum_single_query_flip_weight_share": 0.02,
+    "go_decision": "GO_TO_V6_LOSS_IMPLEMENTATION",
+    "stop_decision": "STOP_NO_DISTRIBUTED_PQ_HEADROOM",
+    "interpretation": "The triplet threshold is an engineering signal gate. It is not a statistical-significance test and cannot replace a later query-paired confidence interval."
+  },
+  "resource_contract": {
+    "minimum_local_free_bytes_before_run": 8000000000,
+    "record_stage_wall_seconds": true,
+    "record_host_max_rss_bytes": true,
+    "record_cuda_peak_allocated_bytes": true,
+    "record_cuda_peak_reserved_bytes": true,
+    "record_local_disk_free_bytes_before_and_after": true,
+    "out_of_memory_is_formal_go": false,
+    "resource_failure_decision": "STOP_RESOURCE_SMOKE_FAILED"
+  },
+  "required_outputs": [
+    "headroom_result.json",
+    "headroom_complete.json",
+    "full_exact_top_rows.int64.npy",
+    "ivf_exact_top_rows.int64.npy",
+    "base_pq_top_rows.int64.npy",
+    "full_exact_recall_at_10.float64.npy",
+    "full_exact_recall_at_100.float64.npy",
+    "ivf_exact_recall_at_10.float64.npy",
+    "ivf_exact_recall_at_100.float64.npy",
+    "base_pq_recall_at_10.float64.npy",
+    "base_pq_recall_at_100.float64.npy"
+  ],
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_package": "faiss-gpu-cu12==1.12.0",
+    "gpu_name_must_contain": "T4",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_required": true,
+    "cudnn_benchmark": false
+  },
+  "artifact_policy": {
+    "canonical_protocol_path_required": true,
+    "clean_exact_source_commit_required": true,
+    "canonical_source_blob_verification_required": true,
+    "nonempty_output_reuse_allowed": false,
+    "all_input_and_output_byte_hash_records_required": true,
+    "corpus_tensors_must_not_be_persisted": true
+  },
+  "prohibited_actions": [
+    "editing this protocol after observing the first v6 headroom metric",
+    "opening oracle_audit or future_method_holdout arrays, labels, candidates, or metrics",
+    "fitting or updating an adapter, encoder, IVF centroid, PQ codebook, PQ code, or RARS sidecar",
+    "calling an unjudged challenger explicitly non-relevant",
+    "using Base Recall below an arbitrary threshold as a substitute for PQ-specific headroom",
+    "treating 500 flip triplets as proof of significance",
+    "claiming official MS MARCO performance, external confirmation, deployment readiness, or SIGIR readiness"
+  ]
+}

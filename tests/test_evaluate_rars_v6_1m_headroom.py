@@ -1,0 +1,95 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+from scripts import evaluate_rars_v6_1m_headroom as MODULE
+
+
+def _write_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value) + "\n", encoding="utf-8")
+
+
+def test_positive_qrels_parser_and_padding_preserve_all_positives(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "qrels.json"
+    _write_json(
+        path,
+        {
+            "q1": {"10": 1, "11": 0},
+            "q2": [{"doc_id": 20, "relevance": 2}, 21],
+        },
+    )
+    qrels = MODULE.load_positive_qrels(path)
+    values, valid = MODULE.pad_qrels_for_queries(["q2", "q1"], qrels)
+    assert values.tolist() == [[20, 21], [10, -1]]
+    assert valid.tolist() == [[True, True], [True, False]]
+
+
+def test_flip_union_excludes_routing_misses_from_pq_supervision() -> None:
+    base = np.asarray(
+        [np.arange(100, 220), np.arange(300, 420)], dtype=np.int64
+    )
+    ivf_exact = np.asarray(
+        [np.arange(150, 270), np.arange(350, 470)], dtype=np.int64
+    )
+    positives = np.asarray([[105, 999], [360, -1]], dtype=np.int64)
+    valid = np.asarray([[1, 1], [1, 0]], dtype=bool)
+    probed = [np.arange(0, 500), np.arange(300, 800)]
+
+    rows, eligible, summary = MODULE.build_flip_candidate_union(
+        base, ivf_exact, positives, valid, probed
+    )
+
+    assert eligible.tolist() == [[True, False], [True, False]]
+    assert 999 not in rows[0]
+    assert 105 in rows[0]
+    assert 360 in rows[1]
+    assert summary["total_positive_qrels"] == 3
+    assert summary["routed_positive_qrels"] == 2
+    assert summary["routing_missed_positive_qrels"] == 1
+
+
+def test_gate_adapter_uses_uncapped_support_and_qrels_coverage() -> None:
+    decomposition = {
+        "pq_specific_r100_gap": 0.01,
+        "qrels_corpus_coverage": 1.0,
+    }
+    support = {
+        "uncapped": {
+            "triplets": 500,
+            "distinct_flip_queries": 100,
+            "effective_sample_size": 250.0,
+            "max_query_weight_share": 0.02,
+        }
+    }
+    decision = MODULE._gate_call(decomposition, support)
+    assert decision["decision"] == "GO_TO_V6_LOSS_IMPLEMENTATION"
+    assert decision["training_authorized"] is False
+
+
+def test_signal_gate_protocol_cannot_drift_from_executable() -> None:
+    protocol = json.loads(
+        (Path(__file__).resolve().parents[1]
+        / "protocols/rars_v6_1m_headroom_v1.json").read_text(encoding="utf-8")
+    )
+    MODULE.validate_signal_gate_contract(protocol)
+    protocol["signal_gate"]["minimum_uncapped_flip_triplets"] = 499
+    with pytest.raises(ValueError, match="disagree"):
+        MODULE.validate_signal_gate_contract(protocol)
+
+
+def test_output_contract_uses_stable_non_top200_filenames() -> None:
+    protocol = json.loads(
+        (Path(__file__).resolve().parents[1]
+        / "protocols/rars_v6_1m_headroom_v1.json").read_text(encoding="utf-8")
+    )
+    required = set(protocol["required_outputs"])
+    assert "headroom_result.json" in required
+    assert "ivf_exact_top_rows.int64.npy" in required
+    assert not any("top200" in name for name in required)
+
