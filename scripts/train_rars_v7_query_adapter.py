@@ -363,6 +363,12 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     )
     if not np.array_equal(probed_lists, registered_probes):
         raise ValueError("Original-query IVF routing differs from the verified v6 packet")
+    # Faiss IndexIVFPQ reconstruction by corpus row requires a DirectMap.  The
+    # serialized frozen index deliberately does not contain one.  Match the
+    # verified v6 evaluator by building this lookup only on the in-memory
+    # downcast IVF object; the index file is never written and its before/after
+    # byte hash remains guarded below.
+    ivf.make_direct_map()
     base_rows = np.load(
         args.v6_packet_root / "base_pq_top_rows.int64.npy", allow_pickle=False
     )
@@ -784,6 +790,7 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "training_pair_support": training_support,
         "selection_pair_support_diagnostic_only": selection_support,
         "index_unchanged": True,
+        "in_memory_direct_map_built": True,
         "document_reencoding_performed": False,
         "rars_used": False,
         "oracle_audit_opened": False,
@@ -829,6 +836,7 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "outputs": output_records,
         "index_before": index_record_before,
         "index_after": index_record_after,
+        "in_memory_direct_map_built": True,
         "document_reencoding_performed": False,
         "rars_used": False,
         "oracle_audit_opened": False,
