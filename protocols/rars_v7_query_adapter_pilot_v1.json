@@ -1,0 +1,215 @@
+{
+  "protocol_id": "rars_v7_query_adapter_pilot_v1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_FIRST_V7_TRAINING_RUN",
+  "method_revision_allowed": false,
+  "outcome_informed_revision_allowed": false,
+  "research_question": "Can a 48 KiB query-only low-rank adapter, trained against the immutable 1M M32x8 IVF-PQ reconstruction with separate Top-10 protection and Top-100 promotion losses, recover end-to-end known-positive Recall@100 without damaging Recall@10 or same-route FP32 retrieval?",
+  "scope": "single-seed, outcome-informed MS MARCO 1M development pilot; no document encoder training, document re-encoding, IVF/PQ mutation, RARS fitting, oracle_audit access, future-role access, external confirmation, deployment claim, novelty claim, or paper claim",
+  "positioning": {
+    "method_name": "frozen-index query-side PQ adaptation",
+    "primary_constraint": "the deployed document index is byte-identical before and after training",
+    "ranking_aware_quantization_training_is_claimed_novel": false,
+    "passing_is_method_success": false,
+    "passing_authorizes_only": "a separately frozen development audit of the exact selected seed-42 checkpoint",
+    "rars_combination_locked": true
+  },
+  "precondition": {
+    "v6_protocol_id": "rars_v6_1m_headroom_v1",
+    "v6_source_commit": "26a7717b964eed979b3bf7a3149d0d24e9bce3f1",
+    "required_v6_status": "RARS_V6_1M_HEADROOM_COMPLETE",
+    "required_v6_decision": "GO_TO_V6_LOSS_IMPLEMENTATION",
+    "v6_result_sha256_policy": "bind at runtime to the hash registered by the verified durable complete record; telemetry makes the result JSON intentionally run-specific",
+    "observed_pq_specific_recall_at_100_gap": 0.04663343447478674,
+    "observed_uncapped_flip_triplets": 4413,
+    "observed_distinct_flip_queries": 189,
+    "observed_flip_effective_sample_size": 4405.011029042101,
+    "precondition_must_be_verified_by": "scripts/verify_rars_v6_1m_headroom_packet.py"
+  },
+  "parent_lineage": {
+    "v3_implementation_commit": "05c2ae43b7d11783460822d10c590240dab1a399",
+    "parent_training_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+    "closed_v5_commit": "a46cd28b4f969abf142f6a338636ceb1c4133699",
+    "prior_v5_stop_decision_must_remain_disclosed": true
+  },
+  "data_policy": {
+    "dataset": "deterministic qrels-preserving 1M MS MARCO passage development corpus",
+    "evidence_status": "OUTCOME_INFORMED_DEVELOPMENT_ONLY_NOT_INDEPENDENT_CONFIRMATION",
+    "source_role": "oracle_design",
+    "source_query_count": 2307,
+    "split": {
+      "method": "label-blind SHA-256 ordering of string query IDs",
+      "salt": "rars-v7-query-adapter-pilot-v1",
+      "training_query_count": 1845,
+      "selection_query_count": 462,
+      "query_disjoint": true,
+      "selection_outcomes_must_not_enter_training": true
+    },
+    "forbidden_roles": {
+      "oracle_audit": "no arrays, labels, candidates, or metrics may be opened or computed",
+      "future_method_holdout": "must remain identity-only; no arrays, labels, candidates, or metrics may be opened or computed",
+      "outer_validation": "forbidden",
+      "clean_test": "forbidden",
+      "external_collections": "forbidden"
+    },
+    "judgment_semantics": {
+      "positive": "explicit positive qrel",
+      "challenger": "candidate absent from positive qrels; unjudged, not explicit non-relevant",
+      "official_msmarco_claim_allowed": false
+    }
+  },
+  "frozen_index_contract": {
+    "document_count": 1000000,
+    "embedding_dimension": 384,
+    "metric": "inner_product",
+    "nlist": 512,
+    "nprobe": 16,
+    "subquantizers": 32,
+    "bits_per_subquantizer": 8,
+    "index_bytes": 41183924,
+    "index_sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8",
+    "doc_ids_bytes": 8000000,
+    "doc_ids_sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96",
+    "document_embeddings_immutable": true,
+    "coarse_quantizer_immutable": true,
+    "inverted_lists_immutable": true,
+    "pq_codebooks_immutable": true,
+    "pq_codes_immutable": true,
+    "routing_query": "original normalized query embedding",
+    "scoring_query": "adapted normalized query embedding",
+    "deployment_score": "adapted query inner product with the fixed reconstructed residual-PQ document inside the original query's 16 probed lists"
+  },
+  "adapter": {
+    "side": "query_only",
+    "form": "q_prime = normalize(q + 0.1 * U(Vq))",
+    "rank": 16,
+    "parameter_count": 12288,
+    "serialized_float32_bytes": 49152,
+    "initialization": "V normal std 0.02; U exactly zero; epoch zero is the identity baseline",
+    "encoder_parameters_updated": false,
+    "document_parameters_updated": false
+  },
+  "pair_mining": {
+    "candidate_union": "frozen Base-PQ Top-200 union same-route FP32 Top-200 union routed positives",
+    "promotion_top_100": {
+      "definition": "explicit-positive versus unjudged boundary challenger with positive same-route FP32 margin and non-positive fixed-PQ margin",
+      "pool_k": 100,
+      "negative_window": 16,
+      "maximum_challengers_per_query_positive": 4
+    },
+    "protection_top_10": {
+      "definition": "an explicit positive in Base-PQ Top-10 versus an unjudged Base-PQ rank 11-26 challenger when the same-route FP32 teacher margin is positive",
+      "pool_k": 10,
+      "negative_window": 16,
+      "maximum_challengers_per_query_positive": 4
+    },
+    "penalty_interpretation": "the pairwise objective lowers an unjudged challenger's score relative to an explicit positive; it is not an absolute non-relevance label",
+    "query_balancing": "within each pair type, every represented query has equal total loss weight",
+    "minimum_training_promotion_queries": 120,
+    "minimum_selection_promotion_queries": 25
+  },
+  "objective": {
+    "formula": "L = L_promote100 + 2.0*L_protect10 + 0.5*L_margin_distill + 0.05*L_query_drift",
+    "promotion_weight": 1.0,
+    "protection_weight": 2.0,
+    "margin_distillation_weight": 0.5,
+    "query_drift_weight": 0.05,
+    "rank_margin": 0.02,
+    "loss_temperature": 0.05,
+    "teacher": "original query scored against FP32 documents inside the original IVF probes",
+    "student": "adapted query scored against immutable reconstructed-PQ documents inside the original IVF probes",
+    "recall_is_directly_differentiated": false
+  },
+  "training": {
+    "seed": 42,
+    "maximum_epochs": 12,
+    "minimum_epochs_before_early_stop": 3,
+    "early_stopping_patience": 3,
+    "pair_batch_size": 256,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "maximum_gradient_norm": 1.0,
+    "corpus_load_batch_size": 8192,
+    "candidate_batch_size": 32768,
+    "selection_query_batch_size": 16,
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260721,
+    "device": "cuda"
+  },
+  "checkpoint_selection": {
+    "identity_epoch_included": true,
+    "eligible_if": [
+      "hard-PQ Recall@10 is no more than 0.0025 below the selection baseline",
+      "adapted same-route FP32 Recall@100 is no more than 0.0025 below the original same-route FP32 teacher"
+    ],
+    "lexicographic_order": [
+      "maximum hard-PQ Recall@100",
+      "maximum hard-PQ Recall@10",
+      "maximum adapted same-route FP32 Recall@100",
+      "maximum mean query cosine to the original query",
+      "earliest epoch"
+    ],
+    "training_loss_may_select_checkpoint": false
+  },
+  "pilot_gate": {
+    "selected_epoch_must_be_nonzero": true,
+    "minimum_hard_pq_recall_at_100_gain": 0.005,
+    "paired_bootstrap_95_lower_must_exceed": 0.0,
+    "minimum_same_route_teacher_gap_recovery_fraction": 0.15,
+    "minimum_improved_selection_queries": 5,
+    "minimum_net_improved_selection_queries": 3,
+    "maximum_hard_pq_recall_at_10_drop": 0.0025,
+    "maximum_adapted_same_route_fp32_recall_at_100_drop": 0.0025,
+    "minimum_mean_query_cosine": 0.995,
+    "go_decision": "GO_TO_V7_DEVELOPMENT_AUDIT",
+    "stop_decision": "STOP_V7_QUERY_ADAPTER_PILOT",
+    "interpretation": "Passing is a development signal from one selected seed. It is not independent confirmation and does not authorize future-holdout access or RARS combination."
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_package": "faiss-gpu-cu12==1.12.0",
+    "gpu_name_must_contain": "T4",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_required": true,
+    "cudnn_benchmark": false
+  },
+  "required_outputs": [
+    "training_started.json",
+    "split_manifest.json",
+    "training_history.json",
+    "pilot_result.json",
+    "training_complete.json",
+    "query_adapter_down.float32.npy",
+    "query_adapter_up.float32.npy",
+    "selection_hard_pq_top_rows.int64.npy",
+    "selection_adapted_fp32_top_rows.int64.npy",
+    "selection_base_recall_at_10.float64.npy",
+    "selection_adapter_recall_at_10.float64.npy",
+    "selection_base_recall_at_100.float64.npy",
+    "selection_adapter_recall_at_100.float64.npy",
+    "selection_teacher_recall_at_100.float64.npy",
+    "selection_adapted_fp32_recall_at_100.float64.npy"
+  ],
+  "artifact_policy": {
+    "clean_exact_source_commit_required": true,
+    "canonical_source_blob_verification_required": true,
+    "verified_v6_packet_required": true,
+    "nonempty_output_reuse_allowed": false,
+    "all_output_byte_hash_records_required": true,
+    "corpus_tensors_must_not_be_persisted": true,
+    "frozen_index_hash_must_be_reverified_after_training": true
+  },
+  "prohibited_actions": [
+    "editing this protocol or implementation after observing the first v7 training or selection metric",
+    "opening oracle_audit, future_method_holdout, outer-validation, clean-test, or external-collection outcomes",
+    "updating the encoder, document embeddings, IVF centroids, inverted lists, PQ codebooks, or PQ codes",
+    "routing with the adapted query in this pilot",
+    "calling an unjudged challenger explicitly non-relevant",
+    "selecting a checkpoint by training loss or by an unguarded Recall@100 maximum",
+    "training or evaluating RARS in this stage",
+    "claiming deployment speed, official MS MARCO performance, external confirmation, novelty of generic ranking-aware QAT, paper readiness, or SIGIR readiness"
+  ]
+}

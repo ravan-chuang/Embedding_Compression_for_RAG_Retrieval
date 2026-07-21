@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v6_1m_headroom_v1",
+  "provenance": "user-provided stdout excerpt from the durable Colab run",
+  "canonical_packet_committed": false,
+  "packet_verification_status": "PENDING_DURABLE_PACKET_VERIFICATION",
+  "source_commit": "26a7717b964eed979b3bf7a3149d0d24e9bce3f1",
+  "status": "RARS_V6_1M_HEADROOM_COMPLETE",
+  "formal_decision": "GO_TO_V6_LOSS_IMPLEMENTATION",
+  "query_count": 2307,
+  "mean_recall": {
+    "base_pq": {
+      "recall_at_10": 0.6799234214708858,
+      "recall_at_100": 0.8473125270914608
+    },
+    "same_ivf_exact": {
+      "recall_at_10": 0.7933463372345037,
+      "recall_at_100": 0.8939459615662475
+    },
+    "full_exact": {
+      "recall_at_10": 0.8592327698309493,
+      "recall_at_100": 0.972980783123826
+    }
+  },
+  "recall_at_100_decomposition": {
+    "ivf_routing_gap": 0.07903482155757846,
+    "pq_specific_gap": 0.04663343447478674,
+    "total_gap": 0.1256682560323652,
+    "pq_fraction_of_total_gap": 0.3710836447254949
+  },
+  "flip_support": {
+    "uncapped_triplets": 4413,
+    "uncapped_distinct_queries": 189,
+    "uncapped_effective_sample_size": 4405.011029042101,
+    "uncapped_max_query_weight_share": 0.01394938271548595,
+    "capped_triplets": 757,
+    "capped_distinct_queries": 189
+  },
+  "signal_gate": {
+    "all_six_gates_passed": true,
+    "failed_gates": [],
+    "training_authorized_under_v6": false
+  },
+  "required_next_check": "Run scripts/verify_rars_v6_1m_headroom_packet.py against the original Drive directory before v7 training."
+}
