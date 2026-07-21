@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "status": "FROZEN_BEFORE_FIRST_V8_DEVELOPMENT_RUN",
+  "research_question": "Can a deterministic, query-balanced, cutoff-aware rank-16 int8 residual sidecar recover candidate-level ranking loss from a byte-identical 1M IVF-PQ index, and does its retrieval-aware basis improve over an ordinary storage-matched residual-PCA sidecar?",
+  "scope": "outcome-informed MS MARCO 1M method development on oracle_design only; no future holdout, independent confirmation, official MS MARCO claim, full-corpus QAT, query-adapter rescue, index mutation, or paper-success claim",
+  "paper_positioning": {
+    "primary_problem": "lightweight post-hoc correction of quantization-induced retrieval degradation in an already deployed frozen IVF-PQ index",
+    "primary_method": "one symmetric orthonormal residual subspace plus rank-16 int8 per-document coefficients",
+    "not_claimed": [
+      "a new product quantizer",
+      "global storage optimality when rebuilding is allowed",
+      "recovery of documents outside the probed candidate pool",
+      "explicit non-relevance for documents absent from positive qrels",
+      "general superiority over residual PCA before a locked comparison passes"
+    ],
+    "claim_tiers": {
+      "algorithm": "RARS improves both the frozen M32 base and a storage-matched PCA sidecar under a locked comparison",
+      "generic_sidecar": "a compact residual sidecar improves the frozen M32 base, while RARS-over-PCA remains unestablished",
+      "stop": "the revised sidecar does not meet the preregistered development evidence floor"
+    }
+  },
+  "parent_lineage": {
+    "v3_protocol_id": "rars_v3_oracle_first_feasibility_v1",
+    "v3_implementation_commit": "05c2ae43b7d11783460822d10c590240dab1a399",
+    "v6_protocol_id": "rars_v6_1m_headroom_v1",
+    "v6_source_commit": "26a7717b964eed979b3bf7a3149d0d24e9bce3f1",
+    "v6_required_status": "RARS_V6_1M_HEADROOM_COMPLETE",
+    "v6_required_decision": "GO_TO_V6_LOSS_IMPLEMENTATION",
+    "v7_protocol_id": "rars_v7_query_adapter_pilot_v1",
+    "v7_observed_decision": "STOP_V7_QUERY_ADAPTER_PILOT",
+    "prior_negative_results_must_remain_disclosed": [
+      "TREC DL 2019 RARS-versus-PCA primary hypothesis unsupported",
+      "BEIR NQ RARS-versus-PCA confirmation unsupported",
+      "RARS-v2.2 decision UNSTABLE_NO_QAT",
+      "RARS-v5 decision STOP_PQ_AWARE_100K_PILOT",
+      "RARS-v7 decision STOP_V7_QUERY_ADAPTER_PILOT"
+    ]
+  },
+  "data_policy": {
+    "dataset": "deterministic qrels-preserving 1M MS MARCO passage development corpus",
+    "development_role": {
+      "role_id": "oracle_design",
+      "query_count": 2307,
+      "evidence_status": "OUTCOME_INFORMED_DEVELOPMENT_ONLY",
+      "source_order_newline_qid_sha256": "952219a667ecfcd8cad5e18475531ceba73720054fae3344227dbdd008491fb6",
+      "numeric_sorted_newline_qid_sha256": "fd1d351a848ee9650fb898ef51ce16f64d1712d39179259d52dc94dcf93956b4"
+    },
+    "cross_validation": {
+      "fold_count": 5,
+      "fold_rule": "inherit exact rars_v3_fold_v1 SHA-256 fold assignment",
+      "fold_counts": [463, 468, 470, 436, 470],
+      "out_of_fold_metrics_only": true,
+      "training_labels_must_not_cross_fold": true,
+      "qrels_free_residuals_may_initialize_every_fold": true,
+      "hyperparameter_selection_from_oof_outcomes": false
+    },
+    "positive_semantics": "explicit positive qrel",
+    "challenger_semantics": "candidate absent from positive qrels; unjudged, not an explicit non-relevant",
+    "forbidden_roles": {
+      "oracle_audit": "historically opened development audit; forbidden in v8 fitting, selection, and decision",
+      "future_method_holdout": "must remain identity-only; no candidates, labels, qrels rows, or metrics may be materialized or opened",
+      "outer_validation": "burned and forbidden",
+      "clean_test": "burned and forbidden",
+      "external_collections": "forbidden during v8 development"
+    }
+  },
+  "frozen_index_contract": {
+    "document_count": 1000000,
+    "embedding_dimension": 384,
+    "metric": "inner_product",
+    "nlist": 512,
+    "nprobe": 16,
+    "subquantizers": 32,
+    "bits_per_subquantizer": 8,
+    "index_bytes": 41183924,
+    "index_sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8",
+    "doc_ids_bytes": 8000000,
+    "doc_ids_sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96",
+    "immutable_components": [
+      "document embeddings",
+      "coarse quantizer",
+      "inverted lists",
+      "PQ codebooks",
+      "PQ codes"
+    ],
+    "candidate_pool": 100,
+    "final_cutoff": 10,
+    "correction_depth": 40,
+    "routing_query": "original normalized query embedding"
+  },
+  "method": {
+    "name": "cutoff-aware query-balanced RARS sidecar",
+    "score": "s_pq(q,d) + alpha * dot(q B, dequant_int8(code_B(r_d)))",
+    "residual": "r_d = d_fp32 - reconstruct_frozen_ivfpq(d)",
+    "rank": 16,
+    "coefficient_dtype": "int8",
+    "representation_payload_bytes_per_document": 16,
+    "alpha": 0.75,
+    "top_b": 40,
+    "basis_constraints": {
+      "single_symmetric_basis": true,
+      "orthonormal_after_every_update": true,
+      "initialization": "deterministic uncentred PCA on qrels-free development candidate residuals",
+      "column_orientation": "largest-absolute element in each column is non-negative",
+      "query_or_document_free_scale_growth": true
+    },
+    "int8_quantization": {
+      "scale": "one max-absolute FP32 scale per sidecar dimension divided by 127",
+      "rounding": "numpy.rint",
+      "clipping": "[-127, 127]",
+      "accumulation": "float32",
+      "selection_and_reported_metrics_must_use_int8_codes": true
+    }
+  },
+  "pair_mining": {
+    "static_base_ranking": true,
+    "promotion": "known positive outside Base-PQ Top-10 but within Top-40 versus an unjudged Base-PQ Top-10 challenger, admitted only when same-route FP32 ranks the positive higher",
+    "protection": "known positive in Base-PQ Top-10 versus an unjudged Base-PQ rank 11-26 challenger, admitted only when same-route FP32 ranks the positive higher",
+    "protection_window": 16,
+    "maximum_challengers_per_positive": 4,
+    "margin_temperature": 0.02,
+    "damage_scale": 4.0,
+    "promotion_total_loss_mass": 0.5,
+    "protection_total_loss_mass": 0.5,
+    "query_balancing": "each represented query receives equal total mass within a role; role masses are fixed and renormalized only if a role is absent",
+    "target": "teacher_margin - base_pq_margin = q dot (r_positive - r_challenger)"
+  },
+  "basis_optimization": {
+    "objective": "query-balanced smooth-L1 error between predicted and exact pairwise residual margins plus PCA subspace-anchor penalty",
+    "steps": 160,
+    "optimizer": "deterministic full-batch projected Adam",
+    "learning_rate": 0.02,
+    "huber_delta": 0.02,
+    "pca_anchor_weight": 0.1,
+    "gradient_norm_clip": 5.0,
+    "retraction": "reduced QR after every update",
+    "random_seed_used": false,
+    "early_stopping_used": false,
+    "training_loss_selects_configuration": false
+  },
+  "comparators": {
+    "frozen_base": "the exact M32 nprobe16 IVF-PQ scores and candidates",
+    "storage_matched_pca": "same rank16 int8 payload, alpha 0.75, Top-40 correction, scale rule, candidate pool, and scorer; only the basis objective differs",
+    "same_candidate_exact": "FP32 exact scoring of the same frozen candidate pool; non-deployable oracle",
+    "zero_document_byte_query_adapter": "closed V7 result, diagnostic only and not rerun",
+    "increased_nprobe": "routing-cost baseline reserved for locked evaluation",
+    "m48_rebuild": "same 48 representation bytes per document but requires a rebuilt index; limitation baseline reserved for locked evaluation"
+  },
+  "development_metrics": {
+    "primary": "known-positive Recall@10",
+    "secondary": [
+      "MRR@10",
+      "nDCG@10",
+      "candidate-pool gap recovery",
+      "improved/harmed/unchanged query counts",
+      "paired-query bootstrap intervals",
+      "promotion/protection support",
+      "int8 saturation fraction"
+    ],
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260722,
+    "multiple_comparison_policy": "RARS-vs-Base is primary; RARS-vs-PCA is the claim-tier comparison; all other metrics are secondary"
+  },
+  "development_gate": {
+    "minimum_rars_recall_at_10_gain_over_base": 0.01,
+    "minimum_rars_recall_at_10_gain_over_pca": 0.002,
+    "minimum_generic_sidecar_gain_over_base": 0.01,
+    "bootstrap_lower_must_exceed": 0.0,
+    "minimum_candidate_gap_recovery_fraction": 0.15,
+    "minimum_improved_queries": 30,
+    "minimum_net_improved_queries": 10,
+    "minimum_promotion_queries": 120,
+    "minimum_protection_queries": 500,
+    "algorithm_go_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+    "generic_sidecar_go_decision": "GO_TO_GENERIC_SIDECAR_CONFIRMATION_PROTOCOL",
+    "stop_decision": "STOP_V8_CUTOFF_SIDECAR",
+    "future_access_authorized_by_development_result": false
+  },
+  "efficiency_contract_for_later_confirmation": {
+    "representation_bytes_per_document_maximum": 16.1,
+    "complete_artifact_bytes_must_include": [
+      "basis",
+      "scales",
+      "codes",
+      "lookup or external document IDs when required"
+    ],
+    "latency_metrics": [
+      "correction-only P50/P95/P99",
+      "end-to-end P50/P95/P99",
+      "QPS",
+      "batch sizes 1, 32, and 64",
+      "peak host and device memory"
+    ],
+    "hardware_specific_claim_required": true,
+    "python_prototype_must_not_be_called_a_fused_production_kernel": true
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_package": "faiss-gpu-cu12==1.12.0",
+    "gpu_name_must_contain": "T4",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_required": true,
+    "cudnn_benchmark": false
+  },
+  "required_development_outputs": [
+    "development_started.json",
+    "pair_support.json",
+    "pca_basis_rank16.float32.npy",
+    "rars_basis_rank16.float32.npy",
+    "pca_scales_rank16.float32.npy",
+    "rars_scales_rank16.float32.npy",
+    "oof_base_recall_at_10.float64.npy",
+    "oof_pca_recall_at_10.float64.npy",
+    "oof_rars_recall_at_10.float64.npy",
+    "oof_teacher_recall_at_10.float64.npy",
+    "fold_results.json",
+    "development_result.json",
+    "method_freeze.json",
+    "development_complete.json"
+  ],
+  "prohibited_actions": [
+    "opening or materializing future_method_holdout candidates, labels, qrels rows, or metrics",
+    "using oracle_audit, outer-validation, clean-test, TREC, NQ, or FiQA outcomes to fit or select v8",
+    "calling unjudged challengers explicit non-relevant documents",
+    "changing alpha, rank, Top-B, loss weights, thresholds, or comparator settings after the first v8 OOF metric",
+    "updating the encoder, original document embeddings, IVF centroids, lists, PQ codebooks, or PQ codes",
+    "claiming RARS superiority when only the generic-sidecar tier passes",
+    "claiming independent confirmation from the 803-query future method role",
+    "hiding the stronger same-storage M48 rebuild baseline",
+    "reporting FP32 sidecar development metrics as deployable int8 results"
+  ]
+}
