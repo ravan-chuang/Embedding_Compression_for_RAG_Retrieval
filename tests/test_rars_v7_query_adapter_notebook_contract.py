@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK_PATH = ROOT / "notebooks/MSMARCO_RARS_v7_Query_Adapter_Pilot.ipynb"
-IMPLEMENTATION_COMMIT = "303c31b7ac3264a0af386d04d1f00b87385f056e"
+IMPLEMENTATION_COMMIT = "b9c930508d1e6f95a191983dc2a8e2027bc33c36"
 
 
 def _notebook() -> dict:
@@ -69,4 +69,3 @@ def test_v7_notebook_guards_durable_output_and_frozen_index() -> None:
     assert "complete['rars_used'] is False" in code
     assert "complete['oracle_audit_opened'] is False" in code
     assert "complete['future_method_holdout_opened'] is False" in code
-
