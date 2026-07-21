@@ -106,6 +106,8 @@ The following remain forbidden:
    [`scripts/train_rars_v8_cutoff_sidecar.py`](../scripts/train_rars_v8_cutoff_sidecar.py)
    verifies the durable V6 packet, runs five-fold OOF comparison, and emits a
    hash-bound `method_freeze.json`.  It never imports or opens the Faiss index.
+   The runnable entry point is the
+   [commit-pinned Colab notebook](../notebooks/MSMARCO_RARS_v8_Cutoff_Sidecar_Development.ipynb).
 2. **Qrels-free artifact build:** only after a GO decision,
    [`scripts/build_rars_v8_frozen_sidecars.py`](../scripts/build_rars_v8_frozen_sidecars.py)
    makes a direct map in memory, performs two streamed passes over the 1M
