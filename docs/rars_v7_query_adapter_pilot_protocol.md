@@ -46,10 +46,13 @@ producing an exact, query-disjoint split:
 | Training | 1,845 | pair mining and gradient updates |
 | Selection | 462 | epoch metrics, guardrails, checkpoint selection, final pilot gate |
 
-`oracle_audit` and the 803-query `future_method_holdout` are not opened. The
-future role remains identity-only. Because the source design role has already
-been inspected in prior research, even a V7 GO remains development evidence,
-not independent confirmation.
+The exact pinned v3 builder rematerializes qrels-free `oracle_design` and
+`oracle_audit` candidate artifacts together as a lineage side effect. Only the
+design identity and query vectors are passed to V7; the audit artifact is not
+opened by the trainer and no audit labels or metrics are materialized. The
+803-query `future_method_holdout` remains identity-only. Because the source
+design role has already been inspected in prior research, even a V7 GO remains
+development evidence, not independent confirmation.
 
 ## Top-k-aware objective
 

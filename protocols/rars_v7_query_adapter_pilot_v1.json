@@ -46,7 +46,7 @@
       "selection_outcomes_must_not_enter_training": true
     },
     "forbidden_roles": {
-      "oracle_audit": "no arrays, labels, candidates, or metrics may be opened or computed",
+      "oracle_audit": "the exact pinned v3 parent builder may rematerialize its qrels-free candidate artifact as a lineage side effect, but the v7 trainer may not open it and no oracle_audit labels or metrics may be materialized, opened, or computed",
       "future_method_holdout": "must remain identity-only; no arrays, labels, candidates, or metrics may be opened or computed",
       "outer_validation": "forbidden",
       "clean_test": "forbidden",
@@ -56,7 +56,8 @@
       "positive": "explicit positive qrel",
       "challenger": "candidate absent from positive qrels; unjudged, not explicit non-relevant",
       "official_msmarco_claim_allowed": false
-    }
+    },
+    "parent_rematerialization_caveat": "the pinned v3 builder deterministically writes qrels-free oracle_design and oracle_audit candidate artifacts together; only oracle_design identity/vectors are passed to v7, oracle_audit remains unlabeled and unopened by the v7 trainer, and future_method_holdout remains identity-only"
   },
   "frozen_index_contract": {
     "document_count": 1000000,

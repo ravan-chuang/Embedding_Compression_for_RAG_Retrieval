@@ -32,7 +32,8 @@ def test_v7_has_label_blind_disjoint_design_split_and_forbids_other_roles() -> N
     assert split["training_query_count"] + split["selection_query_count"] == 2307
     assert split["query_disjoint"] is True
     assert "SHA-256" in split["method"]
-    assert "no arrays" in policy["forbidden_roles"]["oracle_audit"]
+    assert "v7 trainer may not open" in policy["forbidden_roles"]["oracle_audit"]
+    assert "qrels-free" in policy["parent_rematerialization_caveat"]
     assert "identity-only" in policy["forbidden_roles"]["future_method_holdout"]
 
 
@@ -58,4 +59,3 @@ def test_v7_gate_is_constrained_and_does_not_unlock_future_or_rars() -> None:
     assert "future_method_holdout" in prohibited
     assert "RARS" in prohibited
     assert "SIGIR readiness" in prohibited
-
