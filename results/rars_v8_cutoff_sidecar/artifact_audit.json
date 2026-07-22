@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+  "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+  "audit_status": "FULL_EXPORTED_ARTIFACT_AUDIT_PASS",
+  "audit_date": "2026-07-22",
+  "export_archive": {
+    "filename": "rars-v8-cutoff-sidecar-c9d95f15d55e.zip",
+    "bytes": 26703062,
+    "sha256": "eecb3ab0572c6ac35c97830a79dc19703b41f9ce3ee8070c01c3645fba491aa8",
+    "zip_entry_count": 31,
+    "zip_file_count": 26,
+    "crc_test": "PASS",
+    "unsafe_paths_or_symlinks": 0
+  },
+  "artifacts": {
+    "sidecars/pca/codes.int8.npy": {
+      "bytes": 16000128,
+      "sha256": "5804d31e10df384d4dfd85b1bdaa18834faceae825faab88dcb9f5169f8a88cf"
+    },
+    "sidecars/rars/codes.int8.npy": {
+      "bytes": 16000128,
+      "sha256": "f7ae81b07c8423f0527d68d535ba89be56eb9f86bcb630306e3d9699e57948b4"
+    }
+  },
+  "full_packet_verifier_output": {
+    "status": "RARS_V8_CUTOFF_SIDECAR_FULL_PACKET_VERIFIED",
+    "protocol_id": "rars_v8_cutoff_sidecar_v1",
+    "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+    "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+    "query_count": 2307,
+    "rars_recall_at_10": 0.7028247363097818,
+    "base_recall_at_10": 0.6799234214708858,
+    "pca_recall_at_10": 0.6926383470596735,
+    "rars_gain_over_base": 0.02290131483889611,
+    "rars_gain_over_pca": 0.010186389250108365,
+    "candidate_gap_recovery_fraction": 0.24403387220939085,
+    "verified_development_output_count": 12,
+    "sidecars": {
+      "pca": {
+        "code_shape": [1000000, 16],
+        "code_minimum": -127,
+        "code_maximum": 127,
+        "boundary_code_count": 16,
+        "representation_bytes": 16025024,
+        "representation_bytes_per_document": 16.025024
+      },
+      "rars": {
+        "code_shape": [1000000, 16],
+        "code_minimum": -127,
+        "code_maximum": 127,
+        "boundary_code_count": 17,
+        "representation_bytes": 16025024,
+        "representation_bytes_per_document": 16.025024
+      }
+    },
+    "diagnostics": {
+      "all_fold_recorded_losses_decreased": false,
+      "final_recorded_loss_decreased": false,
+      "recorded_loss_warning": "The frozen optimizer trajectory raises the recorded surrogate loss; OOF retrieval gains remain recomputable, but loss convergence must not be claimed."
+    },
+    "evidence_boundary": "Outcome-informed five-fold OOF development on oracle_design; not an independent, prospective, or official MS MARCO evaluation."
+  }
+}

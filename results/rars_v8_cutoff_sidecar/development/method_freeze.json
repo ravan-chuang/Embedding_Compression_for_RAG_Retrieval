@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "status": "RARS_V8_METHOD_FROZEN_AFTER_DEVELOPMENT",
+  "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+  "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+  "method": {
+    "name": "cutoff-aware query-balanced RARS sidecar",
+    "score": "s_pq(q,d) + alpha * dot(q B, dequant_int8(code_B(r_d)))",
+    "residual": "r_d = d_fp32 - reconstruct_frozen_ivfpq(d)",
+    "rank": 16,
+    "coefficient_dtype": "int8",
+    "representation_payload_bytes_per_document": 16,
+    "alpha": 0.75,
+    "top_b": 40,
+    "basis_constraints": {
+      "single_symmetric_basis": true,
+      "orthonormal_after_every_update": true,
+      "initialization": "deterministic uncentred PCA on qrels-free development candidate residuals",
+      "column_orientation": "largest-absolute element in each column is non-negative",
+      "query_or_document_free_scale_growth": true
+    },
+    "int8_quantization": {
+      "scale": "one max-absolute FP32 scale per sidecar dimension divided by 127",
+      "rounding": "numpy.rint",
+      "clipping": "[-127, 127]",
+      "accumulation": "float32",
+      "selection_and_reported_metrics_must_use_int8_codes": true
+    }
+  },
+  "pair_mining": {
+    "static_base_ranking": true,
+    "promotion": "known positive outside Base-PQ Top-10 but within Top-40 versus an unjudged Base-PQ Top-10 challenger, admitted only when same-route FP32 ranks the positive higher",
+    "protection": "known positive in Base-PQ Top-10 versus an unjudged Base-PQ rank 11-26 challenger, admitted only when same-route FP32 ranks the positive higher",
+    "protection_window": 16,
+    "maximum_challengers_per_positive": 4,
+    "margin_temperature": 0.02,
+    "damage_scale": 4.0,
+    "promotion_total_loss_mass": 0.5,
+    "protection_total_loss_mass": 0.5,
+    "query_balancing": "each represented query receives equal total mass within a role; role masses are fixed and renormalized only if a role is absent",
+    "target": "teacher_margin - base_pq_margin = q dot (r_positive - r_challenger)"
+  },
+  "basis_optimization": {
+    "objective": "query-balanced smooth-L1 error between predicted and exact pairwise residual margins plus PCA subspace-anchor penalty",
+    "steps": 160,
+    "optimizer": "deterministic full-batch projected Adam",
+    "learning_rate": 0.02,
+    "huber_delta": 0.02,
+    "pca_anchor_weight": 0.1,
+    "gradient_norm_clip": 5.0,
+    "retraction": "reduced QR after every update",
+    "random_seed_used": false,
+    "early_stopping_used": false,
+    "training_loss_selects_configuration": false
+  },
+  "comparators": {
+    "frozen_base": "the exact M32 nprobe16 IVF-PQ scores and candidates",
+    "storage_matched_pca": "same rank16 int8 payload, alpha 0.75, Top-40 correction, scale rule, candidate pool, and scorer; only the basis objective differs",
+    "same_candidate_exact": "FP32 exact scoring of the same frozen candidate pool; non-deployable oracle",
+    "zero_document_byte_query_adapter": "closed V7 result, diagnostic only and not rerun",
+    "increased_nprobe": "routing-cost baseline reserved for locked evaluation",
+    "m48_rebuild": "same 48 representation bytes per document but requires a rebuilt index; limitation baseline reserved for locked evaluation"
+  },
+  "pca_basis": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/pca_basis_rank16.float32.npy",
+    "bytes": 24704,
+    "sha256": "da3a96814b04690ed0f635cdd0c7ec4b3b99937768c610a7faf2b2034de9cda6"
+  },
+  "rars_basis": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/rars_basis_rank16.float32.npy",
+    "bytes": 24704,
+    "sha256": "0d3e0cdf94ee5e68e60c63a1736809129d60d9fd9d8e09845b727f8527721bd9"
+  },
+  "development_result": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/development_result.json",
+    "bytes": 3744,
+    "sha256": "8c3e8c40d5ae1b2cd0a514ed3970a3f7512c2cb536d24b2523d5bf61d5bd3893"
+  },
+  "future_access_authorized": false,
+  "next_required_action": "freeze a separate full-corpus artifact builder and prospective evaluation protocol; do not open future labels from this file"
+}

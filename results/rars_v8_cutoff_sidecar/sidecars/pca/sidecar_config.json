@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "artifact_type": "row_aligned_frozen_ivfpq_residual_sidecar",
+  "method": "pca",
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "dimension": 384,
+  "rank": 16,
+  "coefficient_dtype": "int8",
+  "alpha": 0.75,
+  "top_b": 40,
+  "row_alignment": "code row equals the zero-based corpus row returned by the frozen index; external document IDs are not duplicated in the representation payload",
+  "basis_file": "basis.float32.npy",
+  "scales_file": "scales.float32.npy",
+  "codes_file": "codes.int8.npy",
+  "score_formula": "s_pq + alpha * dot(q @ B, int8_code[row] * scales)"
+}

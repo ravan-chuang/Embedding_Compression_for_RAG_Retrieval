@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "status": "RARS_V8_DEVELOPMENT_STARTED",
+  "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+  "environment": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_version": "1.12.0",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "cublas_workspace_config": ":4096:8",
+    "cudnn_benchmark": false
+  },
+  "source_blobs": {
+    "protocol": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v8/protocols/rars_v8_cutoff_sidecar_v1.json",
+      "bytes": 11270,
+      "sha256": "ee0e8f7a08c6bd83044e836001a52d464e5c61dd32450842e2e5b7b70da61bd8"
+    },
+    "trainer": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v8/scripts/train_rars_v8_cutoff_sidecar.py",
+      "bytes": 25763,
+      "sha256": "0aba29c636981f740c4bdda89fa0626dd7df17179326b9d0ef36e67226bef946"
+    },
+    "core": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v8/scripts/rars_v8_cutoff_sidecar_core.py",
+      "bytes": 30652,
+      "sha256": "990941bd045461c62241dcc44f5ac450be53ed9c584e88ff6c79e5a9fe845118"
+    }
+  },
+  "inputs": {
+    "candidate_manifest": {
+      "path": "/content/rars-v3-05c2ae43b7d1/bundles/oracle_design/v3_candidate_manifest.json",
+      "bytes": 4645,
+      "sha256": "16475038ca8aedf433408a5effeb35321c71ae38aa0f37ed798a4e8ce27512e2"
+    },
+    "label_manifest": {
+      "path": "/content/rars-v3-05c2ae43b7d1/bundles/oracle_design/v3_role_labels_manifest.json",
+      "bytes": 2486,
+      "sha256": "d78aa39c6f086bfe2cec159affdd2fb27c14c31640bd619fd59407936a5d8d98"
+    },
+    "query_manifest": {
+      "path": "/content/rars-v3-05c2ae43b7d1/bundles/oracle_design/query_manifest.json",
+      "bytes": 94394,
+      "sha256": "e98eda29f119fb29f134cdbafccad7fde12772469f14c91fd055c1e3e9863904"
+    }
+  },
+  "v6_verification": {
+    "status": "RARS_V6_1M_HEADROOM_PACKET_VERIFIED",
+    "protocol_id": "rars_v6_1m_headroom_v1",
+    "source_commit": "26a7717b964eed979b3bf7a3149d0d24e9bce3f1",
+    "formal_decision": "GO_TO_V6_LOSS_IMPLEMENTATION",
+    "result": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v6-1m-headroom/26a7717b964e/headroom_result.json",
+      "bytes": 52686,
+      "sha256": "a31de0ce1b04a6f83495e39a8fd648a3e4c71ed36549743b48757ad92fa14366"
+    },
+    "query_count": 2307,
+    "base_pq_recall_at_10": 0.6799234214708858,
+    "base_pq_recall_at_100": 0.8473125270914608,
+    "same_ivf_exact_recall_at_100": 0.8939459615662475,
+    "pq_specific_recall_at_100_gap": 0.04663343447478674,
+    "uncapped_flip_triplets": 4413,
+    "distinct_flip_queries": 189,
+    "flip_effective_sample_size": 4405.011029042101,
+    "max_query_weight_share": 0.01394938271548595,
+    "verified_output_count": 13
+  },
+  "opened_roles": [
+    "oracle_design"
+  ],
+  "future_method_holdout_opened": false,
+  "oracle_audit_opened": false
+}

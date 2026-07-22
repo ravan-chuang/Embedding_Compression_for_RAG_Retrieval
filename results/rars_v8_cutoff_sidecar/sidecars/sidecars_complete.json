@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "status": "RARS_V8_FULL_CORPUS_SIDECARS_COMPLETE",
+  "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+  "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+  "result": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/sidecars_result.json",
+    "bytes": 6630,
+    "sha256": "d6fc237e07c611c8b2c28fdc37149630c8dae185e985627e824746c06f550c90"
+  },
+  "sidecar_manifests": {
+    "pca": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/pca/manifest.json",
+      "bytes": 1552,
+      "sha256": "c721400cb82c5c79e0f51a28ce91caaefeb0d69a5e716041b1c23017bd7655d3"
+    },
+    "rars": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/manifest.json",
+      "bytes": 1557,
+      "sha256": "5644b14d38fd7a001e74e11114d2acfd273e414316aeed331c9a56bc86be077a"
+    }
+  },
+  "index_before": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_1m_pq_residual_gate3/frozen_ivfpq_m32_nlist512.index",
+    "bytes": 41183924,
+    "sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8"
+  },
+  "index_after": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_1m_pq_residual_gate3/frozen_ivfpq_m32_nlist512.index",
+    "bytes": 41183924,
+    "sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8"
+  },
+  "qrels_opened": false,
+  "future_method_holdout_opened": false
+}

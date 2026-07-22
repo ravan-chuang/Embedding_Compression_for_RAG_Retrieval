@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "status": "RARS_V8_FULL_CORPUS_SIDECARS_COMPLETE",
+  "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+  "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+  "development": {
+    "status": "RARS_V8_DEVELOPMENT_PACKET_VERIFIED",
+    "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+    "complete": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/development_complete.json",
+      "bytes": 4029,
+      "sha256": "335fe0c373a3a06784839ec3d3d4897a0984de84d732a18dd170a42fc908db09"
+    },
+    "method_freeze": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/method_freeze.json",
+      "bytes": 4260,
+      "sha256": "7fc781059ce05bdac4ca203c87b00e73ed237de862380fdd6d0f54b727600fb8"
+    },
+    "result": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/development_result.json",
+      "bytes": 3744,
+      "sha256": "8c3e8c40d5ae1b2cd0a514ed3970a3f7512c2cb536d24b2523d5bf61d5bd3893"
+    }
+  },
+  "index_contract": {
+    "dimension": 384,
+    "nlist": 512,
+    "serialized_nprobe": 16,
+    "subquantizers": 32,
+    "nbits": 8,
+    "ntotal": 1000000,
+    "metric_type": 0,
+    "metric": "inner_product",
+    "runtime_nprobe": 16
+  },
+  "index_before": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_1m_pq_residual_gate3/frozen_ivfpq_m32_nlist512.index",
+    "bytes": 41183924,
+    "sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8"
+  },
+  "index_after": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_1m_pq_residual_gate3/frozen_ivfpq_m32_nlist512.index",
+    "bytes": 41183924,
+    "sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8"
+  },
+  "index_unchanged": true,
+  "inputs": {
+    "embeddings": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_basis_gate0_cache/embeddings.fp16.memmap",
+      "bytes": 768000000,
+      "sha256": "358e386c0e63b20cefc60ebd160754645d59fbb0f4ac16aa2e03843d59958ba0"
+    },
+    "doc_ids": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_basis_gate0_cache/doc_ids.int64.memmap",
+      "bytes": 8000000,
+      "sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96"
+    }
+  },
+  "sidecars": {
+    "pca": {
+      "schema_version": 1,
+      "protocol_id": "rars_v8_cutoff_sidecar_v1",
+      "method": "pca",
+      "files": {
+        "basis.float32.npy": {
+          "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/pca/basis.float32.npy",
+          "bytes": 24704,
+          "sha256": "da3a96814b04690ed0f635cdd0c7ec4b3b99937768c610a7faf2b2034de9cda6"
+        },
+        "scales.float32.npy": {
+          "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/pca/scales.float32.npy",
+          "bytes": 192,
+          "sha256": "f1997729ff38cbfa4d7b8e0da02e3596d8d29dc6b76ca01a64c2d2d44cb9a5f8"
+        },
+        "codes.int8.npy": {
+          "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/pca/codes.int8.npy",
+          "bytes": 16000128,
+          "sha256": "5804d31e10df384d4dfd85b1bdaa18834faceae825faab88dcb9f5169f8a88cf"
+        },
+        "sidecar_config.json": {
+          "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/pca/sidecar_config.json",
+          "bytes": 600,
+          "sha256": "435593cdfa5ac022aa6119cd926259aa31f8f1ee5e8e2edb4e3509ed699d8349"
+        }
+      },
+      "quantization": {
+        "coefficient_count": 16000000,
+        "saturated_coefficients": 0,
+        "saturation_fraction": 0.0
+      },
+      "storage": {
+        "code_payload_bytes_per_document": 16,
+        "representation_bytes": 16025024,
+        "representation_bytes_per_document": 16.025024,
+        "external_document_id_bytes_duplicated": 0,
+        "configuration_bytes_excluded_from_representation": 600
+      },
+      "manifest": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/pca/manifest.json",
+        "bytes": 1552,
+        "sha256": "c721400cb82c5c79e0f51a28ce91caaefeb0d69a5e716041b1c23017bd7655d3"
+      }
+    },
+    "rars": {
+      "schema_version": 1,
+      "protocol_id": "rars_v8_cutoff_sidecar_v1",
+      "method": "rars",
+      "files": {
+        "basis.float32.npy": {
+          "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/basis.float32.npy",
+          "bytes": 24704,
+          "sha256": "0d3e0cdf94ee5e68e60c63a1736809129d60d9fd9d8e09845b727f8527721bd9"
+        },
+        "scales.float32.npy": {
+          "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/scales.float32.npy",
+          "bytes": 192,
+          "sha256": "d32ee1e2cf7a2850bc81b96dfdcc8746d40a2b75a503d9486b5e9f66f24b43ec"
+        },
+        "codes.int8.npy": {
+          "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/codes.int8.npy",
+          "bytes": 16000128,
+          "sha256": "f7ae81b07c8423f0527d68d535ba89be56eb9f86bcb630306e3d9699e57948b4"
+        },
+        "sidecar_config.json": {
+          "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/sidecar_config.json",
+          "bytes": 601,
+          "sha256": "a63fc1a713c1a16106da32362996580a9ec210942d7d0e52e9eb1b6c498fabc7"
+        }
+      },
+      "quantization": {
+        "coefficient_count": 16000000,
+        "saturated_coefficients": 0,
+        "saturation_fraction": 0.0
+      },
+      "storage": {
+        "code_payload_bytes_per_document": 16,
+        "representation_bytes": 16025024,
+        "representation_bytes_per_document": 16.025024,
+        "external_document_id_bytes_duplicated": 0,
+        "configuration_bytes_excluded_from_representation": 601
+      },
+      "manifest": {
+        "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/manifest.json",
+        "bytes": 1557,
+        "sha256": "5644b14d38fd7a001e74e11114d2acfd273e414316aeed331c9a56bc86be077a"
+      }
+    }
+  },
+  "qrels_argument_accepted": false,
+  "query_argument_accepted": false,
+  "future_method_holdout_opened": false,
+  "telemetry": {
+    "wall_seconds": 28.741465077999976,
+    "host_max_rss_bytes": 1111912448
+  }
+}
