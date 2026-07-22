@@ -71,4 +71,3 @@ def test_v12_packet_repairs_v11_self_audit_gap() -> None:
     ] is True
     assert audit["per_seed_arrays_required"] is True
     assert audit["packet_verifier_required"] is True
-

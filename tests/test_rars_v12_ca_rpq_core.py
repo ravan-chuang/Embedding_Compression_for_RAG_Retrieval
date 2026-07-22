@@ -159,4 +159,3 @@ def test_gate_requires_seed_fold_payload_and_harm_stability() -> None:
 
     no_payload = MODULE.ca_rpq_decision(**{**common, "payload_bytes_per_document": 15})
     assert "payload_exactly_sixteen_bytes" in no_payload["failed_gates"]
-

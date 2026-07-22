@@ -68,4 +68,3 @@ def test_notebook_runs_verifier_and_exports_real_full_corpus_codes() -> None:
     assert "result['v11_packet_opened'] is False" in code
     assert "result['old_holdout_opened'] is False" in code
     assert "fresh_confirmation_access_authorized'] is False" in code
-

@@ -111,4 +111,3 @@ trusting aggregate JSON fields.
 
 The machine-readable source of truth is
 [`rars_v12_anchored_cutoff_rpq_v1.json`](../protocols/rars_v12_anchored_cutoff_rpq_v1.json).
-
