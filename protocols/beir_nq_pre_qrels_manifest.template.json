@@ -1,0 +1,164 @@
+{
+  "manifest_id": "beir_nq_rars_pca_confirmation_v1_pre_qrels",
+  "status": "DRAFT_NOT_FROZEN",
+  "protocol_id": "beir_nq_rars_pca_confirmation_v1",
+  "protocol_sha256": "TO_BE_FILLED",
+  "test_qrels_accessed": false,
+  "test_retrieval_performed": false,
+  "test_outcomes_observed": false,
+  "train_qrels_relevance_values_used": false,
+  "corpus_document_count": null,
+  "train_query_count": null,
+  "validation_query_count": null,
+  "selected_configs": {
+    "pca": {
+      "method_id": "pca_r16_int8",
+      "alpha": null,
+      "top_b": null
+    },
+    "rars": {
+      "method_id": "rars_r16_int8",
+      "alpha": null,
+      "top_b": null
+    }
+  },
+  "files": {
+    "test_dataset_archive": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED",
+      "md5": "d4d3d2e48787a744b6f6e691ff534307"
+    },
+    "train_dataset_archive": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED",
+      "md5": "966435435932347d5513f56fed19161c"
+    },
+    "corpus_manifest": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "document_embeddings": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "doc_ids": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "train_query_manifest": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "validation_query_manifest": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "train_validation_query_vectors": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "train_validation_query_vector_manifest": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "embedding_model_snapshot_manifest": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "prior_query_registry": {
+      "path": "protocols/beir_nq_prior_query_registry_v1.json",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "frozen_index": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_config": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_basis": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_scales": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_codes": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "rars_config": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "rars_basis": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "rars_scales": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "rars_codes": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "index_builder": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "query_splitter": {
+      "path": "scripts/create_beir_nq_train_validation_splits.py",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "pca_trainer": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "rars_trainer": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "manifest_builder": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "prior_query_registry_builder": {
+      "path": "scripts/build_beir_nq_prior_query_registry.py",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    },
+    "evaluator": {
+      "path": "TO_BE_FILLED",
+      "bytes": null,
+      "sha256": "TO_BE_FILLED"
+    }
+  }
+}

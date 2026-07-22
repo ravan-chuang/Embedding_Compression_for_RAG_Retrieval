@@ -13,7 +13,9 @@ python scripts/build_rars_paper_tables.py
 - `paper_pca_transfer_table.*`: legacy PCA residual-sidecar transfer summary
 - `paper_system_table.*`: live Faiss latency and overhead
 - `paper_ablation_table.*`: alpha and Top-B ablations
-- `paper_significance_table.*`: paired bootstrap results
+- `paper_significance_table.*`: developmental paired-bootstrap results
+- `paper_external_system_table.*`: frozen external aggregate metrics
+- `paper_external_contrast_table.*`: frozen external RARS-minus-PCA contrasts
 - `paper_storage_table.*`: serialized storage accounting
 
 ## Interpretation constraints
@@ -27,5 +29,9 @@ python scripts/build_rars_paper_tables.py
 - `Paired E2E overhead %` is reported separately because multi-threaded timing
   is sensitive to scheduling noise.
 - Small non-zero or negative Top0 deltas are timing noise.
-- The RARS-vs-PCA bootstrap confidence intervals cross zero, so the paper
-  should claim a positive point estimate rather than statistical superiority.
+- The developmental RARS-vs-PCA table uses the earlier MS MARCO query pool and
+  must not be presented as external confirmation.
+- The preregistered external Recall@10 contrast is negative and its confidence
+  interval crosses zero; the external primary hypothesis was not supported.
+- The external set contains 42 eligible queries and only the judgments covered
+  by the frozen 1M corpus. It is not an official full-corpus TREC result.

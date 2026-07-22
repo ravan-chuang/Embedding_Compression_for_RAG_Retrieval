@@ -1,0 +1,164 @@
+{
+  "manifest_id": "beir_nq_rars_pca_confirmation_v1_pre_qrels",
+  "status": "frozen_before_test_qrels_access",
+  "protocol_id": "beir_nq_rars_pca_confirmation_v1",
+  "protocol_sha256": "45128ed2f8844d0bb7bf4628fcaeff86066fd66ce7c2b474a31afe649b9c019a",
+  "test_qrels_accessed": false,
+  "test_retrieval_performed": false,
+  "test_outcomes_observed": false,
+  "train_qrels_relevance_values_used": false,
+  "corpus_document_count": 2681468,
+  "train_query_count": 119565,
+  "validation_query_count": 13238,
+  "selected_configs": {
+    "pca": {
+      "method_id": "pca_r16_int8",
+      "alpha": 0.75,
+      "top_b": 40
+    },
+    "rars": {
+      "method_id": "rars_r16_int8",
+      "alpha": 0.5,
+      "top_b": 40
+    }
+  },
+  "files": {
+    "test_dataset_archive": {
+      "path": "artifact://source/nq.zip",
+      "bytes": 498307926,
+      "sha256": "2553bf7bfbab47b1436ca00a34bce57320e18e611fd00999a2a3a1b4714be752",
+      "md5": "d4d3d2e48787a744b6f6e691ff534307"
+    },
+    "train_dataset_archive": {
+      "path": "artifact://source/nq-train.zip",
+      "bytes": 1405702846,
+      "sha256": "3aa8eec8d67174d85c055fce6971fa3127e830335842696756373f491bf391c9",
+      "md5": "966435435932347d5513f56fed19161c"
+    },
+    "corpus_manifest": {
+      "path": "artifact://stage1/corpus/corpus_artifacts_manifest.json",
+      "bytes": 1358,
+      "sha256": "8ec0c4077ca97fd1360e979735defa595050ba1d912beb23306ce09dc58daea5"
+    },
+    "document_embeddings": {
+      "path": "artifact://stage1/corpus/embeddings.float16.memmap",
+      "bytes": 2059367424,
+      "sha256": "9fab5c62073f8c5b1250ef6e3af5082ff1eca3282e683816e853c1f146611aed"
+    },
+    "doc_ids": {
+      "path": "artifact://stage1/corpus/doc_ids.utf8.memmap",
+      "bytes": 26814680,
+      "sha256": "486c4ced3dce51e69fe069445698413888819b5365098274d854dc8fabff6296"
+    },
+    "train_query_manifest": {
+      "path": "artifact://stage1/query_splits/train_query_manifest.json",
+      "bytes": 10081194,
+      "sha256": "0cffa55f4aa8db71d23ea8f0c58b44c983977688525be92e74dc62e82682f38d"
+    },
+    "validation_query_manifest": {
+      "path": "artifact://stage1/query_splits/validation_query_manifest.json",
+      "bytes": 1116704,
+      "sha256": "18fa0670e9f840a5439bfd04f1e7bfe41ef1ce7e0964776c48bcc13d4006d3aa"
+    },
+    "train_validation_query_vectors": {
+      "path": "artifact://stage1/queries/train_validation_query_vectors.float32.npy",
+      "bytes": 203985536,
+      "sha256": "87b5c8ff6707dd846075dad3382e4b81f19668aa5e09011280139e8c0b5bd51b"
+    },
+    "train_validation_query_vector_manifest": {
+      "path": "artifact://stage1/queries/train_validation_query_vector_manifest.json",
+      "bytes": 1684,
+      "sha256": "d13bb5ea12b81c286c69fb6c4d67b0e5c572e170df1c9ff8d1a58bf576e53e69"
+    },
+    "embedding_model_snapshot_manifest": {
+      "path": "artifact://stage1/model/snapshot_manifest.json",
+      "bytes": 1935,
+      "sha256": "c114120f164a16c1758b3809d35a5f8140ffa29b535f1edb0e45d24188fda0bf"
+    },
+    "prior_query_registry": {
+      "path": "repo://protocols/beir_nq_prior_query_registry_v1.json",
+      "bytes": 1810,
+      "sha256": "ebfd221e4d674b16161f0e86f28f626f5c2b8341bd0164220932c2c7b623c6cf"
+    },
+    "frozen_index": {
+      "path": "artifact://stage1/index/frozen_ivfpq_m32_nlist2048.index",
+      "bytes": 132265972,
+      "sha256": "200d83c39d6742b5dbb3a775d3116c034cfd4367b3da6d994a33f4285fad53e2"
+    },
+    "pca_config": {
+      "path": "repo://results/beir_nq_confirmation/pre_qrels/selected_pca_config.json",
+      "bytes": 1150,
+      "sha256": "f62c495d87acef9db3997a2b67b7161cf42a2d9859475452fc7e9e768a63811c"
+    },
+    "pca_basis": {
+      "path": "artifact://stage2/sidecars/bases/pca_rank16.float32.npy",
+      "bytes": 24704,
+      "sha256": "bcfcd85b89dd07a7d225dca817953147b832e557b256fa0d19c4acdf0ef0ff82"
+    },
+    "pca_scales": {
+      "path": "artifact://stage2/sidecars/encoded/pca/scales.float32.npy",
+      "bytes": 192,
+      "sha256": "9db8e3c4793534c41358ffba6a541db2ccecc51dc30991a9cc2f186bbf94d202"
+    },
+    "pca_codes": {
+      "path": "artifact://stage2/sidecars/encoded/pca/codes.rank16.int8.memmap",
+      "bytes": 42903488,
+      "sha256": "99d423f6f38de32ec19f89605c1356d81e2af88a1ba7538403a8910ea69f57f1"
+    },
+    "rars_config": {
+      "path": "repo://results/beir_nq_confirmation/pre_qrels/selected_rars_config.json",
+      "bytes": 1370,
+      "sha256": "25625c4d31d179a70aec346866eee5672e273fc150e5e6fea7e5c990487b1914"
+    },
+    "rars_basis": {
+      "path": "artifact://stage2/sidecars/bases/rars_score_error_rank16.float32.npy",
+      "bytes": 24704,
+      "sha256": "ab91fb97178c560c728055fa81492f7365b84ec970b20caadf06f9c88fef71b6"
+    },
+    "rars_scales": {
+      "path": "artifact://stage2/sidecars/encoded/rars/scales.float32.npy",
+      "bytes": 192,
+      "sha256": "cb39c45f6d364d5fea954f65e41499f644c8b933d128f7d5205a34939f639394"
+    },
+    "rars_codes": {
+      "path": "artifact://stage2/sidecars/encoded/rars/codes.rank16.int8.memmap",
+      "bytes": 42903488,
+      "sha256": "cefdedab6ea075f624e5998e2d5c69d5434b68baca8630c2f51809d8f730ae40"
+    },
+    "index_builder": {
+      "path": "repo://scripts/prepare_beir_nq_colab.py",
+      "bytes": 41159,
+      "sha256": "fb3ab4fb8dc172a5b3d7bb9ce02655d38dbe5b84191eb29fc2297d11e78f6396"
+    },
+    "query_splitter": {
+      "path": "repo://scripts/create_beir_nq_train_validation_splits.py",
+      "bytes": 8034,
+      "sha256": "5aaed91ebfe94d5956be188a0d5fbaac2bf9deee128e9f65da736c9c76ac6e9d"
+    },
+    "pca_trainer": {
+      "path": "repo://scripts/train_select_beir_nq_sidecars.py",
+      "bytes": 37642,
+      "sha256": "85b81b63fd416c387dc043bed44350895262dec2dad668fa3fe3e1bece761092"
+    },
+    "rars_trainer": {
+      "path": "repo://scripts/train_select_beir_nq_sidecars.py",
+      "bytes": 37642,
+      "sha256": "85b81b63fd416c387dc043bed44350895262dec2dad668fa3fe3e1bece761092"
+    },
+    "manifest_builder": {
+      "path": "repo://scripts/build_beir_nq_pre_qrels_manifest.py",
+      "bytes": 12833,
+      "sha256": "d70a9466101cb390d27f93a89af04fc17521a2af108b62b47448188a887ad7d1"
+    },
+    "prior_query_registry_builder": {
+      "path": "repo://scripts/build_beir_nq_prior_query_registry.py",
+      "bytes": 5260,
+      "sha256": "92aaadd98354614794c04e0c8753bb0e8ca9296a8ff54717e6b791ac3883d38c"
+    },
+    "evaluator": {
+      "path": "repo://scripts/evaluate_beir_nq_frozen.py",
+      "bytes": 34531,
+      "sha256": "d893f446978623fb785d1706bf1b82922fe1584c63fb9c4a58394e2b284610d9"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "protocol_id": "beir_nq_rars_pca_confirmation_v1",
+  "method_id": "rars_r16_int8",
+  "selection_split": "validation",
+  "basis_training": {
+    "basis": "score_error_weighted",
+    "weight": "absolute exact-minus-IVF-PQ candidate score error",
+    "sampling": "draw document rows with replacement in proportion to summed absolute fit-query candidate score error; aggregate duplicate draw counts before residual covariance eigendecomposition",
+    "draw_count": 300000,
+    "unique_sample_rows": 168094,
+    "sample_seed": 42,
+    "fit_query_count": 119565,
+    "query_labels_used": false,
+    "qrels_used": false
+  },
+  "rank": 16,
+  "coefficient_dtype": "int8",
+  "quantizer": "per_coefficient_symmetric_maxabs",
+  "alpha": 0.5,
+  "top_b": 40,
+  "candidate_k": 100,
+  "final_k": 10,
+  "base_index": {
+    "nlist": 2048,
+    "nprobe": 32,
+    "m": 32,
+    "nbits": 8
+  },
+  "validation_proxy": {
+    "base_top10_overlap": 0.4598655386009971,
+    "corrected_top10_overlap": 0.5080601299289922,
+    "overlap_gain": 0.048194591327995084,
+    "mse_reduction_pct": 7.746035479416928,
+    "maximum_overlap_gain": 0.05089137331923255,
+    "selection_threshold": 0.045802235987309294
+  },
+  "train_qrels_relevance_values_used": false,
+  "validation_qrels_used": false,
+  "test_qrels_accessed": false,
+  "test_retrieval_performed": false,
+  "test_outcomes_observed": false
+}

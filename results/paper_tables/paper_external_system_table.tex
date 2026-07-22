@@ -1,0 +1,13 @@
+\begin{table}[t]
+\caption{Frozen TREC DL 2019 evaluation restricted to the MS MARCO 1M indexed corpus.}
+\label{tab:rars-external-systems}
+\begin{tabular}{lrrrrrl}
+\toprule
+System & Queries & Recall@10 & Success@10 & MRR@10 & nDCG@10 & Evaluation \\
+\midrule
+Base IVF-PQ M32 & 42 & 0.350703 & 0.809524 & 0.693878 & 0.440528 & TREC DL 2019 / frozen 1M corpus restriction \\
+PCA rank-16 int8 & 42 & 0.344523 & 0.809524 & 0.709325 & 0.455817 & TREC DL 2019 / frozen 1M corpus restriction \\
+RARS rank-16 int8 & 42 & 0.326399 & 0.785714 & 0.734127 & 0.462418 & TREC DL 2019 / frozen 1M corpus restriction \\
+\bottomrule
+\end{tabular}
+\end{table}
