@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot_date": "2026-07-22",
-  "scope": "completed RARS evidence through the one-shot V9 within-program confirmation plus the frozen unexecuted V10 development protocol",
+  "scope": "completed RARS evidence through the V11 rank-rate capacity diagnostic plus the frozen unexecuted V12 anchored cutoff-RPQ development protocol",
   "metric_semantics": "known-positive retrieval metrics unless the source explicitly states otherwise; values from different query roles, corpora, models, and candidate protocols are not pooled",
   "experiments": [
     {
@@ -217,15 +217,40 @@
     },
     {
       "id": "rars_v11_rank_rate_diagnostic",
-      "evidence_tier": "post_v10_outcome_informed_architecture_diagnostic_not_yet_run",
+      "evidence_tier": "post_v10_outcome_informed_architecture_capacity_diagnostic",
       "query_count": 2307,
       "fixed_sidecar_screen_count": 7,
       "primary_capacity_comparison": "PCA rank64 FP32 minus PCA rank16 int8",
       "primary_16_byte_comparison": "PCA rank64 RPQ16x8 minus PCA rank16 int8",
-      "decision": "PENDING_SINGLE_FROZEN_RANK_RATE_DIAGNOSTIC",
+      "base_recall_at_10": 0.6799234214708858,
+      "pca_rank16_int8_recall_at_10": 0.6926383470596735,
+      "pca_rank64_fp32_recall_at_10": 0.7250036121947696,
+      "pca_rank64_rpq16x8_recall_at_10": 0.7208857101574918,
+      "rank64_rpq_minus_pca16_int8": 0.028247363097818237,
+      "rank64_rpq_minus_pca16_int8_ci95": [0.019939315127871695, 0.03684438664932813],
+      "rank64_rpq_minus_pca16_int8_randomization_p_one_sided": 0.00000999990000099999,
+      "rank64_rpq_vs_pca16_support": {"improved": 85, "harmed": 20},
+      "rank64_rpq_minus_base": 0.04096228868660598,
+      "headroom_retention_fraction": 0.8727678571428572,
+      "same_candidate_gap_recovery_fraction": 0.4364896073903006,
+      "all_five_fold_gains_positive": true,
+      "decision": "GO_TO_SEPARATE_CA_RPQ_CUTOFF_PROTOCOL",
       "pre_metric_implementation_repair": "the first 08bf7184acc7 attempt wrote only diagnostic_started.json and stopped because the Colab Faiss 1.12 ProductQuantizer binding lacks is_trained; the version-specific check was replaced by centroid/code/round-trip postconditions without changing the protocol",
-      "lesson": "V11 tests representation rank and vector coding at exactly 16 bytes per document before any cutoff-aware loss is allowed; a pass authorizes protocol writing only",
-      "source": "protocols/rars_v11_rank_rate_diagnostic_v1.json; repair disclosure is docs/rars_v11_pre_metric_faiss_compatibility_repair.md"
+      "lesson": "rank-64 residual capacity survives a 16-byte product code and is materially stronger than rank-16 scalar PCA, but V11 contains no cutoff-aware training and therefore establishes capacity rather than algorithm success",
+      "source": "user-returned independently audited rars-v11-rank-rate-927fd9e169eb.zip; protocol source is protocols/rars_v11_rank_rate_diagnostic_v1.json; repair disclosure is docs/rars_v11_pre_metric_faiss_compatibility_repair.md"
+    },
+    {
+      "id": "rars_v12_anchored_cutoff_rpq",
+      "evidence_tier": "fresh_query_outcome_informed_development_protocol_not_yet_run",
+      "planned_query_count": 2500,
+      "query_population": "MS MARCO passage-ranking train queries with at least one positive passage in the frozen 1M corpus, excluding every qid in the historical 6980-query split",
+      "fold_count": 5,
+      "seeds": [20260901, 20260902, 20260903],
+      "baseline": "per-fold rank64 PCA plus Faiss RPQ16x8 at exactly 16 bytes per document",
+      "method": "one closed-form PCA-anchored cutoff-aware centroid update inside the frozen initial RPQ partition, followed by reassignment",
+      "decision": "PENDING_SINGLE_FROZEN_V12_DEVELOPMENT_RUN",
+      "lesson": "V12 is designed to test whether V11 capacity can be converted into stable Top-10 gains without the iterative learned-basis and query-adapter failure modes; no outcome is yet available",
+      "source": "docs/rars_v12_anchored_cutoff_rpq_protocol.md; protocols/rars_v12_anchored_cutoff_rpq_v1.json"
     }
   ]
 }

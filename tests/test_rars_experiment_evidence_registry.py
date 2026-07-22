@@ -23,7 +23,10 @@ def test_registry_preserves_formal_decisions_and_evidence_boundaries() -> None:
         "STOP_V10_NO_STABLE_PCA_ADVANTAGE"
     )
     assert experiments["rars_v11_rank_rate_diagnostic"]["decision"] == (
-        "PENDING_SINGLE_FROZEN_RANK_RATE_DIAGNOSTIC"
+        "GO_TO_SEPARATE_CA_RPQ_CUTOFF_PROTOCOL"
+    )
+    assert experiments["rars_v12_anchored_cutoff_rpq"]["decision"] == (
+        "PENDING_SINGLE_FROZEN_V12_DEVELOPMENT_RUN"
     )
 
 
@@ -38,5 +41,11 @@ def test_registry_does_not_upgrade_v8_or_v9_to_independent_evidence() -> None:
         "rars_v10_pca_anchored_harm_constrained"
     ]["evidence_tier"]
     assert "diagnostic" in experiments["rars_v11_rank_rate_diagnostic"][
+        "evidence_tier"
+    ]
+    assert "development" in experiments["rars_v12_anchored_cutoff_rpq"][
+        "evidence_tier"
+    ]
+    assert "not_yet_run" in experiments["rars_v12_anchored_cutoff_rpq"][
         "evidence_tier"
     ]
