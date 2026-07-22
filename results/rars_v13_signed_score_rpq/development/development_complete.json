@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v13_signed_score_distilled_rpq_v1",
+  "status": "RARS_V13_FRESH_DEVELOPMENT_COMPLETE",
+  "source_commit": "d8cb761c289fe17ea2c2bfb92059e8b5553cfd74",
+  "formal_decision": "STOP_SIGNED_SCORE_RPQ_NO_STABLE_ADVANTAGE",
+  "started": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/development_started.json",
+    "bytes": 4376,
+    "sha256": "da661822f0ad3022931f6f86fc78943239f1f668f6846d2ed1ec1e87a47487c9"
+  },
+  "outputs": {
+    "development_result.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/development_result.json",
+      "bytes": 78469,
+      "sha256": "9e5357844ad599285b9a168a2815d7abf6cc09fe8a2403d4ae78ad8db13455c4"
+    },
+    "final_pca16_basis.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/final_pca16_basis.float32.npy",
+      "bytes": 24704,
+      "sha256": "d0ec70fff51d4744b8546ece5a00854592064eb75ad9124ab8952276f6695927"
+    },
+    "final_pca16_scales.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/final_pca16_scales.float32.npy",
+      "bytes": 192,
+      "sha256": "fe6aeb5ccbaf3021160a7e3b6e31a404729f52f5cc52f3f6b7dc86974ba04ba2"
+    },
+    "final_pca_basis_rank64.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/final_pca_basis_rank64.float32.npy",
+      "bytes": 98432,
+      "sha256": "d403d6c01ae9e6b839c59ad0b42b29a94480617f8703198f4b06396088dda893"
+    },
+    "final_signed_score_codebooks.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/final_signed_score_codebooks.float32.npy",
+      "bytes": 65664,
+      "sha256": "ac722e8021cb914dd270283ea6ce6e1827faad1b43383277a771a2384f42d754"
+    },
+    "final_unsupervised_codebooks.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/final_unsupervised_codebooks.float32.npy",
+      "bytes": 65664,
+      "sha256": "dcf847c6bb4c0d79fd25089df0bbbbdbdaf78456a5b80250a719084a6a176952"
+    },
+    "fold_ids.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/fold_ids.int64.npy",
+      "bytes": 40128,
+      "sha256": "8e04ba31ed51a073dcb9c327df2941c708b25672847976a56bffbdefe0d6a738"
+    },
+    "fold_seed_diagnostics.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/fold_seed_diagnostics.json",
+      "bytes": 111613,
+      "sha256": "9ad67cd5e21551fd6c0b83b0879305ad9f227da70cbafbbaf6b7b5ceacc7cb9c"
+    },
+    "full_corpus_signed_score_assignments.uint8.memmap": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/full_corpus_signed_score_assignments.uint8.memmap",
+      "bytes": 16000000,
+      "sha256": "3896c1fcbba37997c7881c723af8e6b38dbf619f36aa0153ddc78e97cd28e664"
+    },
+    "method_freeze.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/method_freeze.json",
+      "bytes": 4093,
+      "sha256": "846ad66f30a7b8811214781bd43779c55360280b4a75143acc269e46f517cccd"
+    },
+    "per_query_base_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_base_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "90d1fcf5fcd3e3ca56d4c15611725c1511e8620bce774ed6ecbd5d1953d2523c"
+    },
+    "per_query_base_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_base_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "29343464692a287300048cd3c9ddb18fbfb03aaefa603cc1ca2dcf6ee472400d"
+    },
+    "per_query_base_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_base_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "2d7dee9f4b2cc3f0619164875e666fdc06e9379548b72d322074d9eabd5ff2ba"
+    },
+    "per_query_pca16_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_pca16_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "9db2d92bfe835bba862b58a7999b713461657d1c1bb830c4f445000e880e87f8"
+    },
+    "per_query_pca16_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_pca16_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "a1c4842d3c1db69dbd80778fc468a6dad73e42688ae23aab085d09c19539af3c"
+    },
+    "per_query_pca16_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_pca16_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "924945ba9d9e1ec91a3ccd32a510397ac4e2315270f47f6bbf89086f77336408"
+    },
+    "per_query_same_candidate_exact_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_same_candidate_exact_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "8e2ecf2747b742afbc7d040351bd57300a9c4f5d9d51acbcdefacc689dfda73a"
+    },
+    "per_query_same_candidate_exact_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_same_candidate_exact_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "e69a889b3c2b2759c07f360f7f15a5ce94ef2be3ed9e32b5c12af41d563ceca1"
+    },
+    "per_query_same_candidate_exact_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_same_candidate_exact_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "e7f40d1d5cf7fde8e0ba34c04a61d6ed667f93d6d360934705faa9a7c9aed3bf"
+    },
+    "per_query_signed_score_seed20261001_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261001_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "932e679af01c19b60330c5f22b5fdbdc325fcf781cb469e2cbe1b64813e714aa"
+    },
+    "per_query_signed_score_seed20261001_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261001_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "1b2c1bffe1012de76ed36ad337f3beacbe8dd981d1159e0070620ec09e848206"
+    },
+    "per_query_signed_score_seed20261001_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261001_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "e0600536957389f37a082420e2feb2331ff180f0951c7cd0d4d2c71d6769034b"
+    },
+    "per_query_signed_score_seed20261002_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261002_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "46f0a1d8db544689f266365ef7c7e3bcc98a8adcdbabf167cb0a129ca08a584d"
+    },
+    "per_query_signed_score_seed20261002_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261002_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "d3005bbee639759bd2ecebf7907d892989fc48d44dc93c5926574e0aa4070c72"
+    },
+    "per_query_signed_score_seed20261002_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261002_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "a4502aef0e0ae27f81ff4c6550f43704f653be3c59ce932970a66839f0ed74ec"
+    },
+    "per_query_signed_score_seed20261003_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261003_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "da273eb685e7e43d14488b296278c12dd390346309796656356faaf23e7772e0"
+    },
+    "per_query_signed_score_seed20261003_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261003_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "0249036447ab9bf092c89b230bd5c0ae5c3932cd50c8c94147f906f7fc45cef6"
+    },
+    "per_query_signed_score_seed20261003_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_signed_score_seed20261003_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "855f26199c431f3912b70626990ebd83e8d7d8d2c5927cedff193ab827a36588"
+    },
+    "per_query_unsupervised_seed20261001_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261001_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "0d8331604d083115c2bab7e3212ef04cc5e03bb10531294699652496ea7d80cf"
+    },
+    "per_query_unsupervised_seed20261001_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261001_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "c97063bef619fa369d59e1279820bbc014d6e1c7cf7d1eca21572281fc880f2f"
+    },
+    "per_query_unsupervised_seed20261001_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261001_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "0fbeb5afbc6caf3930108937ab28da2cc6f2aecc6b05e61636620b16ae64b48e"
+    },
+    "per_query_unsupervised_seed20261002_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261002_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "427049861376602c77d533dc8da434f08e936dc8975a9ab443820863750f230b"
+    },
+    "per_query_unsupervised_seed20261002_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261002_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "59479f589816329d73ffb8b23cbf77215fe64fbd31a23ce321c0405a90ac56c0"
+    },
+    "per_query_unsupervised_seed20261002_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261002_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "ee1470f40fad041368ca02208cba2241300ff97e437a803c728de36fab1874cc"
+    },
+    "per_query_unsupervised_seed20261003_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261003_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "34dbcd3c15efefa9a98211b604f71520b579cf765f09728d706319dce9bcb896"
+    },
+    "per_query_unsupervised_seed20261003_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261003_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "18fcf9ad269b0d34f20ce04dc3716580ffa0b3759d732e2d2435cc987f25b526"
+    },
+    "per_query_unsupervised_seed20261003_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/per_query_unsupervised_seed20261003_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "19d9f6677d7773f5ff98611b5b1fa346e9f05a1a94824168ad8be8427e9c8f68"
+    },
+    "query_ids.utf8.txt": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/development-once/query_ids.utf8.txt",
+      "bytes": 35166,
+      "sha256": "126fe90ad6168ef5472171a94f52619af65b76ebabce66c84b92350a6416d342"
+    }
+  },
+  "old_holdout_opened": false,
+  "fresh_confirmation_access_authorized": false
+}

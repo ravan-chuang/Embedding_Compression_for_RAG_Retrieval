@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v13_signed_score_distilled_rpq_v1",
+  "status": "RARS_V13_FRESH_BUNDLE_COMPLETE",
+  "source_commit": "d8cb761c289fe17ea2c2bfb92059e8b5553cfd74",
+  "manifest": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/fresh_bundle_manifest.json",
+    "bytes": 7174,
+    "sha256": "4056a48be74007dba22027fd901c837f8539198b5767e22fed6f8a2f19512ad1"
+  },
+  "outputs": {
+    "query_vectors.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/query_vectors.float32.npy",
+      "bytes": 7680128,
+      "sha256": "1a5c057ce31c0dc78c1aa1ef45f69b19937db54dc54b92209a7b3d79af76e0f7"
+    },
+    "fold_ids.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/fold_ids.int64.npy",
+      "bytes": 40128,
+      "sha256": "8e04ba31ed51a073dcb9c327df2941c708b25672847976a56bffbdefe0d6a738"
+    },
+    "ann_rows.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/ann_rows.int64.npy",
+      "bytes": 4000128,
+      "sha256": "0c2d21fdbce37cb414c9d65d92533e351cf24ed9000e302f073afa35a155a4d3"
+    },
+    "ann_scores.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/ann_scores.float32.npy",
+      "bytes": 2000128,
+      "sha256": "14787c563b1124dbec1b8834fccd2216946b3cb6e6013209e8663a289403d2e1"
+    },
+    "ann_residual_rows.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/ann_residual_rows.int64.npy",
+      "bytes": 4000128,
+      "sha256": "406b81e41210c24d420f99a8baee788066fc981c5560b11dca347d7e6f9f3cb5"
+    },
+    "candidate_doc_rows.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/candidate_doc_rows.int64.npy",
+      "bytes": 2227096,
+      "sha256": "91bcdca7fd3892983133c47e9e082e784dc196326439d7d629cfa99a05609efd"
+    },
+    "candidate_residuals.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/candidate_residuals.float32.npy",
+      "bytes": 427577984,
+      "sha256": "392bc857541d05154edf5805f7ce2dcb7facc76f0791ee9d701cabab9762e542"
+    },
+    "candidate_relevance.uint8.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/candidate_relevance.uint8.npy",
+      "bytes": 500128,
+      "sha256": "d3b882eb13e86ff9d441be5102651c8acce6b07ba46dccfd8acf2fdbfb751083"
+    },
+    "relevant_counts.int32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/relevant_counts.int32.npy",
+      "bytes": 20128,
+      "sha256": "cc6dfbabeb28a0259df409756f8fe762c3ec5015743d80807ee0fea9a68377bc"
+    },
+    "query_ids.utf8.txt": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-development-bundle/query_ids.utf8.txt",
+      "bytes": 35166,
+      "sha256": "126fe90ad6168ef5472171a94f52619af65b76ebabce66c84b92350a6416d342"
+    }
+  },
+  "metrics_computed": false,
+  "old_rars_holdout_opened": false
+}
