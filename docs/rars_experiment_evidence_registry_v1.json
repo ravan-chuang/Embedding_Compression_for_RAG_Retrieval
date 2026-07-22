@@ -197,13 +197,34 @@
     },
     {
       "id": "rars_v10_pca_anchored_harm_constrained",
-      "evidence_tier": "post_confirmation_outcome_informed_development_not_yet_run",
+      "evidence_tier": "post_confirmation_outcome_informed_development",
       "query_count": 2307,
       "configuration_count": 1,
-      "primary_endpoint": "V10 minus PCA known-positive Recall@10 under five-fold out-of-fold evaluation",
-      "decision": "PENDING_SINGLE_FROZEN_DEVELOPMENT_RUN",
-      "lesson": "V10 directly tests whether PCA anchoring, query-equal CVaR harm control, and audited monotone manifold optimization can turn the unstable learned-basis effect into broad OOF superiority over PCA; a separate no-training PCA-FP32 versus PCA-int8 diagnostic first quantifies whether a later ScaNN-inspired scalar codebook has material headroom",
-      "source": "protocols/rars_v10_pca_anchored_harm_constrained_v1.json"
+      "base_recall_at_10": 0.6799234214708858,
+      "pca_int8_recall_at_10": 0.6926383470596735,
+      "pca_fp32_recall_at_10": 0.6930718104320185,
+      "v10_recall_at_10": 0.693288542118191,
+      "same_candidate_exact_recall_at_10": 0.7737682415835863,
+      "v10_minus_pca": 0.0006501950585175553,
+      "v10_minus_pca_ci95": [-0.001083658430862592, 0.002600780234070221],
+      "v10_minus_pca_randomization_p_one_sided": 0.3110768892311077,
+      "v10_vs_pca_support": {"improved": 3, "harmed": 2},
+      "pca_fp32_minus_int8": 0.00043346337234503684,
+      "scalar_headroom_decision": "STOP_AVQ_CODEBOOK_NO_SCALAR_HEADROOM",
+      "decision": "STOP_V10_NO_STABLE_PCA_ADVANTAGE",
+      "lesson": "the numerically audited harm-constrained optimizer remains stable but collapses close to PCA and does not establish PCA superiority; rank-16 scalar quantization explains only a negligible fraction of the remaining same-candidate gap",
+      "source": "user-returned independently audited rars-v10-development-54ad229fd2ea.zip; protocol source is protocols/rars_v10_pca_anchored_harm_constrained_v1.json"
+    },
+    {
+      "id": "rars_v11_rank_rate_diagnostic",
+      "evidence_tier": "post_v10_outcome_informed_architecture_diagnostic_not_yet_run",
+      "query_count": 2307,
+      "fixed_sidecar_screen_count": 7,
+      "primary_capacity_comparison": "PCA rank64 FP32 minus PCA rank16 int8",
+      "primary_16_byte_comparison": "PCA rank64 RPQ16x8 minus PCA rank16 int8",
+      "decision": "PENDING_SINGLE_FROZEN_RANK_RATE_DIAGNOSTIC",
+      "lesson": "V11 tests representation rank and vector coding at exactly 16 bytes per document before any cutoff-aware loss is allowed; a pass authorizes protocol writing only",
+      "source": "protocols/rars_v11_rank_rate_diagnostic_v1.json"
     }
   ]
 }

@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v11_rank_rate_diagnostic_v1",
+  "status": "FROZEN_BEFORE_FIRST_V11_DIAGNOSTIC_RUN",
+  "research_question": "After V10 ruled out material rank-16 scalar-quantization headroom, does expanding the residual subspace to rank 32 or 64 create useful Recall@10 headroom, and can a deterministic 16-byte residual product code retain enough of the rank-64 FP32 ceiling to justify a separate cutoff-aware CA-RPQ method protocol?",
+  "scope": "post-V10 outcome-informed architecture diagnostic on the historically opened oracle_design role; no cutoff-aware codebook, relevance-trained model, old holdout, or external dataset is opened",
+  "evidence_boundary": {
+    "tier": "POST_V10_OUTCOME_INFORMED_ARCHITECTURE_DIAGNOSTIC_ONLY",
+    "allowed_claim": "the frozen rank-rate screen did or did not expose sufficient wider-subspace and 16-byte RPQ headroom on oracle_design to justify writing a separate CA-RPQ development protocol",
+    "forbidden_claims": [
+      "independent confirmation",
+      "external generalization",
+      "CA-RPQ algorithm success",
+      "ScaNN implementation or superiority",
+      "official MS MARCO performance",
+      "production-kernel efficiency",
+      "state-of-the-art ANN compression"
+    ]
+  },
+  "parent_evidence": {
+    "v9_formal_decision": "CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM",
+    "v9_algorithm_finding": "RARS-v8 superiority over PCA was unsupported",
+    "v10_formal_decision": "STOP_V10_NO_STABLE_PCA_ADVANTAGE",
+    "v10_pca_int8_recall_at_10": 0.6926383470596735,
+    "v10_pca_fp32_recall_at_10": 0.6930718104320185,
+    "v10_same_candidate_exact_recall_at_10": 0.7737682415835863,
+    "v10_scalar_headroom_decision": "STOP_AVQ_CODEBOOK_NO_SCALAR_HEADROOM",
+    "v10_lesson": "rank-16 FP32 minus rank-16 int8 was only +0.000433 Recall@10, so V11 tests representation rank and vector coding rather than retuning a scalar codebook or learned basis",
+    "runtime_read_policy": "V11 discloses these closed outcomes in the protocol but its executable accepts no V9 or V10 packet path and reads neither packet"
+  },
+  "data_policy": {
+    "dataset": "deterministic qrels-preserving 1M MS MARCO passage development corpus",
+    "development_role": {
+      "role_id": "oracle_design",
+      "query_count": 2307,
+      "evidence_status": "REUSED_OUTCOME_INFORMED_DIAGNOSTIC_ONLY",
+      "source_order_newline_qid_sha256": "952219a667ecfcd8cad5e18475531ceba73720054fae3344227dbdd008491fb6",
+      "numeric_sorted_newline_qid_sha256": "fd1d351a848ee9650fb898ef51ce16f64d1712d39179259d52dc94dcf93956b4"
+    },
+    "cross_validation": {
+      "fold_count": 5,
+      "fold_rule": "inherit exact rars_v3_fold_v1 SHA-256 fold assignment",
+      "fold_counts": [463, 468, 470, 436, 470],
+      "folds_are_stability_summaries_not_independent_replications": true,
+      "out_of_fold_training_performed": false,
+      "training_labels_must_not_cross_fold": true
+    },
+    "configuration_policy": {
+      "fixed_sidecar_screen_count": 7,
+      "reported_rows_including_base": 8,
+      "all_screen_members_reported": true,
+      "primary_capacity_member": "pca_rank64_fp32",
+      "primary_16_byte_member": "pca_rank64_rpq16x8",
+      "outcome_based_member_selection": false,
+      "cutoff_training_performed": false
+    },
+    "permitted_input_roots": [
+      "oracle_design frozen V3 candidate and role-label bundle",
+      "RARS-v6 diagnostic packet for lineage verification"
+    ],
+    "forbidden_inputs": [
+      "future_method_holdout",
+      "oracle_audit",
+      "outer_validation",
+      "clean_test",
+      "any V9 or V10 result packet",
+      "TREC DL",
+      "BEIR NQ",
+      "FiQA"
+    ]
+  },
+  "frozen_index_contract": {
+    "document_count": 1000000,
+    "embedding_dimension": 384,
+    "metric": "inner_product",
+    "nlist": 512,
+    "nprobe": 16,
+    "subquantizers": 32,
+    "bits_per_subquantizer": 8,
+    "index_bytes": 41183924,
+    "index_sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8",
+    "candidate_pool": 100,
+    "final_cutoff": 10,
+    "correction_depth": 40,
+    "immutable_components": [
+      "query embeddings",
+      "document embeddings",
+      "coarse quantizer",
+      "inverted lists",
+      "PQ codebooks",
+      "PQ codes"
+    ]
+  },
+  "shared_scoring_contract": {
+    "basis": "one deterministic uncentred residual PCA rank-64 fit; rank-16 and rank-32 are nested leading-column views",
+    "alpha": 0.75,
+    "top_b": 40,
+    "candidate_order": "Base score descending with document row as deterministic tie-break",
+    "codes_fit_on": "the complete frozen oracle_design candidate-residual union without relevance weighting",
+    "labels_used_only_for_metrics": true,
+    "query_or_document_encoder_changed": false
+  },
+  "screen": [
+    {
+      "id": "base_m32",
+      "deployable": true,
+      "sidecar_payload_bytes_per_document": 0,
+      "purpose": "frozen IVF-PQ baseline"
+    },
+    {
+      "id": "pca_rank16_int8",
+      "deployable": true,
+      "sidecar_payload_bytes_per_document": 16,
+      "purpose": "storage-matched scalar PCA baseline"
+    },
+    {
+      "id": "pca_rank16_fp32",
+      "deployable": false,
+      "sidecar_payload_bytes_per_document": 64,
+      "purpose": "reproduce the closed scalar-quantization ceiling"
+    },
+    {
+      "id": "pca_rank32_fp32",
+      "deployable": false,
+      "sidecar_payload_bytes_per_document": 128,
+      "purpose": "rank-32 projection ceiling"
+    },
+    {
+      "id": "pca_rank64_fp32",
+      "deployable": false,
+      "sidecar_payload_bytes_per_document": 256,
+      "purpose": "preregistered primary rank-capacity ceiling"
+    },
+    {
+      "id": "pca_rank32_int4",
+      "deployable": true,
+      "sidecar_payload_bytes_per_document": 16,
+      "purpose": "packed-scalar wider-rank control"
+    },
+    {
+      "id": "pca_rank32_rpq16x8",
+      "deployable": true,
+      "sidecar_payload_bytes_per_document": 16,
+      "purpose": "descriptive two-dimensional-block RPQ control"
+    },
+    {
+      "id": "pca_rank64_rpq16x8",
+      "deployable": true,
+      "sidecar_payload_bytes_per_document": 16,
+      "purpose": "preregistered primary four-dimensional-block RPQ candidate"
+    }
+  ],
+  "rpq_training": {
+    "implementation": "Faiss ProductQuantizer on fixed PCA coefficients",
+    "subquantizers": 16,
+    "bits_per_subquantizer": 8,
+    "codebook_size": 256,
+    "iterations": 12,
+    "redos": 1,
+    "seed": 20260810,
+    "omp_threads": 1,
+    "minimum_points_per_centroid": 1,
+    "maximum_points_per_centroid": 64,
+    "cutoff_or_relevance_loss_used": false,
+    "basis_optimization_used": false,
+    "query_adapter_used": false
+  },
+  "inference": {
+    "confidence": 0.95,
+    "bootstrap_replicates": 50000,
+    "randomization_replicates": 100000,
+    "rank64_fp32_vs_pca": {
+      "bootstrap_seed": 20260811,
+      "randomization_seed": 20260812
+    },
+    "rank64_rpq_vs_pca": {
+      "bootstrap_seed": 20260813,
+      "randomization_seed": 20260814
+    },
+    "rank64_rpq_vs_base": {
+      "bootstrap_seed": 20260815,
+      "randomization_seed": 20260816
+    },
+    "seed_offsets": "none"
+  },
+  "diagnostic_gate": {
+    "minimum_rank64_fp32_gain_over_pca": 0.005,
+    "minimum_rank64_rpq_gain_over_pca": 0.003,
+    "minimum_rank64_rpq_gain_over_base": 0.01,
+    "minimum_rank64_headroom_retention_fraction": 0.5,
+    "bootstrap_lower_must_exceed": 0.0,
+    "maximum_randomization_p_value": 0.05,
+    "minimum_improved_queries": 20,
+    "minimum_net_improved_queries": 10,
+    "minimum_worst_fold_gain_over_pca": 0.0,
+    "minimum_candidate_gap_recovery_fraction": 0.2,
+    "minimum_mrr_change_vs_pca": -0.002,
+    "minimum_ndcg_change_vs_pca": -0.002,
+    "go_decision": "GO_TO_SEPARATE_CA_RPQ_CUTOFF_PROTOCOL",
+    "stop_no_rank_headroom_decision": "STOP_LINEAR_RANK_EXPANSION_NO_HEADROOM",
+    "stop_rpq_encoding_decision": "STOP_RPQ_16B_CANNOT_RETAIN_HEADROOM",
+    "go_authorizes_only_protocol_writing": true,
+    "old_holdout_reuse_authorized": false,
+    "fresh_confirmation_access_authorized": false
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_package": "faiss-gpu-cu12==1.12.0",
+    "gpu_name_must_contain": "T4",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_required": true,
+    "cudnn_benchmark": false
+  },
+  "required_outputs": [
+    "diagnostic_started.json",
+    "pca_basis_rank64.float32.npy",
+    "pca_rank16_scales.float32.npy",
+    "pca_rank32_int4_scales.float32.npy",
+    "rpq_rank32_codebooks.float32.npy",
+    "rpq_rank64_codebooks.float32.npy",
+    "per_query_base_recall_at_10.float64.npy",
+    "per_query_pca_rank16_int8_recall_at_10.float64.npy",
+    "per_query_pca_rank16_fp32_recall_at_10.float64.npy",
+    "per_query_pca_rank32_fp32_recall_at_10.float64.npy",
+    "per_query_pca_rank64_fp32_recall_at_10.float64.npy",
+    "per_query_pca_rank32_int4_recall_at_10.float64.npy",
+    "per_query_pca_rank32_rpq_recall_at_10.float64.npy",
+    "per_query_pca_rank64_rpq_recall_at_10.float64.npy",
+    "per_query_same_candidate_exact_recall_at_10.float64.npy",
+    "rank_rate_result.json",
+    "diagnostic_freeze.json",
+    "diagnostic_complete.json"
+  ],
+  "prohibited_actions": [
+    "reading V9 or V10 result packets from the V11 executable",
+    "opening future_method_holdout, oracle_audit, or an external dataset",
+    "training a cutoff-aware or relevance-aware codebook in V11",
+    "learning or rotating the PCA basis",
+    "selecting a rank, product partition, seed, alpha, Top-B, or gate after metrics appear",
+    "describing the fixed-screen diagnostic as CA-RPQ algorithm validation",
+    "calling V11 a ScaNN implementation",
+    "claiming success unless both the rank-capacity and 16-byte encoding gates pass"
+  ]
+}

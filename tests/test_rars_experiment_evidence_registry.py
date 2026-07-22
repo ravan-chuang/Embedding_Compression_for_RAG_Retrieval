@@ -20,7 +20,10 @@ def test_registry_preserves_formal_decisions_and_evidence_boundaries() -> None:
         "CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM"
     )
     assert experiments["rars_v10_pca_anchored_harm_constrained"]["decision"] == (
-        "PENDING_SINGLE_FROZEN_DEVELOPMENT_RUN"
+        "STOP_V10_NO_STABLE_PCA_ADVANTAGE"
+    )
+    assert experiments["rars_v11_rank_rate_diagnostic"]["decision"] == (
+        "PENDING_SINGLE_FROZEN_RANK_RATE_DIAGNOSTIC"
     )
 
 
@@ -34,3 +37,6 @@ def test_registry_does_not_upgrade_v8_or_v9_to_independent_evidence() -> None:
     assert "development" in experiments[
         "rars_v10_pca_anchored_harm_constrained"
     ]["evidence_tier"]
+    assert "diagnostic" in experiments["rars_v11_rank_rate_diagnostic"][
+        "evidence_tier"
+    ]
