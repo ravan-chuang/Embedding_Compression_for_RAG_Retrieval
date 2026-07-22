@@ -1,0 +1,51 @@
+{
+  "registry_id": "beir_nq_prior_query_registry_v1",
+  "status": "frozen_before_nq_test_qrels_access",
+  "normalization": "Unicode NFKC, casefold, collapse whitespace, strip",
+  "same_namespace_id_overlap_only": true,
+  "sources": [
+    {
+      "dataset_namespace": "msmarco",
+      "path": "repo://splits/msmarco_rars_train_split.json",
+      "bytes": 120302,
+      "sha256": "881a46f9fb123d37ce8bbadaa78843da8f94e4d76f15b68472e8c2aee28327c2",
+      "query_count": 4980,
+      "query_text_count": 0,
+      "query_ids_field": "query_ids",
+      "query_texts_field": null
+    },
+    {
+      "dataset_namespace": "msmarco",
+      "path": "repo://splits/msmarco_rars_validation_split.json",
+      "bytes": 24210,
+      "sha256": "1d816f01d46c2f8891af72ceedcdfa06ab1a790b2cc96fbe72019b36a348eac1",
+      "query_count": 1000,
+      "query_text_count": 0,
+      "query_ids_field": "query_ids",
+      "query_texts_field": null
+    },
+    {
+      "dataset_namespace": "msmarco",
+      "path": "repo://splits/msmarco_rars_test_split.json",
+      "bytes": 24215,
+      "sha256": "9b8b277585aedb31fc85d4f5cf8a3996443fcdd03193d833eae978ef58f2b24c",
+      "query_count": 1000,
+      "query_text_count": 0,
+      "query_ids_field": "query_ids",
+      "query_texts_field": null
+    },
+    {
+      "dataset_namespace": "trec_dl_2019",
+      "path": "repo://results/external_confirmation/trec_dl_2019_msmarco_1m_restricted/query_manifest.json",
+      "bytes": 4648,
+      "sha256": "5c71413befa7748678e1a512b4d28aae7a4cb26ba0321add3281535935b0dc14",
+      "query_count": 42,
+      "query_text_count": 42,
+      "query_ids_field": "query_ids",
+      "query_texts_field": "query_texts"
+    }
+  ],
+  "query_count_with_source_duplicates": 7022,
+  "query_text_count_with_source_duplicates": 42,
+  "nq_test_qrels_accessed": false
+}
