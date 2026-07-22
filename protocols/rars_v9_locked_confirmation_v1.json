@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v9_locked_confirmation_v1",
+  "status": "FROZEN_BEFORE_FIRST_V9_OUTCOME_ACCESS",
+  "research_question": "Does the exact frozen RARS-v8 rank-16 int8 sidecar improve known-positive Recall@10 over both the byte-identical M32 IVF-PQ base and a storage-matched frozen PCA sidecar on the 803-query future_method_holdout, without refitting, threshold changes, or post-outcome method selection?",
+  "scope": "one-shot within-program prospective confirmation of the already-frozen V8 algorithm; not an independent, official, or external MS MARCO test and not authorization to tune a V8.1 method",
+  "claim_boundary": {
+    "evidence_tier": "WITHIN_PROGRAM_PROSPECTIVE_HOLDOUT_NOT_INDEPENDENT",
+    "why_not_independent": "The role was never opened by V3-V8 and is prospective relative to V8, but all 803 queries were drawn from the historical v2 inner_train pool used by earlier RARS development.",
+    "allowed_claim": "the frozen V8 sidecar did or did not replicate within the historical research program on a role not used for V8 fitting or selection",
+    "forbidden_claims": [
+      "independent confirmation",
+      "official MS MARCO evaluation",
+      "external generalization",
+      "state-of-the-art ANN performance",
+      "production-kernel efficiency"
+    ]
+  },
+  "frozen_v8_lineage": {
+    "protocol_id": "rars_v8_cutoff_sidecar_v1",
+    "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+    "formal_development_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+    "method_freeze_sha256": "7fc781059ce05bdac4ca203c87b00e73ed237de862380fdd6d0f54b727600fb8",
+    "development_result_sha256": "8c3e8c40d5ae1b2cd0a514ed3970a3f7512c2cb536d24b2523d5bf61d5bd3893",
+    "pca_manifest_sha256": "c721400cb82c5c79e0f51a28ce91caaefeb0d69a5e716041b1c23017bd7655d3",
+    "rars_manifest_sha256": "5644b14d38fd7a001e74e11114d2acfd273e414316aeed331c9a56bc86be077a",
+    "pca_codes_sha256": "5804d31e10df384d4dfd85b1bdaa18834faceae825faab88dcb9f5169f8a88cf",
+    "rars_codes_sha256": "f7ae81b07c8423f0527d68d535ba89be56eb9f86bcb630306e3d9699e57948b4"
+  },
+  "data_policy": {
+    "dataset": "deterministic qrels-preserving 1M MS MARCO passage development corpus",
+    "confirmation_role": {
+      "role_id": "future_method_holdout",
+      "query_count": 803,
+      "source_order_newline_qid_sha256": "41a1908b386cdf8bcd5e2905b88d99e66e3e1b392916c55643f36bd215ae95a8",
+      "numeric_sorted_newline_qid_sha256": "8e4c2516af5c82f5caefbe03842cecda36b7bb9c810c4aeb90a05e7aca7181d3",
+      "candidate_arrays_before_v9": false,
+      "labels_or_metrics_before_v9": false,
+      "identity_materialization": "reproduce the registered v2.1 inner partition and V3 hash split from the frozen train split, then copy only the corresponding global query vectors; no qrels, candidates, or labels",
+      "one_shot_opening": true
+    },
+    "outcome_opening_order": [
+      "verify exact source checkout and canonical protocol",
+      "verify V8 freeze and full-corpus sidecar hashes",
+      "build and verify the qrels-free future identity/query-vector packet",
+      "verify M32 index and all qrels-free limitation baselines",
+      "write and fsync confirmation_started.json with outcome_opened=false",
+      "only then parse qrels and compute candidates, metrics, and decisions"
+    ],
+    "forbidden_outcome_roles": [
+      "oracle_design",
+      "oracle_audit",
+      "v2_2_inner_validation",
+      "burned_outer_validation",
+      "clean_test",
+      "TREC_DL_2019",
+      "BEIR_NQ",
+      "FiQA"
+    ]
+  },
+  "immutable_inputs": {
+    "document_count": 1000000,
+    "embedding_dimension": 384,
+    "embeddings_bytes": 768000000,
+    "embeddings_sha256": "358e386c0e63b20cefc60ebd160754645d59fbb0f4ac16aa2e03843d59958ba0",
+    "doc_ids_bytes": 8000000,
+    "doc_ids_sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96",
+    "m32_index_bytes": 41183924,
+    "m32_index_sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8",
+    "m32_contract": {
+      "metric": "inner_product",
+      "nlist": 512,
+      "subquantizers": 32,
+      "bits_per_subquantizer": 8,
+      "serialized_nprobe": 16
+    }
+  },
+  "frozen_methods": {
+    "base_m32_nprobe16": {
+      "candidate_pool": 100,
+      "final_cutoff": 10,
+      "sidecar": false
+    },
+    "pca_rank16_int8": {
+      "rank": 16,
+      "coefficient_dtype": "int8",
+      "alpha": 0.75,
+      "top_b": 40,
+      "representation_bytes_per_document": 16.025024,
+      "basis_or_code_refit_allowed": false
+    },
+    "rars_v8_rank16_int8": {
+      "rank": 16,
+      "coefficient_dtype": "int8",
+      "alpha": 0.75,
+      "top_b": 40,
+      "representation_bytes_per_document": 16.025024,
+      "basis_or_code_refit_allowed": false
+    },
+    "same_candidate_exact": {
+      "candidate_source": "base_m32_nprobe16 Top-100",
+      "purpose": "non-deployable candidate-level ceiling"
+    }
+  },
+  "locked_limitation_baselines": {
+    "m32_nprobe32": "same byte-identical M32 index with twice the routing probes",
+    "m32_nprobe64": "same byte-identical M32 index with four times the routing probes",
+    "m48_rebuild_nlist512_nprobe16": {
+      "purpose": "same 48 code bytes per document as M32 plus a 16-byte sidecar, but rebuilding is allowed",
+      "must_be_built_without_qrels": true,
+      "must_be_hash_frozen_before_confirmation_started": true,
+      "metric": "inner_product",
+      "nlist": 512,
+      "subquantizers": 48,
+      "bits_per_subquantizer": 8,
+      "nprobe": 16
+    }
+  },
+  "metrics": {
+    "primary_endpoint": "paired known-positive Recall@10 difference: RARS-v8 minus PCA",
+    "secondary_endpoints": [
+      "RARS-v8 minus Base Recall@10",
+      "PCA minus Base Recall@10",
+      "Success@10",
+      "MRR@10",
+      "nDCG@10",
+      "same-candidate exact gap recovery",
+      "improved, harmed, and unchanged query counts",
+      "higher-nprobe and rebuilt-M48 quality",
+      "artifact storage and measured latency"
+    ],
+    "bootstrap": {
+      "paired_query_replicates": 50000,
+      "confidence": 0.95,
+      "seed": 20260723,
+      "quantile_method": "linear"
+    },
+    "primary_randomization_test": {
+      "paired_sign_replicates": 100000,
+      "alternative": "RARS-v8 mean Recall@10 is greater than PCA",
+      "seed": 20260724,
+      "maximum_p_value": 0.025
+    },
+    "multiplicity": "RARS-v8 versus PCA Recall@10 is the sole primary endpoint; all other comparisons and metrics are secondary or limitation analyses"
+  },
+  "confirmation_gate": {
+    "minimum_rars_recall_at_10_gain_over_base": 0.01,
+    "minimum_rars_recall_at_10_gain_over_pca": 0.005,
+    "minimum_generic_sidecar_gain_over_base": 0.01,
+    "bootstrap_lower_must_exceed": 0.0,
+    "maximum_primary_randomization_p_value": 0.025,
+    "minimum_candidate_gap_recovery_fraction": 0.15,
+    "minimum_improved_queries_over_base": 20,
+    "minimum_net_improved_queries_over_base": 10,
+    "minimum_improved_queries_over_pca": 15,
+    "minimum_net_improved_queries_over_pca": 8,
+    "algorithm_confirmation_decision": "CONFIRM_RARS_V8_ALGORITHM_WITHIN_PROGRAM",
+    "generic_sidecar_confirmation_decision": "CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM",
+    "stop_decision": "STOP_RARS_V8_AFTER_LOCKED_CONFIRMATION",
+    "method_or_threshold_tuning_authorized": false
+  },
+  "optimization_anomaly_policy": {
+    "observed_v8_fact": "the recorded full-development surrogate loss rises from 0.07568628906025816 to 0.08769166847680343 and all five folds show the same direction",
+    "confirmation_action": "do not change the frozen V8 artifact or rerun training; evaluate the artifact exactly as built",
+    "parallel_diagnostic": "audit analytical gradient, finite-difference gradient, pre-update objective, post-Adam objective, post-QR objective, anchor term, gradient norm, and retrieval metrics on development data only",
+    "if_logging_only": "correct documentation without changing the confirmation method",
+    "if_algorithmic_bug": "retain V8 as an empirical frozen artifact; any corrected optimizer is V8.1 or later and requires a new development protocol"
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "faiss_package": "faiss-gpu-cu12==1.12.0",
+    "determinism": "candidate generation and scoring must be deterministic; timing is hardware-specific and repeated"
+  },
+  "required_outputs": [
+    "confirmation_started.json",
+    "input_freeze.json",
+    "per_query_metrics.npz",
+    "confirmation_result.json",
+    "confirmation_complete.json"
+  ],
+  "prohibited_actions": [
+    "changing rank, alpha, Top-B, basis, scales, codes, pair definitions, loss weights, optimization settings, metric definitions, or gate thresholds",
+    "fitting or choosing any method from future_method_holdout outcomes",
+    "opening qrels before confirmation_started.json is durable",
+    "reusing a non-empty output directory unless a complete packet is verified byte-for-byte",
+    "selecting among seeds, checkpoints, ranks, bit-widths, nprobe values, or M48 builds using holdout outcomes",
+    "calling the future role independent, untouched across the full program, external, or official",
+    "using secondary metrics to overturn a failed primary gate",
+    "hiding the higher-nprobe or rebuilt-M48 limitation baselines",
+    "continuing algorithm tuning after the one-shot result under this protocol"
+  ]
+}

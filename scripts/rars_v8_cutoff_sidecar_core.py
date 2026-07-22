@@ -451,6 +451,30 @@ def fit_cutoff_aware_basis(
     history: list[dict[str, float]] = []
     anchor_projector = anchor @ anchor.T
 
+    def objective(candidate: np.ndarray) -> tuple[float, float, float]:
+        candidate_q = q @ candidate
+        candidate_residual = delta_r @ candidate
+        candidate_prediction = np.einsum(
+            "pr,pr->p", candidate_q, candidate_residual
+        )
+        candidate_error = candidate_prediction - target
+        candidate_absolute = np.abs(candidate_error)
+        candidate_huber = np.where(
+            candidate_absolute <= huber_delta,
+            0.5 * candidate_error * candidate_error / huber_delta,
+            candidate_absolute - 0.5 * huber_delta,
+        )
+        candidate_overlap = anchor.T @ candidate
+        candidate_anchor = anchor_weight * (
+            1.0
+            - float(np.sum(candidate_overlap * candidate_overlap))
+            / candidate.shape[1]
+        )
+        candidate_pair = float(np.sum(weights * candidate_huber))
+        return candidate_pair, float(candidate_anchor), float(
+            candidate_pair + candidate_anchor
+        )
+
     for step in range(1, steps + 1):
         q_projected = q @ basis
         residual_projected = delta_r @ basis
@@ -490,15 +514,37 @@ def fit_cutoff_aware_basis(
         proposal = basis - learning_rate * corrected_first / (
             np.sqrt(corrected_second) + epsilon
         )
-        basis, _ = np.linalg.qr(proposal, mode="reduced")
-        basis = _orient_columns(basis)
+        proposal_pair, proposal_anchor, proposal_total = objective(proposal)
+        retracted, _ = np.linalg.qr(proposal, mode="reduced")
+        basis = _orient_columns(retracted)
+        retracted_pair, retracted_anchor, retracted_total = objective(basis)
+        pre_pair = float(np.sum(weights * huber))
+        pre_total = float(pre_pair + anchor_loss)
         history.append(
             {
                 "step": float(step),
-                "pair_huber_loss": float(np.sum(weights * huber)),
+                # Backward-compatible fields record the pre-update objective,
+                # matching every frozen V8 development packet.
+                "pair_huber_loss": pre_pair,
                 "anchor_loss": float(anchor_loss),
-                "loss": float(np.sum(weights * huber) + anchor_loss),
+                "loss": pre_total,
                 "gradient_norm_before_clip": gradient_norm,
+                # These audit-only fields do not alter the update.  They make
+                # the Adam-versus-QR loss direction observable in later
+                # development diagnostics without rewriting frozen V8.
+                "proposal_pair_huber_loss": proposal_pair,
+                "proposal_anchor_loss": proposal_anchor,
+                "proposal_loss": proposal_total,
+                "retracted_pair_huber_loss": retracted_pair,
+                "retracted_anchor_loss": retracted_anchor,
+                "retracted_loss": retracted_total,
+                "proposal_loss_change": float(proposal_total - pre_total),
+                "retraction_loss_change": float(
+                    retracted_total - proposal_total
+                ),
+                "full_step_loss_change": float(
+                    retracted_total - pre_total
+                ),
             }
         )
     return validate_orthonormal_basis(

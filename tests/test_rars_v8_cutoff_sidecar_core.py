@@ -103,6 +103,17 @@ def test_cutoff_basis_is_deterministic_orthonormal_and_reduces_pair_error() -> N
     assert history_a == history_b
     assert np.allclose(fitted_a.T @ fitted_a, np.eye(1), atol=2e-4)
     assert history_a[-1]["pair_huber_loss"] <= history_a[0]["pair_huber_loss"]
+    assert {
+        "proposal_loss",
+        "retracted_loss",
+        "proposal_loss_change",
+        "retraction_loss_change",
+        "full_step_loss_change",
+    }.issubset(history_a[0])
+    assert np.isclose(
+        history_a[0]["full_step_loss_change"],
+        history_a[0]["retracted_loss"] - history_a[0]["loss"],
+    )
 
 
 def test_int8_sidecar_scores_only_base_top_b_and_preserves_tail() -> None:

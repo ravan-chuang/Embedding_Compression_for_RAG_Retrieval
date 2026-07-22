@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "snapshot_date": "2026-07-22",
+  "scope": "completed RARS evidence through V8 plus the preregistered V9 next experiment",
+  "metric_semantics": "known-positive retrieval metrics unless the source explicitly states otherwise; values from different query roles, corpora, models, and candidate protocols are not pooled",
+  "experiments": [
+    {
+      "id": "fixed_budget_residual_pq",
+      "evidence_tier": "development_and_heldout_system_comparison",
+      "result": "compact residual variants improve some M32 bases, but a uniform rebuilt M48 index remains stronger at comparable representation bytes",
+      "decision": "NOT_THE_PRIMARY_ALGORITHM_CLAIM",
+      "lesson": "a sidecar must be justified by the frozen-index retrofit constraint, not by global storage optimality when rebuilding is allowed",
+      "source": "results/fixed_budget_residual_pq/README.md"
+    },
+    {
+      "id": "rars_v1_clean_split",
+      "evidence_tier": "heldout_but_partially_prior_explored",
+      "query_count": 1000,
+      "base_recall_at_10": 0.6833333333333333,
+      "method_recall_at_10": 0.7073333333333334,
+      "gain": 0.024,
+      "ci95": [0.0105, 0.03783333333333333],
+      "audit": "137 of 1000 queries had prior exploration; on the remaining 863, Recall, Success, and nDCG remain positive while MRR CI crosses zero",
+      "decision": "POSITIVE_BASE_COMPARISON_WITH_EVIDENCE_CAVEAT",
+      "lesson": "the frozen sidecar can help Base, but this does not establish RARS over a storage-matched PCA comparator",
+      "source": "results/rars_clean_split/test/test_metrics.json"
+    },
+    {
+      "id": "rars_v1_cross_setting",
+      "evidence_tier": "directional_transfer",
+      "settings": [
+        {
+          "dataset": "FiQA",
+          "model": "BGE-small",
+          "query_count": 648,
+          "sidecar_gain_over_base": 0.0131118282,
+          "ci95": [-0.0005560723, 0.0268452875]
+        },
+        {
+          "dataset": "FiQA",
+          "model": "MiniLM",
+          "query_count": 648,
+          "sidecar_gain_over_base": 0.0096198597,
+          "ci95": [-0.0056066304, 0.0252210982]
+        }
+      ],
+      "decision": "DIRECTIONAL_NOT_CONFIRMATORY",
+      "lesson": "point estimates transfer, but neither interval excludes zero",
+      "source": "results/pq_residual_sidecar_cross_setting/cross_setting_summary.csv"
+    },
+    {
+      "id": "trec_dl_2019_restricted",
+      "evidence_tier": "preregistered_external_but_corpus_restricted",
+      "query_count": 42,
+      "rars_minus_pca_recall_at_10": -0.01812460026745741,
+      "ci95": [-0.07350718065003778, 0.01684981684981685],
+      "indexed_corpus_qrels_coverage": 0.1224,
+      "decision": "PRIMARY_HYPOTHESIS_UNSUPPORTED",
+      "lesson": "small query count and restricted corpus create high variance, and the primary direction is negative",
+      "source": "results/external_confirmation/trec_dl_2019_msmarco_1m_restricted/evaluation_v1/paired_bootstrap.json"
+    },
+    {
+      "id": "beir_nq_confirmation",
+      "evidence_tier": "one_shot_external",
+      "query_count": 3452,
+      "base_recall_at_10": 0.3797315565855543,
+      "pca_recall_at_10": 0.3781141367323291,
+      "rars_recall_at_10": 0.3777037466203167,
+      "rars_minus_pca": -0.0004103901120124,
+      "ci95": [-0.005987, 0.004972],
+      "posthoc_exact_top40_headroom": 0.08379200463499414,
+      "rars_proxy_relevance_pearson": 0.150202187205734,
+      "decision": "RARS_SUPERIORITY_UNSUPPORTED",
+      "lesson": "candidate-level exact headroom exists, but the learned score-error proxy is weakly aligned with relevance",
+      "source": "results/beir_nq_confirmation/posthoc_diagnosis/diagnostic_summary.json"
+    },
+    {
+      "id": "rars_v2_boundary_loss",
+      "evidence_tier": "development_failure",
+      "boundary_fp32_recall_at_10_after_five_epochs": 0.3845,
+      "decision": "FAILED_PROTOCOL_TRAIN_DEPLOY_MISMATCH",
+      "lesson": "a training objective that is not evaluated through the deployable int8 Top-B scorer can catastrophically optimize the wrong system",
+      "source": "results/rars_v2_boundary_loss/run0_summary.json"
+    },
+    {
+      "id": "rars_v2_1_int8",
+      "evidence_tier": "development_failure",
+      "boundary_int8_recall_at_10": 0.6786666666666666,
+      "pca_recall_at_10": 0.7043333333333334,
+      "decision": "NO_GO_OR_REVISE",
+      "lesson": "making the scorer deployable is necessary but does not make the retrieval-aware objective better than PCA",
+      "source": "results/rars_v2_boundary_loss/v2_1_seed42_go_no_go.json"
+    },
+    {
+      "id": "rars_v2_2_fp32_replication",
+      "evidence_tier": "development_seed_replication_not_query_replication",
+      "query_count": 1019,
+      "heldout_seed_mean_gain_over_base": 0.021099116781158,
+      "heldout_seed_mean_gain_over_pca": 0.007687275106313379,
+      "failed_support": "seed 44 improves 10 queries over PCA versus the registered minimum of 11",
+      "decision": "UNSTABLE_NO_QAT",
+      "lesson": "mean gain and positive confidence intervals are insufficient when the effect is carried by too few queries",
+      "source": "results/rars_v2_2_fp32_replication/aggregate-00a0dee30767/replication_summary.json"
+    },
+    {
+      "id": "rars_v3_matched_access_oracle",
+      "evidence_tier": "development_non_deployable_oracle",
+      "decision": "STOP_NO_HEADROOM",
+      "lesson": "a label-aware adaptive storage allocator did not expose the preregistered advantage over strong fixed-rate access, so static variable-rate allocation was abandoned",
+      "source": "docs/rars_v3_oracle_first_feasibility_protocol.md"
+    },
+    {
+      "id": "rars_v5_pq_aware_100k",
+      "evidence_tier": "development_pilot",
+      "query_count": 728,
+      "base_recall_at_10": 0.94253663003663,
+      "adapter_recall_at_10": 0.9404761904761905,
+      "base_recall_at_100": 0.9752747252747253,
+      "adapter_recall_at_100": 0.978021978021978,
+      "recall_at_100_gain": 0.0027472527472527375,
+      "ci95": [0.0, 0.006868131868131868],
+      "pq_induced_flip_pairs": 24,
+      "improved_queries": 2,
+      "decision": "STOP_PQ_AWARE_100K_PILOT",
+      "lesson": "a near-ceiling 100K task supplies too little PQ-specific supervision; the adapter overfits and harms Recall@10",
+      "source": "results/rars_v5_pq_aware_100k_pilot/pilot_result.json"
+    },
+    {
+      "id": "rars_v6_1m_headroom",
+      "evidence_tier": "development_diagnostic_not_method_result",
+      "query_count": 2307,
+      "base_recall_at_100": 0.8473125270914608,
+      "same_ivf_exact_recall_at_100": 0.8939459615662475,
+      "full_exact_recall_at_100": 0.972980783123826,
+      "pq_specific_gap": 0.04663343447478674,
+      "pq_fraction_of_total_gap": 0.3710836447254949,
+      "flip_triplets": 4413,
+      "flip_queries": 189,
+      "decision": "GO_TO_V6_LOSS_IMPLEMENTATION",
+      "lesson": "PQ-specific headroom is real and distributed, but routing accounts for most remaining Base-to-exact loss",
+      "source": "results/rars_v6_1m_headroom/reported_outcome.json"
+    },
+    {
+      "id": "rars_v7_query_adapter",
+      "evidence_tier": "development_pilot",
+      "query_count": 462,
+      "base_recall_at_10": 0.65657,
+      "adapter_recall_at_10": 0.66162,
+      "base_recall_at_100": 0.84957,
+      "adapter_recall_at_100": 0.85714,
+      "recall_at_100_ci95": [-0.00433, 0.02056],
+      "candidate_gap_recovery": 0.1346,
+      "mean_query_cosine": 0.94682,
+      "decision": "STOP_V7_QUERY_ADAPTER_PILOT",
+      "lesson": "moving the query to compensate document-side PQ residuals creates unacceptable representation drift and uncertain retrieval gain",
+      "source": "docs/rars_v7_query_adapter_pilot_protocol.md"
+    },
+    {
+      "id": "rars_v8_cutoff_sidecar",
+      "evidence_tier": "outcome_informed_five_fold_oof_development",
+      "query_count": 2307,
+      "base_recall_at_10": 0.6799234214708858,
+      "pca_recall_at_10": 0.6926383470596735,
+      "rars_recall_at_10": 0.7028247363097818,
+      "same_candidate_exact_recall_at_10": 0.7737682415835863,
+      "rars_minus_base": 0.02290131483889611,
+      "rars_minus_base_ci95": [0.014665510764340412, 0.03142609449501517],
+      "rars_minus_pca": 0.010186389250108365,
+      "rars_minus_pca_ci95": [0.0034677069787602947, 0.017121803207628954],
+      "rars_vs_base_support": {"improved": 80, "harmed": 25},
+      "rars_vs_pca_support": {"improved": 45, "harmed": 22},
+      "candidate_gap_recovery": 0.24403387220939085,
+      "pair_support": {"total": 7534, "promotion_queries": 261, "protection_queries": 1595},
+      "artifact_bytes_per_document": 16.025024,
+      "optimizer_anomaly": "recorded surrogate loss rises from 0.07568628906025816 to 0.08769166847680343; no convergence claim",
+      "decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+      "lesson": "this is the first development result that beats both Base and storage-matched PCA with broad query support, but it still requires one-shot confirmation",
+      "source": "results/rars_v8_cutoff_sidecar/development/development_result.json"
+    },
+    {
+      "id": "rars_v9_locked_confirmation",
+      "evidence_tier": "preregistered_not_yet_run",
+      "query_count": 803,
+      "primary_endpoint": "RARS-v8 minus PCA known-positive Recall@10",
+      "decision": "PENDING_ONE_SHOT_WITHIN_PROGRAM_CONFIRMATION",
+      "lesson": "the role is prospective relative to V8 but not independent of the historical program",
+      "source": "protocols/rars_v9_locked_confirmation_v1.json"
+    }
+  ]
+}
