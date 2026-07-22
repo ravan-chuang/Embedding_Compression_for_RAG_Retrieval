@@ -34,6 +34,8 @@ def test_v9_notebook_is_clean_compilable_and_gpu_ready() -> None:
 
 def test_v9_notebook_uses_isolated_numpy_and_source_hashes() -> None:
     code = _code()
+    assert "'venv', '--without-pip'" in code
+    assert "'-m', 'pip', '--python', EXPERIMENT_PYTHON" in code
     assert "numpy==1.26.4" in code
     assert "faiss-gpu-cu12==1.12.0" in code
     assert "SOURCE_HASHES =" in code

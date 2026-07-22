@@ -88,10 +88,22 @@ REPO = Path('/content/Embedding_Compression_for_RAG_Retrieval_rars_v9')
 ENV_ROOT = Path('/content/rars-v9-env')
 if ENV_ROOT.exists():
     shutil.rmtree(ENV_ROOT)
-subprocess.run([sys.executable, '-m', 'venv', str(ENV_ROOT)], check=True)
+
+# Colab's system Python can ship the venv module without a working ensurepip.
+# Create the environment without pip, then direct the already-working host pip
+# at that interpreter. This keeps NumPy isolated without apt changes or a
+# runtime restart.
+venv_result = subprocess.run([
+    sys.executable, '-m', 'venv', '--without-pip', str(ENV_ROOT),
+], text=True, capture_output=True)
+if venv_result.returncode != 0:
+    print(venv_result.stdout)
+    print(venv_result.stderr, file=sys.stderr)
+    venv_result.check_returncode()
 EXPERIMENT_PYTHON = str(ENV_ROOT / 'bin/python')
 subprocess.run([
-    EXPERIMENT_PYTHON, '-m', 'pip', 'install', '-q',
+    sys.executable, '-m', 'pip', '--python', EXPERIMENT_PYTHON,
+    'install', '-q',
     'numpy==1.26.4', 'faiss-gpu-cu12==1.12.0', 'pytest>=8,<9',
 ], check=True)
 EXPERIMENT_ENV = os.environ.copy()
