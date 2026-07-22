@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "snapshot_date": "2026-07-22",
-  "scope": "completed RARS evidence through the independently audited V12 anchored cutoff-RPQ negative result plus the frozen unexecuted V13 signed score-distilled RPQ development protocol",
+  "snapshot_date": "2026-07-23",
+  "scope": "completed RARS evidence through the independently audited V13 signed score-distilled RPQ negative result plus the frozen unexecuted V14 query-whitened anisotropic rate-RPQ diagnostic",
   "metric_semantics": "known-positive retrieval metrics unless the source explicitly states otherwise; values from different query roles, corpora, models, and candidate protocols are not pooled",
   "experiments": [
     {
@@ -266,16 +266,44 @@
     },
     {
       "id": "rars_v13_signed_score_distilled_rpq",
-      "evidence_tier": "fresh_query_five_fold_method_development_protocol_not_yet_run",
-      "planned_query_count": 5000,
+      "evidence_tier": "fresh_query_five_fold_method_development_failure",
+      "query_count": 5000,
       "query_population": "new MS MARCO train queries with corpus-covered positives, excluding all historical 6980 qids and all 2500 V12 qids",
       "fold_count": 5,
       "seeds": [20261001, 20261002, 20261003],
       "baseline": "per-fold rank64 PCA plus Faiss RPQ16x8 and a storage-matched PCA16-int8 comparator, each exactly 16 bytes per document",
       "method": "fixed-assignment per-centroid 4x4 ridge regression of signed query-residual block scores, cutoff-weighted and query-covariance anchored, with no code reassignment",
-      "decision": "PENDING_SINGLE_FROZEN_V13_DEVELOPMENT_RUN",
-      "lesson": "V13 is a single preregistered test of the objective mismatch diagnosed in V12; it is not yet evidence of improvement",
-      "source": "docs/rars_v13_signed_score_distilled_rpq_protocol.md; protocols/rars_v13_signed_score_distilled_rpq_v1.json"
+      "base_recall_at_10": 0.14046666666666666,
+      "same_candidate_exact_recall_at_10": 0.24566666666666664,
+      "pca16_recall_at_10": 0.15556666666666666,
+      "unsupervised_rpq_recall_at_10": 0.18926666666666664,
+      "challenger_recall_at_10": 0.18986666666666666,
+      "gain_over_unsupervised": 0.0006,
+      "gain_ci95": [-0.0006, 0.0018],
+      "randomization_p_one_sided": 0.25501744982550173,
+      "changed_query_support": {"improved": 6, "harmed": 3},
+      "seed_gains": [0.0006, 0.0006, 0.0006],
+      "fold_gains": [0.0, 0.0, 0.0009624639076034649, 0.0, 0.0020491803278688526],
+      "candidate_gap_recovery_fraction": 0.46958174904942973,
+      "full_corpus_payload_bytes": 16000000,
+      "changed_query_seed_overlap": "29 changed qids across three seeds, with zero pairwise or three-way overlap",
+      "decision": "STOP_SIGNED_SCORE_RPQ_NO_STABLE_ADVANTAGE",
+      "lesson": "the signed-score surrogate decreases in every fold and seed, but only nine primary-seed queries change Recall and the changed-query identities do not repeat across seeds; surrogate improvement is not stable ranking improvement",
+      "source": "results/rars_v13_signed_score_rpq/development/development_result.json; results/rars_v13_signed_score_rpq/artifact_audit.json; protocols/rars_v13_signed_score_distilled_rpq_v1.json"
+    },
+    {
+      "id": "rars_v14_query_whitened_anisotropic_rate_rpq",
+      "evidence_tier": "post_v13_outcome_informed_architecture_diagnostic_protocol_not_yet_run",
+      "query_count": 5000,
+      "query_role": "reused V13 development queries; explicitly not fresh evidence",
+      "fold_count": 5,
+      "seeds": [20261001, 20261002, 20261003],
+      "baseline": "committed V13 per-seed uniform PCA64 RPQ16x8 arrays at exactly 16 bytes per document",
+      "ablation": "uniform 8-bit query-whitened block quantization",
+      "method": "label-free cutoff-query covariance, per-block score whitening, exact bounded integer allocation of 128 bits across sixteen four-dimensional blocks, and transformed-space k-means",
+      "decision": "PENDING_SINGLE_FROZEN_V14_DIAGNOSTIC_RUN",
+      "lesson": "V14 tests whether the missing mechanism is representation geometry and rate allocation rather than another supervised centroid objective; any GO authorizes only a new disjoint-query protocol",
+      "source": "docs/rars_v14_query_whitened_anisotropic_rate_rpq_protocol.md; protocols/rars_v14_query_whitened_anisotropic_rate_rpq_diagnostic_v1.json"
     }
   ]
 }

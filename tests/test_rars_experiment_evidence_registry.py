@@ -29,7 +29,10 @@ def test_registry_preserves_formal_decisions_and_evidence_boundaries() -> None:
         "STOP_CA_RPQ_NO_STABLE_ADVANTAGE"
     )
     assert experiments["rars_v13_signed_score_distilled_rpq"]["decision"] == (
-        "PENDING_SINGLE_FROZEN_V13_DEVELOPMENT_RUN"
+        "STOP_SIGNED_SCORE_RPQ_NO_STABLE_ADVANTAGE"
+    )
+    assert experiments["rars_v14_query_whitened_anisotropic_rate_rpq"]["decision"] == (
+        "PENDING_SINGLE_FROZEN_V14_DIAGNOSTIC_RUN"
     )
 
 
@@ -52,6 +55,12 @@ def test_registry_does_not_upgrade_v8_or_v9_to_independent_evidence() -> None:
     assert "failure" in experiments["rars_v12_anchored_cutoff_rpq"][
         "evidence_tier"
     ]
+    assert "failure" in experiments["rars_v13_signed_score_distilled_rpq"][
+        "evidence_tier"
+    ]
+    assert "diagnostic" in experiments[
+        "rars_v14_query_whitened_anisotropic_rate_rpq"
+    ]["evidence_tier"]
     assert "not_yet_run" in experiments[
-        "rars_v13_signed_score_distilled_rpq"
+        "rars_v14_query_whitened_anisotropic_rate_rpq"
     ]["evidence_tier"]
