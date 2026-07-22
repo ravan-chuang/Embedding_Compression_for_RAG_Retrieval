@@ -13,7 +13,7 @@ The repository separates three questions that are often conflated:
 2. **Compressed-domain efficiency:** What latency and throughput are obtained when Faiss searches PQ codes directly?
 3. **Frozen-index recovery:** How much ranking quality can be recovered by attaching a compact residual sidecar without rebuilding or rewriting an existing IVF-PQ index?
 
-The current research focus is **lightweight post-hoc correction of quantization-induced Top-k loss in frozen IVF-PQ indexes**. The completed v1 evidence has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority. The separately versioned v2.2 FP32 development replication ends `UNSTABLE_NO_QAT`, the v3 matched-access oracle ends `STOP_NO_HEADROOM`, and the v5 100K PQ-aware adapter pilot ends `STOP_PQ_AWARE_100K_PILOT`. The completed v6 diagnostic then establishes distributed 1M PQ-specific headroom, while the v7 query-only adapter still ends `STOP_V7_QUERY_ADAPTER_PILOT`. RARS-v8 is the resulting redesign: a deterministic, query-balanced, cutoff-aware rank-16 int8 document-residual sidecar with a storage-matched PCA comparator. Its frozen one-shot development run passes every registered gate and authorizes a separate prospective confirmation protocol; it is positive development evidence, not independent confirmation.
+The current research focus is **lightweight post-hoc correction of quantization-induced Top-k loss in frozen IVF-PQ indexes**. The completed v1 evidence has three layers: a positive MS MARCO clean-pipeline result against the frozen base index, an unsupported preregistered TREC DL RARS-versus-PCA hypothesis, and a larger one-shot BEIR NQ confirmation that also does not support RARS superiority. The separately versioned v2.2 FP32 development replication ends `UNSTABLE_NO_QAT`, the v3 matched-access oracle ends `STOP_NO_HEADROOM`, and the v5 100K PQ-aware adapter pilot ends `STOP_PQ_AWARE_100K_PILOT`. The completed v6 diagnostic establishes distributed 1M PQ-specific headroom, while the v7 query-only adapter ends `STOP_V7_QUERY_ADAPTER_PILOT`. RARS-v8 then passes its outcome-informed development gate, but the completed V9 one-shot within-program confirmation supports only the generic frozen-sidecar claim: RARS improves over Base, while its registered superiority over storage-matched PCA is unsupported. V10 is a frozen, unexecuted single-configuration development experiment that tests whether PCA anchoring and explicit tail-harm control can produce a stable out-of-fold advantage over PCA without changing the 16-byte/document deployment budget.
 
 On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improves:
 
@@ -24,7 +24,7 @@ On that clean-pipeline held-out MS MARCO 1M test split, frozen RARS Top40 improv
 
 All four confidence intervals are strictly above zero on the full 1,000-query clean-pipeline held-out split. A project-history audit subsequently found that 137 of those queries had appeared in an earlier exploratory query set. After excluding those 137 queries by ID, the remaining 863 prior-unseen queries retain statistically positive gains for Recall@10, Success@10, and nDCG@10; MRR@10 remains directionally positive but its 95% confidence interval narrowly crosses zero. The base IVF-PQ index and its existing PQ codes remain unchanged.
 
-The later external comparison froze a storage-matched PCA sidecar and RARS before evaluating 42 eligible TREC DL 2019 queries against the same frozen 1M corpus. RARS minus PCA Recall@10 was `-0.0181`, with a 95% paired-bootstrap CI of `[-0.0735, +0.0168]`. The external primary hypothesis was therefore **not supported**. This 42-query result is a corpus-restricted sensitivity analysis, not an official full-corpus TREC benchmark, but it is the latest confirmatory evidence and is reported without retuning.
+The later external comparison froze a storage-matched PCA sidecar and RARS before evaluating 42 eligible TREC DL 2019 queries against the same frozen 1M corpus. RARS minus PCA Recall@10 was `-0.0181`, with a 95% paired-bootstrap CI of `[-0.0735, +0.0168]`. The external primary hypothesis was therefore **not supported**. This 42-query result is a corpus-restricted sensitivity analysis, not an official full-corpus TREC benchmark, and is reported without retuning.
 
 The subsequent full-corpus BEIR NQ confirmation fitted and selected both sidecars using NQ train queries before a one-shot evaluation on 3,452 official test queries. RARS minus PCA Recall@10 was `-0.000410`, with a 95% paired-bootstrap CI of `[-0.005987, +0.004972]`; neither sidecar improved Recall@10 over the frozen M32 base. A locked post-hoc diagnosis found substantial recoverable headroom from exact Top-40 candidate rescoring (`+0.08379` Recall@10 over base), while the exact-overlap proxy correlated only weakly with relevance gain (`r≈0.15` for RARS). These diagnostics motivated the now-completed, separately versioned RARS-v2.2 FP32 development replication; they do not authorize NQ test retuning.
 
@@ -40,27 +40,41 @@ gap. All ten frozen development gates pass. The subsequent qrels-free builder
 creates byte-audited 1M-document PCA and RARS sidecars at `16.025024 B/doc`
 without changing the IVF-PQ index. The recorded optimization loss rises rather
 than falls, so no loss-convergence claim is made; the positive result is limited
-to recomputable OOF ranking metrics and still requires prospective confirmation.
+to recomputable OOF ranking metrics. Its prospective V9 result is reported next.
 
-That next step is now specified by the frozen
-[RARS-v9 confirmation protocol](docs/rars_v9_locked_confirmation_protocol.md),
+The frozen [RARS-v9 confirmation protocol](docs/rars_v9_locked_confirmation_protocol.md),
 [machine-readable contract](protocols/rars_v9_locked_confirmation_v1.json), and
-[clean Colab notebook](notebooks/MSMARCO_RARS_v9_Locked_Confirmation.ipynb).
-V9 does not train or tune a new method. It first builds the 803-query identity
-packet and a rebuilt M48 limitation baseline without qrels, freezes every input,
-and then permits one outcome opening. Its sole primary endpoint is
-RARS-v8-minus-PCA Recall@10; higher `nprobe`, M48, Base, and same-candidate exact
-are locked comparators. The 803-query role is prospective relative to V8 but
-came from the historical v2 development pool, so it is explicitly classified
-as within-program confirmation, not independent evidence. V9 has not yet run.
+[clean Colab notebook](notebooks/MSMARCO_RARS_v9_Locked_Confirmation.ipynb)
+have now been executed exactly once. On 803 prospective-to-V8 queries, Recall@10
+is `0.696347` for Base, `0.710046` for PCA, and `0.711499` for RARS-v8.
+RARS-minus-Base is `+0.015152` with 95% CI
+`[+0.002076, +0.028643]`, but RARS-minus-PCA is only `+0.001453` with CI
+`[-0.009132, +0.012246]`, one-sided randomization `p=0.409`, and query support
+`12 improved / 11 harmed`. All five algorithm gates fail. The formal decision is
+`CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM`, not confirmation of the RARS
+learning algorithm. Rebuild-allowed M48 reaches `0.756330` Recall@10, so the
+sidecar remains a retrofit method rather than a globally storage-optimal design.
+
+The next experiment is the unexecuted
+[RARS-v10 stable-sidecar protocol](docs/rars_v10_stable_sidecar_protocol.md),
+[machine-readable contract](protocols/rars_v10_pca_anchored_harm_constrained_v1.json),
+and [source-hash-pinned Colab notebook](notebooks/MSMARCO_RARS_v10_Stable_Sidecar_Development.ipynb).
+V10 uses only the historically opened `oracle_design` role, one frozen
+configuration, five-fold OOF scoring, explicit PCA-relative tail-harm control,
+finite-difference gradient audits, and monotone Riemannian optimization. It does
+not read or reuse V9 data and cannot authorize access to any old holdout. The
+same run also measures, without training a codebook, the same-basis PCA-FP32
+versus PCA-int8 gap. That diagnostic determines whether a separate
+ScaNN-inspired score-aware scalar-codebook experiment has enough headroom to be
+worth implementing.
 
 ## Current Evidence Summary
 
-**As of 2026-07-22, the experiment sequence includes the audited RARS-v8
-development and full-corpus sidecar packets.** V8 passes its frozen development
-gate, but it has not undergone a separate prospective evaluation. The
-appropriate review status remains **share with caveats** rather than
-method-superiority ready.
+**As of 2026-07-22, V9 has completed its one-shot within-program confirmation.**
+The evidence supports a generic compact frozen-index residual sidecar over Base,
+but not superiority of RARS-v8 over storage-matched PCA. The appropriate review
+status remains **share with caveats** rather than method-superiority ready. V10
+is protocol-complete but has not run.
 
 The strongest defensible research claim is:
 
@@ -89,7 +103,8 @@ or query-adapter extension.
 | RARS-v6 1M headroom diagnostic | 2,307 design queries | Same-route FP32 gives `+0.04663` Recall@100 over Base-PQ; 4,413 flip triplets span 189 queries | `GO_TO_V6_LOSS_IMPLEMENTATION`; diagnostic only |
 | RARS-v7 query adapter | 462 selection queries | Recall@10 `+0.00505`; Recall@100 `+0.00758`, CI crosses zero; cosine guardrail fails | `STOP_V7_QUERY_ADAPTER_PILOT` |
 | RARS-v8 cutoff-aware sidecar | 2,307 design queries; five-fold OOF, int8-only | Recall@10 `0.67992 → 0.70282`; `+0.01019` over storage-matched PCA, CI `[+0.00347, +0.01712]`; all gates pass | `GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL`; development only |
-| RARS-v9 locked confirmation | 803 prospective-to-V8 queries; one-shot, not independent of the historical program | Protocol, qrels-free identity/M48 builders, evaluator, decision core, and notebook frozen; no outcome opened | Pending execution; no retuning authorized |
+| RARS-v9 locked confirmation | 803 prospective-to-V8 queries; one-shot, within-program | RARS `+0.01515` over Base, CI positive; RARS `+0.00145` over PCA, CI crosses zero, `p=0.409`, support `12/11`; M48 `0.75633` | `CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM`; algorithm superiority unsupported |
+| RARS-v10 stable sidecar | 2,307 historical design queries; five-fold OOF development | One frozen PCA-anchored, query-harm-constrained rank-16 int8 configuration plus a no-training PCA-FP32-versus-int8 scalar-headroom diagnostic; not yet executed | Pending single development run; V9 and old holdouts prohibited |
 
 These rows are not a single leaderboard. They use different datasets, query
 roles, candidate pools, and comparators. Development and selection results
@@ -127,7 +142,8 @@ generation or artifact release.
 | RARS-v6 1M PQ-specific headroom diagnostic | [Frozen diagnostic protocol](docs/rars_v6_1m_headroom_protocol.md), [machine-readable contract](protocols/rars_v6_1m_headroom_v1.json), and commit-pinned Colab run are complete. On 2,307 `oracle_design` queries, Base-PQ Recall@100 is `0.84731`, same-route FP32 Recall@100 is `0.89395`, and 4,413 uncapped PQ-induced flip triplets span 189 queries. All six preregistered gates pass; formal decision `GO_TO_V6_LOSS_IMPLEMENTATION`. This is a development diagnostic, not a method result or independent confirmation. |
 | RARS-v7 frozen-index query-adapter pilot | [Frozen protocol](docs/rars_v7_query_adapter_pilot_protocol.md), [machine-readable contract](protocols/rars_v7_query_adapter_pilot_v1.json), and [commit-pinned notebook](notebooks/MSMARCO_RARS_v7_Query_Adapter_Pilot.ipynb) are complete. The query-only adapter changes selection Recall@10 from `0.65657` to `0.66162` and Recall@100 from `0.84957` to `0.85714`, but its Recall@100 95% CI is `[-0.00433, +0.02056]`, gap recovery is `13.46%`, and mean query cosine is `0.94682`. Formal decision: `STOP_V7_QUERY_ADAPTER_PILOT`. |
 | RARS-v8 cutoff-aware frozen-index sidecar | [Frozen development protocol](docs/rars_v8_cutoff_sidecar_protocol.md), [machine-readable contract](protocols/rars_v8_cutoff_sidecar_v1.json), [commit-pinned Colab notebook](notebooks/MSMARCO_RARS_v8_Cutoff_Sidecar_Development.ipynb), and [audited closure packet](results/rars_v8_cutoff_sidecar/README.md) are complete. On 2,307 design queries, five-fold OOF RARS-v8 Recall@10 is `0.702825` versus Base `0.679923` and storage-matched PCA `0.692638`; all development gates pass and the formal decision is `GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL`. The qrels-free builder creates both 1M sidecars at `16.025024 B/doc` with a byte-identical IVF-PQ index. The optimizer's recorded surrogate loss rises, and no independent confirmation or loss-convergence claim is made. |
-| RARS-v9 locked confirmation | [Frozen protocol](docs/rars_v9_locked_confirmation_protocol.md), [machine-readable contract](protocols/rars_v9_locked_confirmation_v1.json), [source-hash-pinned Colab notebook](notebooks/MSMARCO_RARS_v9_Locked_Confirmation.ipynb), qrels-free future-identity builder, qrels-free M48 builder, and one-shot evaluator are complete but unexecuted. The primary endpoint is RARS-v8 minus PCA Recall@10. The 803-query role is prospective relative to V8 but historically descended from v2 `inner_train`; it must not be called independent. |
+| RARS-v9 locked confirmation | [Frozen protocol](docs/rars_v9_locked_confirmation_protocol.md), [machine-readable contract](protocols/rars_v9_locked_confirmation_v1.json), [source-hash-pinned Colab notebook](notebooks/MSMARCO_RARS_v9_Locked_Confirmation.ipynb), qrels-free identity/M48 builders, and one-shot evaluator have completed. On 803 queries, RARS-minus-Base Recall@10 is `+0.015152`, CI `[+0.002076, +0.028643]`; RARS-minus-PCA is `+0.001453`, CI `[-0.009132, +0.012246]`, `p=0.409`, support `12/11`. Formal decision: `CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM`; the RARS algorithm path is not confirmed. |
+| RARS-v10 PCA-anchored harm-constrained sidecar | [Frozen development protocol](docs/rars_v10_stable_sidecar_protocol.md), [machine-readable contract](protocols/rars_v10_pca_anchored_harm_constrained_v1.json), deterministic core/trainer, contract tests, and [source-hash-pinned Colab notebook](notebooks/MSMARCO_RARS_v10_Stable_Sidecar_Development.ipynb) are complete but unexecuted. One five-fold OOF configuration tests V10 against storage-matched PCA with explicit tail-harm, worst-fold, breadth, gradient-audit, and monotone-loss gates. It cannot read V9 or any old holdout. |
 | Deployable rank-16 int8 sidecar artifact | Complete |
 | FastAPI sidecar serving path | Complete |
 | Artifact-backed and live-Faiss benchmarks | Complete |
@@ -149,8 +165,9 @@ generation or artifact release.
 - Preserves the completed v2.2 FP32 replication without post-hoc rescue: the held-out-seed mean gain over direct PCA is `+0.007687`, but seed 44 misses the frozen positive-support gate by one query, so the formal decision is `UNSTABLE_NO_QAT` and no QAT stage is run.
 - Separates routing loss from PQ-specific loss on the V6 1M design role: Base-PQ Recall@100 is `0.84731`, same-route FP32 Recall@100 is `0.89395`, and full exact Recall@100 is `0.97298`. The PQ-specific gap is real but accounts for only `37.11%` of the total Base-to-exact gap.
 - Records the V7 query-only adapter as a stopped negative pilot: its small Recall gains are not statistically supported, gap recovery is only `13.46%`, and mean query cosine `0.94682` violates the preregistered `0.995` drift guardrail.
-- Completes V8 exactly as frozen: five-fold OOF Recall@10 improves by `+0.022901` over Base and `+0.010186` over storage-matched PCA, both with positive paired-bootstrap lower bounds. The separate qrels-free builder produces audited 1M-document PCA and RARS artifacts without changing the IVF-PQ index. This is development evidence awaiting prospective confirmation; the rising recorded surrogate loss is disclosed.
-- Freezes V9 before any 803-query outcome access: source and artifact hashes, one primary endpoint, paired bootstrap, paired randomization test, breadth/harm gates, higher-`nprobe` alternatives, and a qrels-free same-code-budget M48 rebuild are fixed. The evaluator writes durable input/start markers before parsing qrels and never authorizes post-hoc tuning.
+- Completes V8 exactly as frozen: five-fold OOF Recall@10 improves by `+0.022901` over Base and `+0.010186` over storage-matched PCA, both with positive paired-bootstrap lower bounds. The separate qrels-free builder produces audited 1M-document PCA and RARS artifacts without changing the IVF-PQ index. The rising recorded surrogate loss is disclosed.
+- Completes V9 exactly once on 803 prospective-to-V8 queries. RARS improves over Base by `+0.015152` with a positive CI, but its `+0.001453` gain over PCA is not significant and all registered algorithm gates fail. The result supports the generic frozen-sidecar retrofit claim only; M48 remains stronger when rebuilding is permitted.
+- Freezes V10 as one post-confirmation development configuration: PCA initialization and anchoring, query-equal CVaR tail-harm, deterministic QR-retracted manifold optimization, per-fold finite-difference gradient audits, worst-fold stability, and PCA-superiority gates are fixed before execution. V10 never reads V9 arrays or an old holdout.
 - Packages the 1M-document RARS sidecar with a `16.025 B/document` residual-representation cost and `24.028 B/document` complete artifact cost including external document IDs.
 - Adds vectorized live-Faiss correction; the previously recorded 14-thread Top40 implementation requires `1.325 µs/query`, equal to `4.41%` of independently timed Faiss search cost. These timing measurements come from the earlier artifact benchmark and are reported separately from the clean-split quality result.
 - Verifies clean-split artifacts with SHA-256 hashes for the selected configuration, basis, scales, evaluator inputs, test results, and per-query outputs.
@@ -1747,18 +1764,19 @@ Immediate priorities:
    `STOP_PQ_AWARE_100K_PILOT`, and v7 `STOP_V7_QUERY_ADAPTER_PILOT`
    classifications; do not add seeds, relax gates, combine stopped methods, or
    open any protected future/audit role outside its frozen protocol;
-3. preserve the audited V8 development outcome and frozen method without
-   changing its optimizer, margins, rank, alpha, Top-B depth, gates, or PCA
-   comparator; do not describe the rising recorded surrogate loss as
-   convergence;
-4. execute the now-frozen V9 evaluator exactly once. Reuse the already encoded
-   qrels-free 1M artifacts and include Base, storage-matched PCA,
-   higher-`nprobe`, same-candidate exact, and rebuild-allowed M48 baselines;
-5. commit machine-readable closure packets for the NQ primary comparison and
+3. preserve the audited V8 development outcome and completed V9 one-shot result
+   without retuning either. Cite V9 as generic-sidecar support over Base, not as
+   RARS-over-PCA algorithm confirmation;
+4. execute V10 once on the historical `oracle_design` role. Do not change its
+   objective, rank, angle, seeds, steps, gates, or checkpoint; do not read any
+   V9 packet or old holdout from the V10 pipeline;
+5. if and only if every V10 gate passes, write a new preregistered protocol for
+   a genuinely fresh dataset/model. Never reopen the 803-query V9 role;
+6. commit machine-readable closure packets for the NQ primary comparison and
    the executed v3/v6/v7 outcomes before final paper-table generation;
-6. finish the manuscript around mixed evidence, sparse query support, and the
+7. finish the manuscript around mixed evidence, sparse query support, and the
    frozen-index retrofit boundary rather than a universal superiority claim;
-7. keep rebuild-allowed M48/OPQ and exact-reranking Pareto points separate from
+8. keep rebuild-allowed M48/OPQ and exact-reranking Pareto points separate from
    frozen-index retrofit claims, and freeze any future method before opening a
    genuinely new independent dataset.
 
@@ -1785,21 +1803,22 @@ FiQA / SciFact compression benchmarks
 → v7 frozen-index query-adapter pilot (`STOP_V7_QUERY_ADAPTER_PILOT`)
 → v8 five-fold OOF cutoff-aware int8 development (`GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL`)
 → audited qrels-free PCA/RARS 1M sidecars (`16.025024 B/document`)
-→ v9 locked within-program confirmation protocol and unexecuted one-shot notebook
+→ v9 one-shot within-program confirmation (`CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM`)
+→ v10 PCA-anchored harm-constrained sidecar protocol (unexecuted development)
 → reproducible CSV / LaTeX paper tables
 → automated tests and CI
 ```
 
 Current evidence summary:
 
-> RARS Top40 improves Recall@10 from `0.6833` to `0.7073` on the 1,000-query clean-pipeline MS MARCO split (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). The preregistered 42-query corpus-restricted TREC comparison gives RARS minus PCA `-0.0181`, CI `[-0.0735, +0.0168]`; the 3,452-query BEIR NQ comparison gives `-0.000410`, CI `[-0.005987, +0.004972]`. The v2.2 FP32 effect replicates in mean but fails the positive-support gate, v3 and v5 stop at their frozen gates, and the v7 query-only adapter is neither statistically supported nor drift-safe. V6 confirms distributed 1M PQ-specific headroom. In frozen five-fold OOF development, V8 improves Recall@10 by `+0.022901` over Base and `+0.010186` over storage-matched PCA, but this outcome-informed result still awaits prospective confirmation and its recorded surrogate loss does not decrease. General superiority over PCA, OPQ, or higher-rate PQ and a successful PQ-aware training extension are not established. Both v1 and V8 rank-16 int8 representations cost approximately `16.025 B/document`.
+> RARS Top40 improves Recall@10 from `0.6833` to `0.7073` on the 1,000-query clean-pipeline MS MARCO split (`+0.0240`, 95% CI `[+0.0105, +0.0378]`). The preregistered 42-query corpus-restricted TREC comparison gives RARS minus PCA `-0.0181`, CI `[-0.0735, +0.0168]`; the 3,452-query BEIR NQ comparison gives `-0.000410`, CI `[-0.005987, +0.004972]`. The v2.2 FP32 effect replicates in mean but fails the positive-support gate, v3 and v5 stop at their frozen gates, and the v7 query-only adapter is neither statistically supported nor drift-safe. V6 confirms distributed 1M PQ-specific headroom. V8 shows `+0.010186` Recall@10 over PCA in outcome-informed OOF development, but V9 confirmation finds only `+0.001453`, CI `[-0.009132, +0.012246]`, `p=0.409`, so the RARS-over-PCA algorithm claim is unsupported. V9 does support a generic frozen sidecar over Base. General superiority over PCA, OPQ, or higher-rate PQ and a successful PQ-aware training extension are not established. Both v1 and V8 rank-16 int8 representations cost approximately `16.025 B/document`; rebuild-allowed M48 remains stronger.
 
-The project is ready for an evidence-honest manuscript revision. The V8
-development and sidecar stages now have a committed, machine-verifiable closure
-packet; a final reproducible artifact release still requires the remaining NQ,
-v3, v6, and v7 closure gaps to be resolved. A stronger method-superiority
-submission still requires successful one-shot execution of the already frozen
-V9 confirmation. The system should remain
+The project is ready for an evidence-honest manuscript revision centered on the
+generic frozen-sidecar retrofit result. V9 is complete and does not confirm the
+RARS learning algorithm over PCA. V10 is an unexecuted attempt to address the
+observed instability; it must not be used to rewrite the V9 conclusion. A final
+reproducible artifact release still requires the remaining NQ, v3, v6, v7, and
+V9 closure packets to be committed. The system should remain
 described as a research prototype rather than a production vector database:
 operational hardening, fused-kernel integration, and full request-level load
 testing remain future work.

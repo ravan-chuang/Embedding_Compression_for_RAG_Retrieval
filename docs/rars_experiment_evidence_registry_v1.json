@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot_date": "2026-07-22",
-  "scope": "completed RARS evidence through V8 plus the preregistered V9 next experiment",
+  "scope": "completed RARS evidence through the one-shot V9 within-program confirmation plus the frozen unexecuted V10 development protocol",
   "metric_semantics": "known-positive retrieval metrics unless the source explicitly states otherwise; values from different query roles, corpora, models, and candidate protocols are not pooled",
   "experiments": [
     {
@@ -179,12 +179,31 @@
     },
     {
       "id": "rars_v9_locked_confirmation",
-      "evidence_tier": "preregistered_not_yet_run",
+      "evidence_tier": "preregistered_one_shot_within_program_confirmation",
       "query_count": 803,
-      "primary_endpoint": "RARS-v8 minus PCA known-positive Recall@10",
-      "decision": "PENDING_ONE_SHOT_WITHIN_PROGRAM_CONFIRMATION",
-      "lesson": "the role is prospective relative to V8 but not independent of the historical program",
-      "source": "protocols/rars_v9_locked_confirmation_v1.json"
+      "base_recall_at_10": 0.6963470319634703,
+      "pca_recall_at_10": 0.7100456621004566,
+      "rars_recall_at_10": 0.7114985471149855,
+      "rars_minus_base": 0.01515151515151515,
+      "rars_minus_base_ci95": [0.0020755500207555, 0.028642590286425903],
+      "rars_minus_pca": 0.00145288501452885,
+      "rars_minus_pca_ci95": [-0.009132420091324202, 0.01224574512245745],
+      "rars_minus_pca_randomization_p_one_sided": 0.4091759082409176,
+      "rars_vs_pca_support": {"improved": 12, "harmed": 11},
+      "m48_recall_at_10": 0.7563304275633044,
+      "decision": "CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM",
+      "lesson": "a compact residual sidecar is supported over Base within this program, but every registered RARS-over-PCA algorithm gate fails and rebuild-allowed M48 remains stronger",
+      "source": "user-returned audited rars-v9-confirmation-a7b889a5aa01.zip; protocol source is protocols/rars_v9_locked_confirmation_v1.json"
+    },
+    {
+      "id": "rars_v10_pca_anchored_harm_constrained",
+      "evidence_tier": "post_confirmation_outcome_informed_development_not_yet_run",
+      "query_count": 2307,
+      "configuration_count": 1,
+      "primary_endpoint": "V10 minus PCA known-positive Recall@10 under five-fold out-of-fold evaluation",
+      "decision": "PENDING_SINGLE_FROZEN_DEVELOPMENT_RUN",
+      "lesson": "V10 directly tests whether PCA anchoring, query-equal CVaR harm control, and audited monotone manifold optimization can turn the unstable learned-basis effect into broad OOF superiority over PCA; a separate no-training PCA-FP32 versus PCA-int8 diagnostic first quantifies whether a later ScaNN-inspired scalar codebook has material headroom",
+      "source": "protocols/rars_v10_pca_anchored_harm_constrained_v1.json"
     }
   ]
 }
