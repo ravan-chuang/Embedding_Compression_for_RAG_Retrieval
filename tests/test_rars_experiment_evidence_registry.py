@@ -26,7 +26,10 @@ def test_registry_preserves_formal_decisions_and_evidence_boundaries() -> None:
         "GO_TO_SEPARATE_CA_RPQ_CUTOFF_PROTOCOL"
     )
     assert experiments["rars_v12_anchored_cutoff_rpq"]["decision"] == (
-        "PENDING_SINGLE_FROZEN_V12_DEVELOPMENT_RUN"
+        "STOP_CA_RPQ_NO_STABLE_ADVANTAGE"
+    )
+    assert experiments["rars_v13_signed_score_distilled_rpq"]["decision"] == (
+        "PENDING_SINGLE_FROZEN_V13_DEVELOPMENT_RUN"
     )
 
 
@@ -46,6 +49,9 @@ def test_registry_does_not_upgrade_v8_or_v9_to_independent_evidence() -> None:
     assert "development" in experiments["rars_v12_anchored_cutoff_rpq"][
         "evidence_tier"
     ]
-    assert "not_yet_run" in experiments["rars_v12_anchored_cutoff_rpq"][
+    assert "failure" in experiments["rars_v12_anchored_cutoff_rpq"][
         "evidence_tier"
     ]
+    assert "not_yet_run" in experiments[
+        "rars_v13_signed_score_distilled_rpq"
+    ]["evidence_tier"]

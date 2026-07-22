@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v12_anchored_cutoff_rpq_v1",
+  "status": "RARS_V12_METHOD_AND_DECISION_FROZEN",
+  "source_commit": "07b0fe09b82babb3b06ffd1649266a656dd07df1",
+  "formal_decision": "STOP_CA_RPQ_NO_STABLE_ADVANTAGE",
+  "method": {
+    "id": "pca64_anchored_cutoff_rpq16x8",
+    "basis": "one deterministic uncentred PCA rank-64 basis fit only on candidate residual rows reached by the four training folds; the held-out fold contributes no basis, codebook, pair, weight, or hyperparameter information",
+    "rank": 64,
+    "subquantizers": 16,
+    "block_dimension": 4,
+    "bits_per_subquantizer": 8,
+    "payload_bytes_per_document": 16,
+    "alpha": 0.75,
+    "top_b": 40,
+    "baseline": "Faiss ProductQuantizer fit without labels on the same fold-training coefficients, seed, iterations, and payload",
+    "challenger": "one cutoff-weighted closed-form centroid update with the baseline assignments frozen during the update, followed by ordinary nearest-centroid re-encoding",
+    "basis_learning_allowed": false,
+    "query_adapter_allowed": false,
+    "hard_assignment_gradient_allowed": false,
+    "configuration_count": 1
+  },
+  "cutoff_pair_mining": {
+    "source_order": "frozen Base M32 Top-100 order",
+    "known_positive_treatment": "qrels relevance greater than zero",
+    "other_candidate_treatment": "unjudged challenger, never explicit non-relevant",
+    "promotion": "known positive at Base ranks 11..40 versus an unjudged Base Top-10 challenger when same-candidate exact prefers the positive",
+    "protection": "known positive in Base Top-10 versus an unjudged rank 11..26 challenger when same-candidate exact prefers the positive",
+    "protection_window": 16,
+    "maximum_challengers_per_positive": 4,
+    "margin_temperature": 0.02,
+    "damage_scale": 4.0,
+    "promotion_mass": 0.5
+  },
+  "cutoff_weighting": {
+    "block_sensitivity": "squared L2 norm of the PCA-projected query within each four-dimensional RPQ block, normalized to sum to one per pair",
+    "documents_receiving_pair_mass": "both the known-positive and unjudged-challenger residual rows",
+    "base_weight": 1.0,
+    "cutoff_boost": 8.0,
+    "protection_multiplier": 2.0,
+    "maximum_document_block_weight": 25.0,
+    "normalization": "within each block, active residual rows receive mean additive boost eight before clipping"
+  },
+  "centroid_update": {
+    "updates": 1,
+    "assignment_during_update": "frozen unsupervised RPQ assignment",
+    "anchor_pseudocount": 32.0,
+    "maximum_centroid_drift_fraction_of_training_block_rms": 0.25,
+    "empty_cell_policy": "remain byte-identical to the unsupervised centroid",
+    "objective": "weighted within-cell coefficient squared error plus anchor_pseudocount times squared centroid drift",
+    "objective_must_not_increase": true,
+    "post_update_encoding": "ordinary nearest updated centroid"
+  },
+  "rpq_training": {
+    "implementation": "Faiss ProductQuantizer on fixed PCA coefficients",
+    "iterations": 12,
+    "redos": 1,
+    "seeds": [
+      20260901,
+      20260902,
+      20260903
+    ],
+    "primary_seed": 20260901,
+    "omp_threads": 1,
+    "minimum_points_per_centroid": 1,
+    "maximum_points_per_centroid": 64,
+    "all_seeds_run_in_all_folds": true
+  },
+  "development_gate": {
+    "minimum_recall_gain_over_unsupervised": 0.003,
+    "minimum_recall_gain_over_base": 0.01,
+    "bootstrap_lower_must_exceed": 0.0,
+    "maximum_randomization_p_value": 0.05,
+    "minimum_improved_queries": 20,
+    "minimum_net_improved_queries": 10,
+    "minimum_each_seed_gain": 0.0,
+    "minimum_median_seed_gain": 0.002,
+    "minimum_worst_fold_gain": 0.0,
+    "minimum_candidate_gap_recovery_fraction": 0.2,
+    "minimum_mrr_change": -0.002,
+    "minimum_ndcg_change": -0.002,
+    "maximum_centroid_drift_fraction": 0.25,
+    "go_decision": "GO_TO_FRESH_CA_RPQ_CONFIRMATION_PROTOCOL",
+    "stop_decision": "STOP_CA_RPQ_NO_STABLE_ADVANTAGE",
+    "go_authorizes_only_protocol_writing": true,
+    "old_holdout_reuse_authorized": false,
+    "fresh_confirmation_access_authorized": false
+  },
+  "development_result": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/development-once/development_result.json",
+    "bytes": 73097,
+    "sha256": "2ac0e11d96a39ab4cbe7a8d445d521de91f0dc962ffa80232bdb09a3f0a7fbdd"
+  },
+  "old_holdout_reuse_authorized": false,
+  "fresh_confirmation_access_authorized": false
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot_date": "2026-07-22",
-  "scope": "completed RARS evidence through the V11 rank-rate capacity diagnostic plus the frozen unexecuted V12 anchored cutoff-RPQ development protocol",
+  "scope": "completed RARS evidence through the independently audited V12 anchored cutoff-RPQ negative result plus the frozen unexecuted V13 signed score-distilled RPQ development protocol",
   "metric_semantics": "known-positive retrieval metrics unless the source explicitly states otherwise; values from different query roles, corpora, models, and candidate protocols are not pooled",
   "experiments": [
     {
@@ -241,16 +241,41 @@
     },
     {
       "id": "rars_v12_anchored_cutoff_rpq",
-      "evidence_tier": "fresh_query_outcome_informed_development_protocol_not_yet_run",
-      "planned_query_count": 2500,
+      "evidence_tier": "fresh_query_five_fold_method_development_failure",
+      "query_count": 2500,
       "query_population": "MS MARCO passage-ranking train queries with at least one positive passage in the frozen 1M corpus, excluding every qid in the historical 6980-query split",
       "fold_count": 5,
       "seeds": [20260901, 20260902, 20260903],
       "baseline": "per-fold rank64 PCA plus Faiss RPQ16x8 at exactly 16 bytes per document",
       "method": "one closed-form PCA-anchored cutoff-aware centroid update inside the frozen initial RPQ partition, followed by reassignment",
-      "decision": "PENDING_SINGLE_FROZEN_V12_DEVELOPMENT_RUN",
-      "lesson": "V12 is designed to test whether V11 capacity can be converted into stable Top-10 gains without the iterative learned-basis and query-adapter failure modes; no outcome is yet available",
-      "source": "docs/rars_v12_anchored_cutoff_rpq_protocol.md; protocols/rars_v12_anchored_cutoff_rpq_v1.json"
+      "base_recall_at_10": 0.1296,
+      "same_candidate_exact_recall_at_10": 0.2374,
+      "unsupervised_rpq_recall_at_10": 0.1872,
+      "challenger_recall_at_10": 0.1874,
+      "gain_over_unsupervised": 0.0002,
+      "gain_ci95": [-0.0026, 0.0032],
+      "randomization_p_one_sided": 0.4965550344496555,
+      "changed_query_support": {"improved": 8, "harmed": 8},
+      "seed_gains": [0.0002, 0.0012, -0.001],
+      "fold_gains": [0.002008032128514056, -0.0022172949002217295, -0.001976284584980237, -0.0009345794392523365, 0.00392156862745098],
+      "candidate_gap_recovery_fraction": 0.5361781076066792,
+      "full_corpus_payload_bytes": 16000000,
+      "decision": "STOP_CA_RPQ_NO_STABLE_ADVANTAGE",
+      "lesson": "V12 decreases its unsigned residual reconstruction objective but does not stably improve ranking: the primary confidence interval crosses zero, support is only 8 versus 8, one seed is negative, and three folds regress. The next method must fit signed query-residual score error rather than unsigned vector reconstruction.",
+      "source": "results/rars_v12_ca_rpq/development/development_result.json; results/rars_v12_ca_rpq/artifact_audit.json; protocols/rars_v12_anchored_cutoff_rpq_v1.json"
+    },
+    {
+      "id": "rars_v13_signed_score_distilled_rpq",
+      "evidence_tier": "fresh_query_five_fold_method_development_protocol_not_yet_run",
+      "planned_query_count": 5000,
+      "query_population": "new MS MARCO train queries with corpus-covered positives, excluding all historical 6980 qids and all 2500 V12 qids",
+      "fold_count": 5,
+      "seeds": [20261001, 20261002, 20261003],
+      "baseline": "per-fold rank64 PCA plus Faiss RPQ16x8 and a storage-matched PCA16-int8 comparator, each exactly 16 bytes per document",
+      "method": "fixed-assignment per-centroid 4x4 ridge regression of signed query-residual block scores, cutoff-weighted and query-covariance anchored, with no code reassignment",
+      "decision": "PENDING_SINGLE_FROZEN_V13_DEVELOPMENT_RUN",
+      "lesson": "V13 is a single preregistered test of the objective mismatch diagnosed in V12; it is not yet evidence of improvement",
+      "source": "docs/rars_v13_signed_score_distilled_rpq_protocol.md; protocols/rars_v13_signed_score_distilled_rpq_v1.json"
     }
   ]
 }
