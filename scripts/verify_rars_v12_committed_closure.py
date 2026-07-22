@@ -28,6 +28,9 @@ from rars_v8_cutoff_sidecar_core import candidate_gap_recovery  # noqa: E402
 
 
 EXTERNAL_PAYLOAD = "full_corpus_ca_rpq_codes.uint8.memmap"
+CLEAN_NOTEBOOK = Path(
+    "notebooks/MSMARCO_RARS_v12_Anchored_Cutoff_RPQ_Development.ipynb"
+)
 
 
 def sha256_file(path: Path, chunk_size: int = 8 * 1024 * 1024) -> str:
@@ -120,6 +123,31 @@ def _verify_lineage(root: Path) -> None:
         raise ValueError("Fresh bundle opened an old holdout")
 
 
+def _load_clean_notebook(repo_root: Path, source_commit: str) -> dict[str, Any]:
+    """Load the clean notebook without requiring ancestor history in CI.
+
+    GitHub's pull-request checkout can be shallow even though the clean
+    notebook is present in the checked-out tree.  Prefer that tracked file.
+    The historical blob remains a fallback for local worktrees where the user
+    intentionally removed the notebook from the working directory.
+    """
+
+    checkout_path = repo_root / CLEAN_NOTEBOOK
+    if checkout_path.is_file():
+        return read_json(checkout_path)
+    try:
+        clean_bytes = subprocess.check_output(
+            ["git", "show", f"{source_commit}:{CLEAN_NOTEBOOK.as_posix()}"],
+            cwd=repo_root,
+            stderr=subprocess.PIPE,
+        )
+    except subprocess.CalledProcessError as error:
+        raise ValueError(
+            "Clean V12 notebook is absent from both the checkout and source commit"
+        ) from error
+    return json.loads(clean_bytes)
+
+
 def _verify_notebook(root: Path, repo_root: Path, audit: dict[str, Any]) -> None:
     path = (
         root
@@ -127,16 +155,7 @@ def _verify_notebook(root: Path, repo_root: Path, audit: dict[str, Any]) -> None
     )
     verify_record(path, audit["executed_notebook"], "executed V12 notebook")
     executed = read_json(path)
-    source_commit = audit["source_commit"]
-    clean_bytes = subprocess.check_output(
-        [
-            "git",
-            "show",
-            f"{source_commit}:notebooks/MSMARCO_RARS_v12_Anchored_Cutoff_RPQ_Development.ipynb",
-        ],
-        cwd=repo_root,
-    )
-    clean = json.loads(clean_bytes)
+    clean = _load_clean_notebook(repo_root, audit["source_commit"])
     if len(executed["cells"]) != len(clean["cells"]):
         raise ValueError("Executed V12 notebook cell count changed")
     for index, (actual, expected) in enumerate(
@@ -359,4 +378,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

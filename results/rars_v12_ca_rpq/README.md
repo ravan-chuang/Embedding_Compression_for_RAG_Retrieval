@@ -11,7 +11,6 @@ The run completed successfully and the independently recomputed decision is:
 ```text
 STOP_CA_RPQ_NO_STABLE_ADVANTAGE
 ```
-
 On 2,500 previously unused MS MARCO train queries restricted to the frozen 1M
 corpus, primary-seed Recall@10 is:
 
@@ -62,4 +61,3 @@ Run the portable closure audit with:
 ```bash
 python scripts/verify_rars_v12_committed_closure.py
 ```
-

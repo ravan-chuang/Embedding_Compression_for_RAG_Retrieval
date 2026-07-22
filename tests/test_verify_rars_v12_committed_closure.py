@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,3 +31,17 @@ def test_v12_committed_closure_recomputes_the_frozen_stop_decision() -> None:
     assert summary["primary_ci95"] == [-0.0026, 0.0032]
     assert summary["verified_committed_outputs"] == 32
 
+
+def test_clean_notebook_prefers_checkout_without_git_history() -> None:
+    module = _load_module()
+    with TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        path = root / module.CLEAN_NOTEBOOK
+        path.parent.mkdir(parents=True)
+        path.write_text('{"cells": []}\n', encoding="utf-8")
+        with mock.patch.object(
+            module.subprocess,
+            "check_output",
+            side_effect=AssertionError("git history must not be read"),
+        ):
+            assert module._load_clean_notebook(root, "0" * 40) == {"cells": []}
