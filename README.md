@@ -72,6 +72,11 @@ and [source-hash-pinned Colab notebook](notebooks/MSMARCO_RARS_v11_Rank_Rate_Dia
 It tests whether rank-32/rank-64 residual capacity and a 16-byte product code
 can expose headroom before any cutoff-aware loss is allowed. A GO permits only
 writing a separate CA-RPQ development protocol; it is not algorithm success.
+The first source-commit attempt stopped before every metric because the Colab
+Faiss 1.12 `ProductQuantizer` binding lacks a local-only `is_trained` property.
+The [pre-metric compatibility repair](docs/rars_v11_pre_metric_faiss_compatibility_repair.md)
+replaces that check with centroid/code/round-trip validation without changing
+the frozen protocol.
 
 ## Current Evidence Summary
 
@@ -111,7 +116,7 @@ or query-adapter extension.
 | RARS-v8 cutoff-aware sidecar | 2,307 design queries; five-fold OOF, int8-only | Recall@10 `0.67992 → 0.70282`; `+0.01019` over storage-matched PCA, CI `[+0.00347, +0.01712]`; all gates pass | `GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL`; development only |
 | RARS-v9 locked confirmation | 803 prospective-to-V8 queries; one-shot, within-program | RARS `+0.01515` over Base, CI positive; RARS `+0.00145` over PCA, CI crosses zero, `p=0.409`, support `12/11`; M48 `0.75633` | `CONFIRM_GENERIC_FROZEN_SIDECAR_WITHIN_PROGRAM`; algorithm superiority unsupported |
 | RARS-v10 stable sidecar | 2,307 historical design queries; five-fold OOF development | V10 `0.69329` vs PCA `0.69264`; difference `+0.00065`, CI crosses zero, `p=0.311`, support `3/2`; PCA FP32 minus int8 only `+0.00043` | `STOP_V10_NO_STABLE_PCA_ADVANTAGE`; scalar codebook also stopped |
-| RARS-v11 rank-rate diagnostic | 2,307 historical design queries; fixed architecture screen | Nested rank-16/32/64 PCA ceilings, packed rank-32 int4, and rank-32/64 RPQ at exactly `16 B/doc`; no cutoff-aware training | Pending one frozen diagnostic run; GO authorizes protocol writing only |
+| RARS-v11 rank-rate diagnostic | 2,307 historical design queries; fixed architecture screen | Nested rank-16/32/64 PCA ceilings, packed rank-32 int4, and rank-32/64 RPQ at exactly `16 B/doc`; first attempt stopped pre-metric on a disclosed Faiss binding compatibility check | Pending one compatibility-repaired frozen diagnostic run; GO authorizes protocol writing only |
 
 These rows are not a single leaderboard. They use different datasets, query
 roles, candidate pools, and comparators. Development and selection results

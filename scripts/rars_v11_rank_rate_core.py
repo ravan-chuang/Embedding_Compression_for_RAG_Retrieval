@@ -222,18 +222,29 @@ def fit_faiss_product_quantizer(
     quantizer.cp.max_points_per_centroid = int(max_points_per_centroid)
     contiguous = np.ascontiguousarray(values, dtype=np.float32)
     quantizer.train(contiguous)
-    if not quantizer.is_trained:
-        raise ValueError("Faiss product quantizer did not finish training")
+    codebook_size = 1 << bits
+    block_dimension = values.shape[1] // subquantizers
+    centroid_values = np.asarray(
+        faiss_module.vector_to_array(quantizer.centroids), dtype=np.float32
+    )
+    expected_centroids = subquantizers * codebook_size * block_dimension
+    if centroid_values.size != expected_centroids or not np.all(
+        np.isfinite(centroid_values)
+    ):
+        raise ValueError(
+            "Faiss product-quantizer training produced an invalid centroid table"
+        )
+    codebooks = centroid_values.reshape(
+        subquantizers, codebook_size, block_dimension
+    )
     codes = np.asarray(quantizer.compute_codes(contiguous), dtype=np.uint8)
     if codes.shape != (len(values), subquantizers):
         raise ValueError(f"Unexpected RPQ code shape: {codes.shape}")
-    codebook_size = 1 << bits
-    block_dimension = values.shape[1] // subquantizers
-    codebooks = np.asarray(
-        faiss_module.vector_to_array(quantizer.centroids), dtype=np.float32
-    ).reshape(subquantizers, codebook_size, block_dimension)
     reconstructed = decode_product_codes(codes, codebooks)
     error = values - reconstructed
+    coefficient_mse = float(np.mean(error * error))
+    if reconstructed.shape != values.shape or not np.isfinite(coefficient_mse):
+        raise ValueError("Faiss product-quantizer round trip is invalid")
     return codes, codebooks, {
         "rank": int(values.shape[1]),
         "subquantizers": int(subquantizers),
@@ -244,7 +255,7 @@ def fit_faiss_product_quantizer(
         "iterations": int(iterations),
         "seed": int(seed),
         "omp_threads": 1,
-        "coefficient_mse": float(np.mean(error * error)),
+        "coefficient_mse": coefficient_mse,
     }
 
 

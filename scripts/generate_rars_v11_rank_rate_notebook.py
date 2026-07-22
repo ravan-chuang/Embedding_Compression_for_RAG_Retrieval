@@ -314,14 +314,25 @@ Do not interrupt or reuse a partially written output directory.
         ),
         code(
             """DIAGNOSTIC.parent.mkdir(parents=True, exist_ok=True)
-subprocess.run([
+RUNNER_LOGS = V11_ROOT / 'runner-logs'
+RUNNER_LOGS.mkdir(parents=True, exist_ok=True)
+runner = subprocess.run([
     EXPERIMENT_PYTHON, str(V11_REPO / 'scripts/evaluate_rars_v11_rank_rate.py'),
     '--design-role-dir', str(V3_BUNDLES / 'oracle_design'),
     '--v6-packet-root', str(V6_PACKET),
     '--output-dir', str(DIAGNOSTIC),
     '--protocol', str(V11_PROTOCOL),
     '--source-commit', V11_IMPLEMENTATION_COMMIT,
-], check=True, cwd=V11_REPO, env=EXPERIMENT_ENV)
+], text=True, capture_output=True, cwd=V11_REPO, env=EXPERIMENT_ENV)
+(RUNNER_LOGS / 'diagnostic_stdout.log').write_text(runner.stdout)
+(RUNNER_LOGS / 'diagnostic_stderr.log').write_text(runner.stderr)
+if runner.returncode != 0:
+    print('V11 evaluator return code:', runner.returncode)
+    print('===== STDOUT =====')
+    print(runner.stdout[-12000:])
+    print('===== STDERR =====')
+    print(runner.stderr[-12000:])
+    runner.check_returncode()
 print('Single V11 fixed rank-rate diagnostic completed.')
 """
         ),

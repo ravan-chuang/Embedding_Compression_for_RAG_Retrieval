@@ -73,3 +73,12 @@ def test_v11_notebook_accepts_only_registered_hierarchical_decisions() -> None:
     assert "GO_TO_SEPARATE_CA_RPQ_CUTOFF_PROTOCOL" in code
     assert "fresh_confirmation_access_authorized'] is False" in code
     assert "failed_gates" in code
+
+
+def test_v11_notebook_persists_runner_logs_before_raising() -> None:
+    code = _code()
+    assert "RUNNER_LOGS = V11_ROOT / 'runner-logs'" in code
+    assert "'diagnostic_stdout.log'" in code
+    assert "'diagnostic_stderr.log'" in code
+    assert "text=True, capture_output=True" in code
+    assert "runner.check_returncode()" in code

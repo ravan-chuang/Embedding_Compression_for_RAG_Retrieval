@@ -223,8 +223,9 @@
       "primary_capacity_comparison": "PCA rank64 FP32 minus PCA rank16 int8",
       "primary_16_byte_comparison": "PCA rank64 RPQ16x8 minus PCA rank16 int8",
       "decision": "PENDING_SINGLE_FROZEN_RANK_RATE_DIAGNOSTIC",
+      "pre_metric_implementation_repair": "the first 08bf7184acc7 attempt wrote only diagnostic_started.json and stopped because the Colab Faiss 1.12 ProductQuantizer binding lacks is_trained; the version-specific check was replaced by centroid/code/round-trip postconditions without changing the protocol",
       "lesson": "V11 tests representation rank and vector coding at exactly 16 bytes per document before any cutoff-aware loss is allowed; a pass authorizes protocol writing only",
-      "source": "protocols/rars_v11_rank_rate_diagnostic_v1.json"
+      "source": "protocols/rars_v11_rank_rate_diagnostic_v1.json; repair disclosure is docs/rars_v11_pre_metric_faiss_compatibility_repair.md"
     }
   ]
 }

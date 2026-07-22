@@ -12,6 +12,7 @@ SPEC = importlib.util.spec_from_file_location("rars_v11_rank_rate_core", PATH)
 assert SPEC and SPEC.loader
 MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
+SOURCE = PATH.read_text(encoding="utf-8")
 
 
 def test_signed_int4_round_trip_uses_exactly_half_a_byte_per_value() -> None:
@@ -141,3 +142,9 @@ def test_paired_inference_is_deterministic_and_counts_support() -> None:
     assert first == second
     assert first["improved_queries"] == 2
     assert first["harmed_queries"] == 1
+
+
+def test_faiss_training_validation_does_not_depend_on_is_trained_binding() -> None:
+    assert "quantizer.is_trained" not in SOURCE
+    assert "expected_centroids" in SOURCE
+    assert "product-quantizer round trip is invalid" in SOURCE
