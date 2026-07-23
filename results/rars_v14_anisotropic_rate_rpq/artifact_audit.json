@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "status": "RARS_V14_COMMITTED_CLOSURE_AUDITED",
+  "audit_date": "2026-07-23",
+  "source_commit": "a3895e8d2ba298b155ac7f866453af134fd3c222",
+  "formal_decision": "STOP_V14_NO_ANISOTROPIC_RATE_SIGNAL",
+  "source_archive": {
+    "filename": "rars-v14-anisotropic-rate-rpq-a3895e8d2ba2.zip",
+    "bytes": 16274545,
+    "sha256": "d2afb3405ab892bf6a07f2f45cfe5abbe06da71d1b4bc1be30d3b71d47d53784"
+  },
+  "executed_notebook": {
+    "filename": "MSMARCO_RARS_v14_Anisotropic_Rate_RPQ_Diagnostic.ipynb",
+    "bytes": 31800,
+    "sha256": "210da7319933e6cc1850620b0a00320918a7e72bdfbd5d883225ac5d91ac9da5",
+    "cell_sources_match_source_commit": true,
+    "code_execution_counts": [1, 2, 3, 4, 5, 6],
+    "error_output_count": 0
+  },
+  "packet_verification": {
+    "status": "RARS_V14_PACKET_VERIFIED",
+    "verified_output_count": 41,
+    "query_count": 5000,
+    "primary_gain": -0.0003,
+    "primary_ci95": [-0.0044, 0.0038],
+    "primary_randomization_p_value": 0.5743642563574364,
+    "changed_query_support": {
+      "improved": 54,
+      "harmed": 56,
+      "unchanged": 4890
+    },
+    "seed_gains": [-0.0003, 0.0003, 0.0027],
+    "fold_gains": [
+      -0.002036659877800407,
+      0.001984126984126984,
+      0.007699711260827719,
+      -0.006532663316582915,
+      -0.0030737704918032786
+    ],
+    "multi_seed_consensus": {
+      "improved_in_at_least_two_seeds": 30,
+      "harmed_in_at_least_two_seeds": 25,
+      "improved_in_all_three_seeds": 2,
+      "harmed_in_all_three_seeds": 3
+    },
+    "final_bit_allocation": [9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7]
+  },
+  "external_full_corpus_payload": {
+    "path_in_original_packet": "full_corpus_qw_ar_rpq_codes.uint8.memmap",
+    "committed_to_git": false,
+    "document_count": 1000000,
+    "shape": [1000000, 16],
+    "dtype": "uint8",
+    "bytes": 16000000,
+    "bytes_per_document": 16,
+    "sha256": "fd2dc092f38bfdecbac9881c9dc17dd0a900ee53b431de0665ca23e6b12ca6ad",
+    "minimum_occupied_centroids_per_block": 128,
+    "maximum_occupied_centroids_per_block": 512,
+    "verified_before_repository_import": true
+  },
+  "closure_scope": "all decision-bearing arrays and model artifacts are committed; only the independently hashed 16 MB full-corpus payload is external"
+}

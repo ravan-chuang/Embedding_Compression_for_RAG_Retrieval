@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot_date": "2026-07-23",
-  "scope": "completed RARS evidence through the independently audited V13 signed score-distilled RPQ negative result plus the frozen unexecuted V14 query-whitened anisotropic rate-RPQ diagnostic",
+  "scope": "completed RARS evidence through the independently audited V14 negative diagnostic plus the frozen, not-yet-run V15 selective-gate protocol",
   "metric_semantics": "known-positive retrieval metrics unless the source explicitly states otherwise; values from different query roles, corpora, models, and candidate protocols are not pooled",
   "experiments": [
     {
@@ -293,7 +293,7 @@
     },
     {
       "id": "rars_v14_query_whitened_anisotropic_rate_rpq",
-      "evidence_tier": "post_v13_outcome_informed_architecture_diagnostic_protocol_not_yet_run",
+      "evidence_tier": "post_v13_outcome_informed_architecture_diagnostic_failure",
       "query_count": 5000,
       "query_role": "reused V13 development queries; explicitly not fresh evidence",
       "fold_count": 5,
@@ -301,9 +301,42 @@
       "baseline": "committed V13 per-seed uniform PCA64 RPQ16x8 arrays at exactly 16 bytes per document",
       "ablation": "uniform 8-bit query-whitened block quantization",
       "method": "label-free cutoff-query covariance, per-block score whitening, exact bounded integer allocation of 128 bits across sixteen four-dimensional blocks, and transformed-space k-means",
-      "decision": "PENDING_SINGLE_FROZEN_V14_DIAGNOSTIC_RUN",
-      "lesson": "V14 tests whether the missing mechanism is representation geometry and rate allocation rather than another supervised centroid objective; any GO authorizes only a new disjoint-query protocol",
-      "source": "docs/rars_v14_query_whitened_anisotropic_rate_rpq_protocol.md; protocols/rars_v14_query_whitened_anisotropic_rate_rpq_diagnostic_v1.json"
+      "base_recall_at_10": 0.14046666666666666,
+      "same_candidate_exact_recall_at_10": 0.24566666666666664,
+      "pca16_recall_at_10": 0.15556666666666666,
+      "v13_uniform_rpq_recall_at_10": 0.18926666666666664,
+      "uniform_whitened_recall_at_10": 0.18786666666666665,
+      "anisotropic_recall_at_10": 0.18896666666666664,
+      "gain_over_v13_uniform_rpq": -0.0003,
+      "gain_ci95": [-0.0044, 0.0038],
+      "randomization_p_one_sided": 0.5743642563574364,
+      "changed_query_support": {
+        "improved": 54,
+        "harmed": 56
+      },
+      "seed_gains": [-0.0003, 0.0003, 0.0027],
+      "fold_gains": [-0.002036659877800407, 0.001984126984126984, 0.007699711260827719, -0.006532663316582915, -0.0030737704918032786],
+      "bit_allocation": [9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7],
+      "candidate_gap_recovery_fraction": 0.46102661596958167,
+      "full_corpus_payload_bytes": 16000000,
+      "decision": "STOP_V14_NO_ANISOTROPIC_RATE_SIGNAL",
+      "lesson": "the non-uniform allocation is identical across all folds and the exact 16-byte payload is valid, but whitening lowers quality and rate allocation only partially recovers that loss; the primary comparison is negative, its interval crosses zero, three folds regress, and improved/harmed support is balanced",
+      "source": "results/rars_v14_anisotropic_rate_rpq/diagnostic/diagnostic_result.json; results/rars_v14_anisotropic_rate_rpq/artifact_audit.json; protocols/rars_v14_query_whitened_anisotropic_rate_rpq_diagnostic_v1.json"
+    },
+    {
+      "id": "rars_v15_cross_fitted_selective_rpq_gate",
+      "evidence_tier": "post_v14_outcome_informed_query_gating_protocol_not_yet_run",
+      "query_count": 5000,
+      "query_role": "reused V13 development queries; explicitly not fresh evidence",
+      "fold_count": 5,
+      "seeds": [20261001, 20261002, 20261003],
+      "baseline": "committed V13 per-seed uniform PCA64 RPQ16x8 arrays at exactly 16 bytes per document",
+      "method": "one preregistered cross-fitted weighted-ridge query gate selects the complete uniform-sidecar ranking or untouched Base ranking from twelve label-free score features",
+      "additional_document_bytes": 0,
+      "maximum_global_gate_bytes": 4096,
+      "decision": "PENDING_FIRST_FROZEN_V15_DEVELOPMENT_RUN",
+      "lesson": "V15 changes no document representation; it tests whether predicted query-level correction utility can reduce always-on sidecar harm without candidate-level outcome mixing",
+      "source": "docs/rars_v15_cross_fitted_selective_rpq_gate_protocol.md; protocols/rars_v15_cross_fitted_selective_rpq_gate_v1.json"
     }
   ]
 }

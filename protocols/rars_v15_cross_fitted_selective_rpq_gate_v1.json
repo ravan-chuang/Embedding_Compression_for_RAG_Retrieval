@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v15_cross_fitted_selective_rpq_gate_v1",
+  "status": "FROZEN_BEFORE_FIRST_V15_DEVELOPMENT_RUN",
+  "research_question": "Can a tiny cross-fitted query-level gate improve the strongest fixed 16-byte uniform RPQ sidecar by falling back to the frozen Base ranking on queries with predicted negative correction utility?",
+  "scope": "post-V14 outcome-informed method development on the already opened V13 query role; not fresh evidence, independent confirmation, an official MS MARCO score, or a production latency claim",
+  "parent_evidence": {
+    "v13_source_commit": "d8cb761c289fe17ea2c2bfb92059e8b5553cfd74",
+    "v13_formal_decision": "STOP_SIGNED_SCORE_RPQ_NO_STABLE_ADVANTAGE",
+    "v14_source_commit": "a3895e8d2ba298b155ac7f866453af134fd3c222",
+    "v14_formal_decision": "STOP_V14_NO_ANISOTROPIC_RATE_SIGNAL",
+    "v14_uniform_rpq_recall_at_10": 0.18926666666666664,
+    "v14_anisotropic_minus_uniform": -0.0003,
+    "diagnosis": "uniform PCA64 RPQ16x8 is the strongest stable 16-byte representation, but it improves 293 and harms 46 queries versus Base on the opened V13 role; V15 leaves every document-side component fixed and learns only whether to apply that correction"
+  },
+  "evidence_boundary": {
+    "tier": "POST_V14_OUTCOME_INFORMED_QUERY_GATING_DEVELOPMENT_ON_V13_QUERIES",
+    "allowed_claim": "whether one preregistered cross-fitted selective gate warrants a new disjoint-query protocol",
+    "forbidden_claims": [
+      "independent confirmation",
+      "fresh-query evidence",
+      "official full-corpus MS MARCO performance",
+      "generalization beyond the frozen restricted corpus",
+      "production QPS or latency",
+      "state of the art"
+    ]
+  },
+  "input_contract": {
+    "v13_closure_status": "RARS_V13_COMMITTED_CLOSURE_VERIFIED",
+    "v14_closure_status": "RARS_V14_COMMITTED_CLOSURE_VERIFIED",
+    "v13_bundle_role": "fresh_train_development",
+    "query_count": 5000,
+    "fold_count": 5,
+    "fold_counts": [982, 1008, 1039, 995, 976],
+    "reuse_reason": "query-gate feasibility only; any GO requires a new disjoint query freeze",
+    "labels_used_for_gate_fitting": true,
+    "labels_used_for_pca_or_rpq_fitting": false,
+    "future_method_holdout_opened": false,
+    "old_rars_holdout_opened": false
+  },
+  "frozen_index_contract": {
+    "document_count": 1000000,
+    "embedding_dimension": 384,
+    "metric": "inner_product",
+    "nlist": 512,
+    "nprobe": 16,
+    "subquantizers": 32,
+    "bits_per_subquantizer": 8,
+    "index_bytes": 41183924,
+    "index_sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8",
+    "candidate_pool": 100,
+    "final_cutoff": 10,
+    "correction_depth": 40,
+    "immutable_components": [
+      "query encoder weights",
+      "document embeddings",
+      "coarse quantizer",
+      "inverted lists",
+      "base PQ codebooks",
+      "base PQ codes"
+    ]
+  },
+  "uniform_sidecar": {
+    "id": "pca64_uniform_rpq16x8",
+    "rank": 64,
+    "subquantizers": 16,
+    "block_dimension": 4,
+    "bits_per_subquantizer": 8,
+    "payload_bytes_per_document": 16,
+    "alpha": 0.75,
+    "top_b": 40,
+    "basis": "deterministic uncentred PCA rank-64 fit on residual rows reached by the four outer training folds",
+    "quantizer": "Faiss RPQ16x8 trained without relevance labels",
+    "codes": "identical uniform-RPQ representation used by the V13 primary comparator",
+    "document_side_changes_from_v13_uniform": false
+  },
+  "gate": {
+    "id": "cross_fitted_weighted_ridge_query_utility_gate",
+    "decision_unit": "whole query",
+    "action": "use the complete uniform-RPQ ranking when predicted utility is at least the calibrated threshold; otherwise return the untouched Base ranking",
+    "feature_count": 12,
+    "features": [
+      "base cutoff margin",
+      "sidecar cutoff margin",
+      "Base Top-10 score span",
+      "sidecar Top-10 score span",
+      "mean absolute correction on Base Top-10",
+      "mean absolute correction on Base Top-40",
+      "maximum absolute correction on Base Top-40",
+      "correction standard deviation on Base Top-40",
+      "mean signed correction on Base Top-10",
+      "Base/sidecar Top-10 disagreement fraction",
+      "mean Top-40 correction divided by Base cutoff margin, clipped at 50",
+      "sidecar-minus-Base Top-10 score standard deviation"
+    ],
+    "features_use_relevance_labels": false,
+    "target": "per-query uniform-RPQ Recall@10 minus Base Recall@10",
+    "model": "standardized weighted ridge regression with an intercept",
+    "ridge": 1.0,
+    "neutral_weight": 0.05,
+    "harm_weight": 2.0,
+    "minimum_feature_scale": 0.000001,
+    "threshold_quantiles": [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0],
+    "calibration_minimum_coverage": 0.2,
+    "calibration_maximum_coverage": 0.95,
+    "calibration_minimum_mrr_change_vs_always_on": 0.0,
+    "calibration_minimum_ndcg_change_vs_always_on": 0.0,
+    "fallback": "if no calibration threshold has positive Recall gain and satisfies both ranking guardrails, use the always-on uniform sidecar for that fold and seed",
+    "configuration_count": 1
+  },
+  "comparators": {
+    "primary": "always-on V13 uniform PCA64 RPQ16x8 using the same fold and seed",
+    "base": "committed V13 Base M32 IVF-PQ arrays",
+    "storage_matched_pca16": "committed V13 PCA16-int8 arrays",
+    "ceiling": "committed V13 same-candidate exact arrays",
+    "oracle_selective_bound": "post-result descriptive max(Base, uniform RPQ) per-query bound; never used to fit or select the gate"
+  },
+  "rpq_training": {
+    "iterations": 12,
+    "redos": 1,
+    "seeds": [20261001, 20261002, 20261003],
+    "primary_seed": 20261001,
+    "omp_threads": 1,
+    "minimum_points_per_centroid": 1,
+    "maximum_points_per_centroid": 64,
+    "all_seeds_run_in_all_folds": true
+  },
+  "cross_validation": {
+    "outer_fold_count": 5,
+    "outer_heldout_folds_per_run": 1,
+    "calibration_fold_rule": "(outer_fold + 1) mod 5",
+    "gate_fit_folds_per_run": 3,
+    "calibration_folds_per_run": 1,
+    "all_pca_and_rpq_components_fit_without_labels_on_the_four_nonheldout_folds": true,
+    "gate_labels_restricted_to_three_fit_folds_and_one_calibration_fold": true,
+    "outer_heldout_labels_not_used_until_final_scoring": true,
+    "out_of_fold_primary_endpoint": true,
+    "final_all-development_gate_is_export_only": true
+  },
+  "storage_contract": {
+    "parent_document_payload_bytes": 16000000,
+    "parent_payload_bytes_per_document": 16,
+    "additional_document_bytes": 0,
+    "maximum_global_gate_bytes": 4096,
+    "base_and_uniform_scores_are_already_required": true,
+    "no_second_sidecar_or_document_code": true
+  },
+  "inference": {
+    "confidence": 0.95,
+    "bootstrap_replicates": 50000,
+    "randomization_replicates": 100000,
+    "primary_vs_uniform_rpq": {
+      "bootstrap_seed": 20261201,
+      "randomization_seed": 20261202
+    },
+    "primary_vs_base": {
+      "bootstrap_seed": 20261203,
+      "randomization_seed": 20261204
+    },
+    "primary_vs_pca16": {
+      "bootstrap_seed": 20261205,
+      "randomization_seed": 20261206
+    }
+  },
+  "development_gate": {
+    "minimum_recall_gain_over_uniform_rpq": 0.003,
+    "minimum_recall_gain_over_base": 0.01,
+    "bootstrap_lower_must_exceed": 0.0,
+    "maximum_randomization_p_value": 0.05,
+    "minimum_improved_queries": 30,
+    "maximum_harmed_queries": 15,
+    "minimum_net_improved_queries": 15,
+    "minimum_each_seed_gain": 0.0,
+    "minimum_median_seed_gain": 0.002,
+    "minimum_worst_fold_gain": 0.0,
+    "minimum_mrr_change": -0.001,
+    "minimum_ndcg_change": -0.001,
+    "minimum_primary_coverage": 0.2,
+    "maximum_primary_coverage": 0.95,
+    "maximum_global_gate_bytes": 4096,
+    "go_decision": "GO_TO_FRESH_SELECTIVE_RPQ_GATE_PROTOCOL",
+    "stop_decision": "STOP_V15_NO_SELECTIVE_GATE_SIGNAL",
+    "go_authorizes_only_protocol_writing": true,
+    "fresh_query_access_authorized": false
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_package": "faiss-gpu-cu12==1.12.0",
+    "faiss_version": "1.12.0",
+    "gpu_name_must_contain": "T4",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_required": true,
+    "cudnn_benchmark": false
+  },
+  "prohibited_actions": [
+    "changing the PCA basis, RPQ codebooks, code assignments, document payload, alpha, or correction depth based on V15 labels",
+    "using held-out-fold labels to fit, calibrate, or select the gate",
+    "changing features, weights, ridge, threshold grid, coverage bounds, seeds, or gates after outcomes appear",
+    "selecting the best seed or fold",
+    "adding a second document sidecar",
+    "opening oracle_audit, future_method_holdout, or any old RARS holdout",
+    "claiming the reused V13 role is fresh evidence",
+    "claiming production efficiency from the Python evaluator"
+  ]
+}

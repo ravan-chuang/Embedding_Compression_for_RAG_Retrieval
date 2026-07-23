@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v14_query_whitened_anisotropic_rate_rpq_diagnostic_v1",
+  "status": "RARS_V14_ANISOTROPIC_RATE_DIAGNOSTIC_COMPLETE",
+  "source_commit": "a3895e8d2ba298b155ac7f866453af134fd3c222",
+  "formal_decision": "STOP_V14_NO_ANISOTROPIC_RATE_SIGNAL",
+  "started": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/diagnostic_started.json",
+    "bytes": 7508,
+    "sha256": "832b4eaf0529a967ad03cec9b7156fb33bf122ca21434bcde1e8c08ae472fd05"
+  },
+  "outputs": {
+    "diagnostic_freeze.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/diagnostic_freeze.json",
+      "bytes": 3418,
+      "sha256": "62b8739d66e6573cca04cebbb2b013d67cc240c6578e83b7d01a2f10a7199e7a"
+    },
+    "diagnostic_result.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/diagnostic_result.json",
+      "bytes": 83532,
+      "sha256": "243f052e52a9cac906ebbdb0127e5b1c904666cfddb5fdfd60565bfa0efbad43"
+    },
+    "final_bit_allocation.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/final_bit_allocation.int64.npy",
+      "bytes": 256,
+      "sha256": "b89be5e39a20b6c9cffbe5d71369e62d1d23de3aed6a1f7eed961ba150af6472"
+    },
+    "final_codebook_offsets.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/final_codebook_offsets.int64.npy",
+      "bytes": 264,
+      "sha256": "15299bcfa87ebdfb1d204039f013a638bc612190a53cd4284a8d4a95b4954234"
+    },
+    "final_codebooks.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/final_codebooks.float32.npy",
+      "bytes": 69760,
+      "sha256": "389ee61276657158dbdcfb9c354720040ea6fb9028646afa043b2eeb0448a9e2"
+    },
+    "final_pca_basis_rank64.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/final_pca_basis_rank64.float32.npy",
+      "bytes": 98432,
+      "sha256": "60f45395ee9f6467520fb643f631faa2cc22c5cb96c6cf44ee7f2f6107e5d7e7"
+    },
+    "final_query_metric_transforms.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/final_query_metric_transforms.float32.npy",
+      "bytes": 1152,
+      "sha256": "9c28fdf6a7c36b27a55e301a6b39d6ba45637ab610fb83326dcd786169d5e8ab"
+    },
+    "fold_ids.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/fold_ids.int64.npy",
+      "bytes": 40128,
+      "sha256": "8e04ba31ed51a073dcb9c327df2941c708b25672847976a56bffbdefe0d6a738"
+    },
+    "fold_seed_diagnostics.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/fold_seed_diagnostics.json",
+      "bytes": 124571,
+      "sha256": "d2656c9c196b026446cd2392c3b322c35ea08ea6f38da0584bb762b6911df172"
+    },
+    "full_corpus_qw_ar_rpq_codes.uint8.memmap": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/full_corpus_qw_ar_rpq_codes.uint8.memmap",
+      "bytes": 16000000,
+      "sha256": "fd2dc092f38bfdecbac9881c9dc17dd0a900ee53b431de0665ca23e6b12ca6ad"
+    },
+    "per_query_anisotropic_seed20261001_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261001_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "dd3f04bc2211aa585667bb9eb21fc9f85c711255c36ef53b8fa93987ba85ac25"
+    },
+    "per_query_anisotropic_seed20261001_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261001_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "c71e5523ebb7e93f27a9f709ee3cd87464544b1685d6aaaa5b13e508527cce82"
+    },
+    "per_query_anisotropic_seed20261001_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261001_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "5790ec7683c229b934422315e9606a6eda6bba4a9ab10374bdaffda9ddb91ed3"
+    },
+    "per_query_anisotropic_seed20261002_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261002_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "5a8d122623595f5d1f7eb539f35c24a248e4576070364c64a1d404a618006fda"
+    },
+    "per_query_anisotropic_seed20261002_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261002_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "e9f28fd0a05a6c62748ed3bbf0713b27fca8915cb5d1455a99b26eac2e1d021e"
+    },
+    "per_query_anisotropic_seed20261002_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261002_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "ba01abeea63b9bcda257c32db7dc17cc024c471a5c118368e8014949d79ac3f0"
+    },
+    "per_query_anisotropic_seed20261003_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261003_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "6bc069a9803cb5aedeb1506c620baf8c03dcfa67d1504a78052647ba0e5c6109"
+    },
+    "per_query_anisotropic_seed20261003_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261003_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "afc282f1abd85c2a878233df2449e9c28f44ea125e9465be8a3ec9c29bd0a94f"
+    },
+    "per_query_anisotropic_seed20261003_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_anisotropic_seed20261003_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "6643dc7765bdfc23b53539261fcb0df250e8cb2c8880f7fd75e720365d87dd2e"
+    },
+    "per_query_base_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_base_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "90d1fcf5fcd3e3ca56d4c15611725c1511e8620bce774ed6ecbd5d1953d2523c"
+    },
+    "per_query_base_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_base_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "29343464692a287300048cd3c9ddb18fbfb03aaefa603cc1ca2dcf6ee472400d"
+    },
+    "per_query_base_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_base_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "2d7dee9f4b2cc3f0619164875e666fdc06e9379548b72d322074d9eabd5ff2ba"
+    },
+    "per_query_pca16_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_pca16_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "9db2d92bfe835bba862b58a7999b713461657d1c1bb830c4f445000e880e87f8"
+    },
+    "per_query_pca16_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_pca16_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "a1c4842d3c1db69dbd80778fc468a6dad73e42688ae23aab085d09c19539af3c"
+    },
+    "per_query_pca16_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_pca16_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "924945ba9d9e1ec91a3ccd32a510397ac4e2315270f47f6bbf89086f77336408"
+    },
+    "per_query_same_candidate_exact_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_same_candidate_exact_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "8e2ecf2747b742afbc7d040351bd57300a9c4f5d9d51acbcdefacc689dfda73a"
+    },
+    "per_query_same_candidate_exact_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_same_candidate_exact_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "e69a889b3c2b2759c07f360f7f15a5ce94ef2be3ed9e32b5c12af41d563ceca1"
+    },
+    "per_query_same_candidate_exact_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_same_candidate_exact_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "e7f40d1d5cf7fde8e0ba34c04a61d6ed667f93d6d360934705faa9a7c9aed3bf"
+    },
+    "per_query_uniform_whitened_primary_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_uniform_whitened_primary_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "f968bfa71f28a0109b1d3fbca55cf38e5fcc6724f48949ff15a4841d704df664"
+    },
+    "per_query_uniform_whitened_primary_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_uniform_whitened_primary_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "d3e358c07eb0047b4d4491dda1dce8eae054e9e787f082ad54b3945ab9a8f232"
+    },
+    "per_query_uniform_whitened_primary_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_uniform_whitened_primary_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "e3a8340f972465b2d054dd6a2caae0662085b70eb68d71a86ebb3a4019d03847"
+    },
+    "per_query_v13_uniform_seed20261001_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261001_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "0d8331604d083115c2bab7e3212ef04cc5e03bb10531294699652496ea7d80cf"
+    },
+    "per_query_v13_uniform_seed20261001_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261001_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "c97063bef619fa369d59e1279820bbc014d6e1c7cf7d1eca21572281fc880f2f"
+    },
+    "per_query_v13_uniform_seed20261001_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261001_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "0fbeb5afbc6caf3930108937ab28da2cc6f2aecc6b05e61636620b16ae64b48e"
+    },
+    "per_query_v13_uniform_seed20261002_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261002_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "427049861376602c77d533dc8da434f08e936dc8975a9ab443820863750f230b"
+    },
+    "per_query_v13_uniform_seed20261002_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261002_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "59479f589816329d73ffb8b23cbf77215fe64fbd31a23ce321c0405a90ac56c0"
+    },
+    "per_query_v13_uniform_seed20261002_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261002_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "ee1470f40fad041368ca02208cba2241300ff97e437a803c728de36fab1874cc"
+    },
+    "per_query_v13_uniform_seed20261003_mrr_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261003_mrr_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "34dbcd3c15efefa9a98211b604f71520b579cf765f09728d706319dce9bcb896"
+    },
+    "per_query_v13_uniform_seed20261003_ndcg_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261003_ndcg_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "18fcf9ad269b0d34f20ce04dc3716580ffa0b3759d732e2d2435cc987f25b526"
+    },
+    "per_query_v13_uniform_seed20261003_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/per_query_v13_uniform_seed20261003_recall_at_10.float64.npy",
+      "bytes": 40128,
+      "sha256": "19d9f6677d7773f5ff98611b5b1fa346e9f05a1a94824168ad8be8427e9c8f68"
+    },
+    "query_ids.utf8.txt": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v14-anisotropic-rate-rpq/a3895e8d2ba2/diagnostic-once/query_ids.utf8.txt",
+      "bytes": 35166,
+      "sha256": "126fe90ad6168ef5472171a94f52619af65b76ebabce66c84b92350a6416d342"
+    }
+  },
+  "fresh_query_access_authorized": false
+}

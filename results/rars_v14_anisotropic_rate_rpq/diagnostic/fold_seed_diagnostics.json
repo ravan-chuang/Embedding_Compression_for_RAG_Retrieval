@@ -1,0 +1,4917 @@
+[
+  {
+    "fold": 0,
+    "seed": 20261001,
+    "heldout_query_count": 982,
+    "representation": {
+      "training_query_count": 4018,
+      "training_residual_count": 118037,
+      "metric": {
+        "query_count": 4018,
+        "weighted_candidate_mass": 608153.5676817739,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.6992533492495914,
+            1.4692849312549368
+          ],
+          [
+            0.7466380115276464,
+            1.212020313570941
+          ],
+          [
+            0.8326074307552531,
+            1.1446245731864475
+          ],
+          [
+            0.8703381702409579,
+            1.1634525359492514
+          ],
+          [
+            0.8472356630187344,
+            1.1705723799238776
+          ],
+          [
+            0.8658320768717847,
+            1.1496330555278909
+          ],
+          [
+            0.8759957198964367,
+            1.1244331383234756
+          ],
+          [
+            0.8754931042319228,
+            1.1117893455394807
+          ],
+          [
+            0.8536015283655326,
+            1.1996772152492037
+          ],
+          [
+            0.8547803473208502,
+            1.1302538204667003
+          ],
+          [
+            0.8825134461438899,
+            1.1481320053588697
+          ],
+          [
+            0.8287857259925849,
+            1.1523241805230229
+          ],
+          [
+            0.8435264589873425,
+            1.1851610162033048
+          ],
+          [
+            0.8866707244602221,
+            1.0901667287629266
+          ],
+          [
+            0.8941970274056287,
+            1.113715795500409
+          ],
+          [
+            0.8625557089152662,
+            1.133427463935468
+          ]
+        ],
+        "maximum_condition_number": 2.101219726486416,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160720,
+        "weighted_candidate_mass": 608153.5676817739,
+        "minimum_sensitivity": 0.0025234283633722284,
+        "maximum_sensitivity": 0.00449991669552879,
+        "anisotropy_ratio": 1.783255178092413,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.0031662329005546345,
+        "uniform_objective": 0.00318707765751953,
+        "proxy_reduction_fraction": 0.00654039819698616
+      },
+      "quantizer": {
+        "training_rows": 118037,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.347930270247161e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.315227412618697e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.74838258116506e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.391092316946015e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.115530701819807e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.831457671476528e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.607799099991098e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.365265966858715e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.044197602430359e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.849823305150494e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.611764158355072e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.377864676527679e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.17815273674205e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.074112363625318e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.495071572018787e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.19440935831517e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.164969450101833,
+      "mrr": 0.07607571202275887,
+      "ndcg": 0.09659122052651906
+    }
+  },
+  {
+    "fold": 0,
+    "seed": 20261002,
+    "heldout_query_count": 982,
+    "representation": {
+      "training_query_count": 4018,
+      "training_residual_count": 118037,
+      "metric": {
+        "query_count": 4018,
+        "weighted_candidate_mass": 608153.5676817739,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.6992533492495914,
+            1.4692849312549368
+          ],
+          [
+            0.7466380115276464,
+            1.212020313570941
+          ],
+          [
+            0.8326074307552531,
+            1.1446245731864475
+          ],
+          [
+            0.8703381702409579,
+            1.1634525359492514
+          ],
+          [
+            0.8472356630187344,
+            1.1705723799238776
+          ],
+          [
+            0.8658320768717847,
+            1.1496330555278909
+          ],
+          [
+            0.8759957198964367,
+            1.1244331383234756
+          ],
+          [
+            0.8754931042319228,
+            1.1117893455394807
+          ],
+          [
+            0.8536015283655326,
+            1.1996772152492037
+          ],
+          [
+            0.8547803473208502,
+            1.1302538204667003
+          ],
+          [
+            0.8825134461438899,
+            1.1481320053588697
+          ],
+          [
+            0.8287857259925849,
+            1.1523241805230229
+          ],
+          [
+            0.8435264589873425,
+            1.1851610162033048
+          ],
+          [
+            0.8866707244602221,
+            1.0901667287629266
+          ],
+          [
+            0.8941970274056287,
+            1.113715795500409
+          ],
+          [
+            0.8625557089152662,
+            1.133427463935468
+          ]
+        ],
+        "maximum_condition_number": 2.101219726486416,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160720,
+        "weighted_candidate_mass": 608153.5676817739,
+        "minimum_sensitivity": 0.0025234283633722284,
+        "maximum_sensitivity": 0.00449991669552879,
+        "anisotropy_ratio": 1.783255178092413,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.0031662329005546345,
+        "uniform_objective": 0.00318707765751953,
+        "proxy_reduction_fraction": 0.00654039819698616
+      },
+      "quantizer": {
+        "training_rows": 118037,
+        "iterations": 12,
+        "seed": 20261002,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.311714191222563e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.294110400835052e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.716702334117144e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.387664613313973e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.113394480664283e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.827223791740835e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.634500409243628e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.358618651982397e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.033362973947078e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.851822738302872e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.58499518269673e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.403144991258159e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.199510582722723e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.042576908133924e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.551500988891348e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.224627137882635e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.164969450101833,
+      "mrr": 0.07875529369928555,
+      "ndcg": 0.09874781896183098
+    }
+  },
+  {
+    "fold": 0,
+    "seed": 20261003,
+    "heldout_query_count": 982,
+    "representation": {
+      "training_query_count": 4018,
+      "training_residual_count": 118037,
+      "metric": {
+        "query_count": 4018,
+        "weighted_candidate_mass": 608153.5676817739,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.6992533492495914,
+            1.4692849312549368
+          ],
+          [
+            0.7466380115276464,
+            1.212020313570941
+          ],
+          [
+            0.8326074307552531,
+            1.1446245731864475
+          ],
+          [
+            0.8703381702409579,
+            1.1634525359492514
+          ],
+          [
+            0.8472356630187344,
+            1.1705723799238776
+          ],
+          [
+            0.8658320768717847,
+            1.1496330555278909
+          ],
+          [
+            0.8759957198964367,
+            1.1244331383234756
+          ],
+          [
+            0.8754931042319228,
+            1.1117893455394807
+          ],
+          [
+            0.8536015283655326,
+            1.1996772152492037
+          ],
+          [
+            0.8547803473208502,
+            1.1302538204667003
+          ],
+          [
+            0.8825134461438899,
+            1.1481320053588697
+          ],
+          [
+            0.8287857259925849,
+            1.1523241805230229
+          ],
+          [
+            0.8435264589873425,
+            1.1851610162033048
+          ],
+          [
+            0.8866707244602221,
+            1.0901667287629266
+          ],
+          [
+            0.8941970274056287,
+            1.113715795500409
+          ],
+          [
+            0.8625557089152662,
+            1.133427463935468
+          ]
+        ],
+        "maximum_condition_number": 2.101219726486416,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160720,
+        "weighted_candidate_mass": 608153.5676817739,
+        "minimum_sensitivity": 0.0025234283633722284,
+        "maximum_sensitivity": 0.00449991669552879,
+        "anisotropy_ratio": 1.783255178092413,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.0031662329005546345,
+        "uniform_objective": 0.00318707765751953,
+        "proxy_reduction_fraction": 0.00654039819698616
+      },
+      "quantizer": {
+        "training_rows": 118037,
+        "iterations": 12,
+        "seed": 20261003,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.323548536282033e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.271271897479892e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.762529953150079e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.389857586938888e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.111544932238758e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.878528751665726e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.635411359136924e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.32204896141775e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.012171747395769e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.852593989809975e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.60481198085472e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.386814104393125e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.205620931927115e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.06246355548501e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.492459503235295e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.168347605736926e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.16191446028513237,
+      "mrr": 0.07795598551708531,
+      "ndcg": 0.09756890956601649
+    }
+  },
+  {
+    "fold": 0,
+    "seed": 20261001,
+    "ablation": "uniform_whitened_8bit",
+    "heldout_query_count": 982,
+    "representation": {
+      "training_query_count": 4018,
+      "training_residual_count": 118037,
+      "metric": {
+        "query_count": 4018,
+        "weighted_candidate_mass": 608153.5676817739,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.6992533492495914,
+            1.4692849312549368
+          ],
+          [
+            0.7466380115276464,
+            1.212020313570941
+          ],
+          [
+            0.8326074307552531,
+            1.1446245731864475
+          ],
+          [
+            0.8703381702409579,
+            1.1634525359492514
+          ],
+          [
+            0.8472356630187344,
+            1.1705723799238776
+          ],
+          [
+            0.8658320768717847,
+            1.1496330555278909
+          ],
+          [
+            0.8759957198964367,
+            1.1244331383234756
+          ],
+          [
+            0.8754931042319228,
+            1.1117893455394807
+          ],
+          [
+            0.8536015283655326,
+            1.1996772152492037
+          ],
+          [
+            0.8547803473208502,
+            1.1302538204667003
+          ],
+          [
+            0.8825134461438899,
+            1.1481320053588697
+          ],
+          [
+            0.8287857259925849,
+            1.1523241805230229
+          ],
+          [
+            0.8435264589873425,
+            1.1851610162033048
+          ],
+          [
+            0.8866707244602221,
+            1.0901667287629266
+          ],
+          [
+            0.8941970274056287,
+            1.113715795500409
+          ],
+          [
+            0.8625557089152662,
+            1.133427463935468
+          ]
+        ],
+        "maximum_condition_number": 2.101219726486416,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160720,
+        "weighted_candidate_mass": 608153.5676817739,
+        "minimum_sensitivity": 0.0025234283633722284,
+        "maximum_sensitivity": 0.00449991669552879,
+        "anisotropy_ratio": 1.783255178092413,
+        "labels_used": false
+      },
+      "allocation": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 8,
+        "maximum_allocated_bits": 8,
+        "nonuniform": false,
+        "ablation": "uniform_eight_bits"
+      },
+      "quantizer": {
+        "training_rows": 118037,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00011637169518508017
+          },
+          {
+            "block": 1,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00010217740782536566
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.74838258116506e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.391092316946015e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.115530701819807e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.831457671476528e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.607799099991098e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.365265966858715e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.044197602430359e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.849823305150494e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.611764158355072e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.377864676527679e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.17815273674205e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.074112363625318e-05
+          },
+          {
+            "block": 14,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.832629151176661e-05
+          },
+          {
+            "block": 15,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.602329085581005e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.164969450101833,
+      "mrr": 0.0766264992079656,
+      "ndcg": 0.09703536184110814
+    }
+  },
+  {
+    "fold": 1,
+    "seed": 20261001,
+    "heldout_query_count": 1008,
+    "representation": {
+      "training_query_count": 3992,
+      "training_residual_count": 117502,
+      "metric": {
+        "query_count": 3992,
+        "weighted_candidate_mass": 603652.6192908396,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7165249530665639,
+            1.4629138807973368
+          ],
+          [
+            0.7351395608071124,
+            1.2182240446010952
+          ],
+          [
+            0.8605603764054569,
+            1.1199088735275826
+          ],
+          [
+            0.880298714646365,
+            1.1742597734820013
+          ],
+          [
+            0.8139145009561022,
+            1.201370738940243
+          ],
+          [
+            0.8905254791011273,
+            1.1424451418096926
+          ],
+          [
+            0.8289962191942746,
+            1.159184399236535
+          ],
+          [
+            0.8684182195914177,
+            1.1766763227386612
+          ],
+          [
+            0.8580120639529663,
+            1.1859387194848185
+          ],
+          [
+            0.8418900083007589,
+            1.179128589093202
+          ],
+          [
+            0.8739164696152595,
+            1.1824155474234237
+          ],
+          [
+            0.8447052990584077,
+            1.133568389104879
+          ],
+          [
+            0.8051530373359813,
+            1.138607149128302
+          ],
+          [
+            0.8750122319977278,
+            1.1384893363710296
+          ],
+          [
+            0.8694296820334573,
+            1.120275973632713
+          ],
+          [
+            0.8867106865350287,
+            1.106381747450675
+          ]
+        ],
+        "maximum_condition_number": 2.0416789039047387,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 159680,
+        "weighted_candidate_mass": 603652.6192908396,
+        "minimum_sensitivity": 0.0025231306338680884,
+        "maximum_sensitivity": 0.00450513845113083,
+        "anisotropy_ratio": 1.785535156467195,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.0031635836906244537,
+        "uniform_objective": 0.003184522183442508,
+        "proxy_reduction_fraction": 0.006575081475934227
+      },
+      "quantizer": {
+        "training_rows": 117502,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.351531141670421e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.269789057318121e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.77130766841583e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.386176679981872e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.086349746212363e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.835493645165116e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.619468280812725e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.311484270961955e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.03348739282228e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.810502575011924e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.567187276436016e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.416521111736074e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.16932991053909e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.066558464430273e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.509894880466163e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.201439388561994e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.18353174603174602,
+      "mrr": 0.08240504535147393,
+      "ndcg": 0.10593837002552883
+    }
+  },
+  {
+    "fold": 1,
+    "seed": 20261002,
+    "heldout_query_count": 1008,
+    "representation": {
+      "training_query_count": 3992,
+      "training_residual_count": 117502,
+      "metric": {
+        "query_count": 3992,
+        "weighted_candidate_mass": 603652.6192908396,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7165249530665639,
+            1.4629138807973368
+          ],
+          [
+            0.7351395608071124,
+            1.2182240446010952
+          ],
+          [
+            0.8605603764054569,
+            1.1199088735275826
+          ],
+          [
+            0.880298714646365,
+            1.1742597734820013
+          ],
+          [
+            0.8139145009561022,
+            1.201370738940243
+          ],
+          [
+            0.8905254791011273,
+            1.1424451418096926
+          ],
+          [
+            0.8289962191942746,
+            1.159184399236535
+          ],
+          [
+            0.8684182195914177,
+            1.1766763227386612
+          ],
+          [
+            0.8580120639529663,
+            1.1859387194848185
+          ],
+          [
+            0.8418900083007589,
+            1.179128589093202
+          ],
+          [
+            0.8739164696152595,
+            1.1824155474234237
+          ],
+          [
+            0.8447052990584077,
+            1.133568389104879
+          ],
+          [
+            0.8051530373359813,
+            1.138607149128302
+          ],
+          [
+            0.8750122319977278,
+            1.1384893363710296
+          ],
+          [
+            0.8694296820334573,
+            1.120275973632713
+          ],
+          [
+            0.8867106865350287,
+            1.106381747450675
+          ]
+        ],
+        "maximum_condition_number": 2.0416789039047387,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 159680,
+        "weighted_candidate_mass": 603652.6192908396,
+        "minimum_sensitivity": 0.0025231306338680884,
+        "maximum_sensitivity": 0.00450513845113083,
+        "anisotropy_ratio": 1.785535156467195,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.0031635836906244537,
+        "uniform_objective": 0.003184522183442508,
+        "proxy_reduction_fraction": 0.006575081475934227
+      },
+      "quantizer": {
+        "training_rows": 117502,
+        "iterations": 12,
+        "seed": 20261002,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.356528269359842e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.230514893308282e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.778917592484504e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.401542047271505e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.072438115254045e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.823140524327755e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.59314386616461e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.310555858770385e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.006725693121552e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.81307098804973e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.574702613055706e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.370211824309081e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.148937584133819e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.081944931996986e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.525711357127875e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.202681394526735e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.18551587301587302,
+      "mrr": 0.08183775825144872,
+      "ndcg": 0.10597317817316147
+    }
+  },
+  {
+    "fold": 1,
+    "seed": 20261003,
+    "heldout_query_count": 1008,
+    "representation": {
+      "training_query_count": 3992,
+      "training_residual_count": 117502,
+      "metric": {
+        "query_count": 3992,
+        "weighted_candidate_mass": 603652.6192908396,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7165249530665639,
+            1.4629138807973368
+          ],
+          [
+            0.7351395608071124,
+            1.2182240446010952
+          ],
+          [
+            0.8605603764054569,
+            1.1199088735275826
+          ],
+          [
+            0.880298714646365,
+            1.1742597734820013
+          ],
+          [
+            0.8139145009561022,
+            1.201370738940243
+          ],
+          [
+            0.8905254791011273,
+            1.1424451418096926
+          ],
+          [
+            0.8289962191942746,
+            1.159184399236535
+          ],
+          [
+            0.8684182195914177,
+            1.1766763227386612
+          ],
+          [
+            0.8580120639529663,
+            1.1859387194848185
+          ],
+          [
+            0.8418900083007589,
+            1.179128589093202
+          ],
+          [
+            0.8739164696152595,
+            1.1824155474234237
+          ],
+          [
+            0.8447052990584077,
+            1.133568389104879
+          ],
+          [
+            0.8051530373359813,
+            1.138607149128302
+          ],
+          [
+            0.8750122319977278,
+            1.1384893363710296
+          ],
+          [
+            0.8694296820334573,
+            1.120275973632713
+          ],
+          [
+            0.8867106865350287,
+            1.106381747450675
+          ]
+        ],
+        "maximum_condition_number": 2.0416789039047387,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 159680,
+        "weighted_candidate_mass": 603652.6192908396,
+        "minimum_sensitivity": 0.0025231306338680884,
+        "maximum_sensitivity": 0.00450513845113083,
+        "anisotropy_ratio": 1.785535156467195,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.0031635836906244537,
+        "uniform_objective": 0.003184522183442508,
+        "proxy_reduction_fraction": 0.006575081475934227
+      },
+      "quantizer": {
+        "training_rows": 117502,
+        "iterations": 12,
+        "seed": 20261003,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.328323747264221e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.292921509360895e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.793620847631246e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.434153616894037e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.07826834009029e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.85541012394242e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.63321329234168e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.323568181367591e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.015766798052937e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.792924589011818e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.573153561679646e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.373224070761353e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.125965203158557e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.060920324875042e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.565981599735096e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.197525650961325e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.18154761904761904,
+      "mrr": 0.08044729465860419,
+      "ndcg": 0.10409046952262173
+    }
+  },
+  {
+    "fold": 1,
+    "seed": 20261001,
+    "ablation": "uniform_whitened_8bit",
+    "heldout_query_count": 1008,
+    "representation": {
+      "training_query_count": 3992,
+      "training_residual_count": 117502,
+      "metric": {
+        "query_count": 3992,
+        "weighted_candidate_mass": 603652.6192908396,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7165249530665639,
+            1.4629138807973368
+          ],
+          [
+            0.7351395608071124,
+            1.2182240446010952
+          ],
+          [
+            0.8605603764054569,
+            1.1199088735275826
+          ],
+          [
+            0.880298714646365,
+            1.1742597734820013
+          ],
+          [
+            0.8139145009561022,
+            1.201370738940243
+          ],
+          [
+            0.8905254791011273,
+            1.1424451418096926
+          ],
+          [
+            0.8289962191942746,
+            1.159184399236535
+          ],
+          [
+            0.8684182195914177,
+            1.1766763227386612
+          ],
+          [
+            0.8580120639529663,
+            1.1859387194848185
+          ],
+          [
+            0.8418900083007589,
+            1.179128589093202
+          ],
+          [
+            0.8739164696152595,
+            1.1824155474234237
+          ],
+          [
+            0.8447052990584077,
+            1.133568389104879
+          ],
+          [
+            0.8051530373359813,
+            1.138607149128302
+          ],
+          [
+            0.8750122319977278,
+            1.1384893363710296
+          ],
+          [
+            0.8694296820334573,
+            1.120275973632713
+          ],
+          [
+            0.8867106865350287,
+            1.106381747450675
+          ]
+        ],
+        "maximum_condition_number": 2.0416789039047387,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 159680,
+        "weighted_candidate_mass": 603652.6192908396,
+        "minimum_sensitivity": 0.0025231306338680884,
+        "maximum_sensitivity": 0.00450513845113083,
+        "anisotropy_ratio": 1.785535156467195,
+        "labels_used": false
+      },
+      "allocation": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 8,
+        "maximum_allocated_bits": 8,
+        "nonuniform": false,
+        "ablation": "uniform_eight_bits"
+      },
+      "quantizer": {
+        "training_rows": 117502,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00011676964641083032
+          },
+          {
+            "block": 1,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00010263221338391304
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.77130766841583e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.386176679981872e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.086349746212363e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.835493645165116e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.619468280812725e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.311484270961955e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.03348739282228e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.810502575011924e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.567187276436016e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.416521111736074e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.16932991053909e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.066558464430273e-05
+          },
+          {
+            "block": 14,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.852131627965719e-05
+          },
+          {
+            "block": 15,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.612129072891548e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.1765873015873016,
+      "mrr": 0.08034966301335349,
+      "ndcg": 0.10289134706881713
+    }
+  },
+  {
+    "fold": 2,
+    "seed": 20261001,
+    "heldout_query_count": 1039,
+    "representation": {
+      "training_query_count": 3961,
+      "training_residual_count": 116781,
+      "metric": {
+        "query_count": 3961,
+        "weighted_candidate_mass": 599839.7693804501,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.727606500269307,
+            1.4433512930570405
+          ],
+          [
+            0.7585678567524612,
+            1.1948656174256085
+          ],
+          [
+            0.8479149448074029,
+            1.1479010616342662
+          ],
+          [
+            0.8845960223736195,
+            1.2120951405667744
+          ],
+          [
+            0.8451814845711182,
+            1.1947729715687674
+          ],
+          [
+            0.8638613393513686,
+            1.1541687390964592
+          ],
+          [
+            0.7769080630633801,
+            1.1869598891863253
+          ],
+          [
+            0.8606274148117566,
+            1.1595640205538733
+          ],
+          [
+            0.87204245249387,
+            1.1564882536733532
+          ],
+          [
+            0.8682634704890295,
+            1.148560414502232
+          ],
+          [
+            0.8785300758201977,
+            1.1236300481250108
+          ],
+          [
+            0.8731914628133244,
+            1.1681369194834477
+          ],
+          [
+            0.8971934034715419,
+            1.1080059274788752
+          ],
+          [
+            0.8994189144023566,
+            1.0907412009297306
+          ],
+          [
+            0.8689306581403141,
+            1.1710871422472782
+          ],
+          [
+            0.896581772363294,
+            1.0833024622051255
+          ]
+        ],
+        "maximum_condition_number": 1.9836976339859758,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 158440,
+        "weighted_candidate_mass": 599839.7693804501,
+        "minimum_sensitivity": 0.0025181033730557823,
+        "maximum_sensitivity": 0.004476312353688192,
+        "anisotropy_ratio": 1.7776523400848605,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003155418686492268,
+        "uniform_objective": 0.003176129233383081,
+        "proxy_reduction_fraction": 0.00652068772049075
+      },
+      "quantizer": {
+        "training_rows": 116781,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.338301267940551e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.286606705747545e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.744564158609137e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.402501746080816e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.087692887987942e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.818195783533156e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.555871318094432e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.328144031111151e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.981489761732519e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.787840149831027e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.600279786856845e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.385653589153662e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.202599226729944e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.076133624650538e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.498758299741894e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.223515371559188e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.20291947385306383,
+      "mrr": 0.09060910215866906,
+      "ndcg": 0.1166336843564421
+    }
+  },
+  {
+    "fold": 2,
+    "seed": 20261002,
+    "heldout_query_count": 1039,
+    "representation": {
+      "training_query_count": 3961,
+      "training_residual_count": 116781,
+      "metric": {
+        "query_count": 3961,
+        "weighted_candidate_mass": 599839.7693804501,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.727606500269307,
+            1.4433512930570405
+          ],
+          [
+            0.7585678567524612,
+            1.1948656174256085
+          ],
+          [
+            0.8479149448074029,
+            1.1479010616342662
+          ],
+          [
+            0.8845960223736195,
+            1.2120951405667744
+          ],
+          [
+            0.8451814845711182,
+            1.1947729715687674
+          ],
+          [
+            0.8638613393513686,
+            1.1541687390964592
+          ],
+          [
+            0.7769080630633801,
+            1.1869598891863253
+          ],
+          [
+            0.8606274148117566,
+            1.1595640205538733
+          ],
+          [
+            0.87204245249387,
+            1.1564882536733532
+          ],
+          [
+            0.8682634704890295,
+            1.148560414502232
+          ],
+          [
+            0.8785300758201977,
+            1.1236300481250108
+          ],
+          [
+            0.8731914628133244,
+            1.1681369194834477
+          ],
+          [
+            0.8971934034715419,
+            1.1080059274788752
+          ],
+          [
+            0.8994189144023566,
+            1.0907412009297306
+          ],
+          [
+            0.8689306581403141,
+            1.1710871422472782
+          ],
+          [
+            0.896581772363294,
+            1.0833024622051255
+          ]
+        ],
+        "maximum_condition_number": 1.9836976339859758,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 158440,
+        "weighted_candidate_mass": 599839.7693804501,
+        "minimum_sensitivity": 0.0025181033730557823,
+        "maximum_sensitivity": 0.004476312353688192,
+        "anisotropy_ratio": 1.7776523400848605,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003155418686492268,
+        "uniform_objective": 0.003176129233383081,
+        "proxy_reduction_fraction": 0.00652068772049075
+      },
+      "quantizer": {
+        "training_rows": 116781,
+        "iterations": 12,
+        "seed": 20261002,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.358514605788514e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.283853483386338e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.72788329818286e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.396310633746907e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.049627260537818e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.83081738720648e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.567194890929386e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.334579615620896e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.966170960571617e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.769271905999631e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.570863817818463e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.364351040450856e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.229981565615162e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.059605559334159e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.495115955360234e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.19996018637903e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.1995508501764517,
+      "mrr": 0.09326924545885086,
+      "ndcg": 0.1182666118694578
+    }
+  },
+  {
+    "fold": 2,
+    "seed": 20261003,
+    "heldout_query_count": 1039,
+    "representation": {
+      "training_query_count": 3961,
+      "training_residual_count": 116781,
+      "metric": {
+        "query_count": 3961,
+        "weighted_candidate_mass": 599839.7693804501,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.727606500269307,
+            1.4433512930570405
+          ],
+          [
+            0.7585678567524612,
+            1.1948656174256085
+          ],
+          [
+            0.8479149448074029,
+            1.1479010616342662
+          ],
+          [
+            0.8845960223736195,
+            1.2120951405667744
+          ],
+          [
+            0.8451814845711182,
+            1.1947729715687674
+          ],
+          [
+            0.8638613393513686,
+            1.1541687390964592
+          ],
+          [
+            0.7769080630633801,
+            1.1869598891863253
+          ],
+          [
+            0.8606274148117566,
+            1.1595640205538733
+          ],
+          [
+            0.87204245249387,
+            1.1564882536733532
+          ],
+          [
+            0.8682634704890295,
+            1.148560414502232
+          ],
+          [
+            0.8785300758201977,
+            1.1236300481250108
+          ],
+          [
+            0.8731914628133244,
+            1.1681369194834477
+          ],
+          [
+            0.8971934034715419,
+            1.1080059274788752
+          ],
+          [
+            0.8994189144023566,
+            1.0907412009297306
+          ],
+          [
+            0.8689306581403141,
+            1.1710871422472782
+          ],
+          [
+            0.896581772363294,
+            1.0833024622051255
+          ]
+        ],
+        "maximum_condition_number": 1.9836976339859758,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 158440,
+        "weighted_candidate_mass": 599839.7693804501,
+        "minimum_sensitivity": 0.0025181033730557823,
+        "maximum_sensitivity": 0.004476312353688192,
+        "anisotropy_ratio": 1.7776523400848605,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003155418686492268,
+        "uniform_objective": 0.003176129233383081,
+        "proxy_reduction_fraction": 0.00652068772049075
+      },
+      "quantizer": {
+        "training_rows": 116781,
+        "iterations": 12,
+        "seed": 20261003,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.345026435563341e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.277516124304384e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.739339293446392e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.468943608226255e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.056585258804262e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.84753608261235e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.554908708902076e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.327396062668413e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.966878183651716e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.809733506292105e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.613638445036486e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.392073166556656e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.226269372040406e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.051198917906731e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.45098654483445e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.24297928577289e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.2009945460378569,
+      "mrr": 0.08870174312907711,
+      "ndcg": 0.11506267395577283
+    }
+  },
+  {
+    "fold": 2,
+    "seed": 20261001,
+    "ablation": "uniform_whitened_8bit",
+    "heldout_query_count": 1039,
+    "representation": {
+      "training_query_count": 3961,
+      "training_residual_count": 116781,
+      "metric": {
+        "query_count": 3961,
+        "weighted_candidate_mass": 599839.7693804501,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.727606500269307,
+            1.4433512930570405
+          ],
+          [
+            0.7585678567524612,
+            1.1948656174256085
+          ],
+          [
+            0.8479149448074029,
+            1.1479010616342662
+          ],
+          [
+            0.8845960223736195,
+            1.2120951405667744
+          ],
+          [
+            0.8451814845711182,
+            1.1947729715687674
+          ],
+          [
+            0.8638613393513686,
+            1.1541687390964592
+          ],
+          [
+            0.7769080630633801,
+            1.1869598891863253
+          ],
+          [
+            0.8606274148117566,
+            1.1595640205538733
+          ],
+          [
+            0.87204245249387,
+            1.1564882536733532
+          ],
+          [
+            0.8682634704890295,
+            1.148560414502232
+          ],
+          [
+            0.8785300758201977,
+            1.1236300481250108
+          ],
+          [
+            0.8731914628133244,
+            1.1681369194834477
+          ],
+          [
+            0.8971934034715419,
+            1.1080059274788752
+          ],
+          [
+            0.8994189144023566,
+            1.0907412009297306
+          ],
+          [
+            0.8689306581403141,
+            1.1710871422472782
+          ],
+          [
+            0.896581772363294,
+            1.0833024622051255
+          ]
+        ],
+        "maximum_condition_number": 1.9836976339859758,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 158440,
+        "weighted_candidate_mass": 599839.7693804501,
+        "minimum_sensitivity": 0.0025181033730557823,
+        "maximum_sensitivity": 0.004476312353688192,
+        "anisotropy_ratio": 1.7776523400848605,
+        "labels_used": false
+      },
+      "allocation": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 8,
+        "maximum_allocated_bits": 8,
+        "nonuniform": false,
+        "ablation": "uniform_eight_bits"
+      },
+      "quantizer": {
+        "training_rows": 116781,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00011684180208249018
+          },
+          {
+            "block": 1,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00010267913603456691
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.744564158609137e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.402501746080816e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.087692887987942e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.818195783533156e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.555871318094432e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.328144031111151e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.981489761732519e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.787840149831027e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.600279786856845e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.385653589153662e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.202599226729944e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.076133624650538e-05
+          },
+          {
+            "block": 14,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.855065294075757e-05
+          },
+          {
+            "block": 15,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.634336750721559e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.2038819377606673,
+      "mrr": 0.0905281329727913,
+      "ndcg": 0.11677286496588449
+    }
+  },
+  {
+    "fold": 3,
+    "seed": 20261001,
+    "heldout_query_count": 995,
+    "representation": {
+      "training_query_count": 4005,
+      "training_residual_count": 117371,
+      "metric": {
+        "query_count": 4005,
+        "weighted_candidate_mass": 606198.7074346989,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7106247812053275,
+            1.4608556872034588
+          ],
+          [
+            0.7678439973921819,
+            1.2410207987012862
+          ],
+          [
+            0.8312769895498502,
+            1.1197815002834526
+          ],
+          [
+            0.8996842192741255,
+            1.165745550224807
+          ],
+          [
+            0.8459979541536706,
+            1.2257635237589284
+          ],
+          [
+            0.8523098684306324,
+            1.2026941156036355
+          ],
+          [
+            0.9161535885846231,
+            1.0968538764994615
+          ],
+          [
+            0.8920484087381666,
+            1.1241269268037561
+          ],
+          [
+            0.8510659626497602,
+            1.1721432056793586
+          ],
+          [
+            0.8486921746323494,
+            1.1766809211826381
+          ],
+          [
+            0.8815491166787977,
+            1.1595130064005343
+          ],
+          [
+            0.8393111595912635,
+            1.1406338572800798
+          ],
+          [
+            0.8359741900200585,
+            1.1049831096335916
+          ],
+          [
+            0.8901890890663006,
+            1.1179800919640033
+          ],
+          [
+            0.8947568868245807,
+            1.1147552750554768
+          ],
+          [
+            0.8908359152908182,
+            1.0891196334026993
+          ]
+        ],
+        "maximum_condition_number": 2.055734229709279,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160200,
+        "weighted_candidate_mass": 606198.7074346989,
+        "minimum_sensitivity": 0.0025140058832752105,
+        "maximum_sensitivity": 0.004502264796023186,
+        "anisotropy_ratio": 1.7908728161597223,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003152923013158792,
+        "uniform_objective": 0.0031743083661755172,
+        "proxy_reduction_fraction": 0.006737011830545902
+      },
+      "quantizer": {
+        "training_rows": 117371,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.305832307087258e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.303520396817476e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.735765343066305e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.447128104511648e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.086277714231983e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.785803947830573e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.642974717076868e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.329248521476984e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.974948675837368e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.775266567477956e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.584316335851327e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.382647891063243e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.163071859395131e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.0719383074902e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.510124800726771e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.185496310237795e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.1849246231155779,
+      "mrr": 0.09294647842386537,
+      "ndcg": 0.1143824181225041
+    }
+  },
+  {
+    "fold": 3,
+    "seed": 20261002,
+    "heldout_query_count": 995,
+    "representation": {
+      "training_query_count": 4005,
+      "training_residual_count": 117371,
+      "metric": {
+        "query_count": 4005,
+        "weighted_candidate_mass": 606198.7074346989,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7106247812053275,
+            1.4608556872034588
+          ],
+          [
+            0.7678439973921819,
+            1.2410207987012862
+          ],
+          [
+            0.8312769895498502,
+            1.1197815002834526
+          ],
+          [
+            0.8996842192741255,
+            1.165745550224807
+          ],
+          [
+            0.8459979541536706,
+            1.2257635237589284
+          ],
+          [
+            0.8523098684306324,
+            1.2026941156036355
+          ],
+          [
+            0.9161535885846231,
+            1.0968538764994615
+          ],
+          [
+            0.8920484087381666,
+            1.1241269268037561
+          ],
+          [
+            0.8510659626497602,
+            1.1721432056793586
+          ],
+          [
+            0.8486921746323494,
+            1.1766809211826381
+          ],
+          [
+            0.8815491166787977,
+            1.1595130064005343
+          ],
+          [
+            0.8393111595912635,
+            1.1406338572800798
+          ],
+          [
+            0.8359741900200585,
+            1.1049831096335916
+          ],
+          [
+            0.8901890890663006,
+            1.1179800919640033
+          ],
+          [
+            0.8947568868245807,
+            1.1147552750554768
+          ],
+          [
+            0.8908359152908182,
+            1.0891196334026993
+          ]
+        ],
+        "maximum_condition_number": 2.055734229709279,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160200,
+        "weighted_candidate_mass": 606198.7074346989,
+        "minimum_sensitivity": 0.0025140058832752105,
+        "maximum_sensitivity": 0.004502264796023186,
+        "anisotropy_ratio": 1.7908728161597223,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003152923013158792,
+        "uniform_objective": 0.0031743083661755172,
+        "proxy_reduction_fraction": 0.006737011830545902
+      },
+      "quantizer": {
+        "training_rows": 117371,
+        "iterations": 12,
+        "seed": 20261002,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.349664130946621e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.307089254027233e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.710725134937093e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.438029519515112e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.087588114198297e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.797628834145144e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.669034286867827e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.336619794135913e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.986985292518511e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.766869384795427e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.569490844616666e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.369094964815304e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.165770512074232e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.03805562807247e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.471248631598428e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.219345520250499e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.19195979899497487,
+      "mrr": 0.0964556911541836,
+      "ndcg": 0.11858072562518344
+    }
+  },
+  {
+    "fold": 3,
+    "seed": 20261003,
+    "heldout_query_count": 995,
+    "representation": {
+      "training_query_count": 4005,
+      "training_residual_count": 117371,
+      "metric": {
+        "query_count": 4005,
+        "weighted_candidate_mass": 606198.7074346989,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7106247812053275,
+            1.4608556872034588
+          ],
+          [
+            0.7678439973921819,
+            1.2410207987012862
+          ],
+          [
+            0.8312769895498502,
+            1.1197815002834526
+          ],
+          [
+            0.8996842192741255,
+            1.165745550224807
+          ],
+          [
+            0.8459979541536706,
+            1.2257635237589284
+          ],
+          [
+            0.8523098684306324,
+            1.2026941156036355
+          ],
+          [
+            0.9161535885846231,
+            1.0968538764994615
+          ],
+          [
+            0.8920484087381666,
+            1.1241269268037561
+          ],
+          [
+            0.8510659626497602,
+            1.1721432056793586
+          ],
+          [
+            0.8486921746323494,
+            1.1766809211826381
+          ],
+          [
+            0.8815491166787977,
+            1.1595130064005343
+          ],
+          [
+            0.8393111595912635,
+            1.1406338572800798
+          ],
+          [
+            0.8359741900200585,
+            1.1049831096335916
+          ],
+          [
+            0.8901890890663006,
+            1.1179800919640033
+          ],
+          [
+            0.8947568868245807,
+            1.1147552750554768
+          ],
+          [
+            0.8908359152908182,
+            1.0891196334026993
+          ]
+        ],
+        "maximum_condition_number": 2.055734229709279,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160200,
+        "weighted_candidate_mass": 606198.7074346989,
+        "minimum_sensitivity": 0.0025140058832752105,
+        "maximum_sensitivity": 0.004502264796023186,
+        "anisotropy_ratio": 1.7908728161597223,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003152923013158792,
+        "uniform_objective": 0.0031743083661755172,
+        "proxy_reduction_fraction": 0.006737011830545902
+      },
+      "quantizer": {
+        "training_rows": 117371,
+        "iterations": 12,
+        "seed": 20261003,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.355970203410834e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.280804129550233e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.658715134719387e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.419128764420748e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.054993279278278e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.794933091849089e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.665969653520733e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.319746848428622e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.989630103111267e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.791379175614566e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.57137022446841e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.380832539638504e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.167717558331788e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.072988228173926e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.50458415900357e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.209489508066326e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.19195979899497487,
+      "mrr": 0.09500358937544869,
+      "ndcg": 0.11746383316601214
+    }
+  },
+  {
+    "fold": 3,
+    "seed": 20261001,
+    "ablation": "uniform_whitened_8bit",
+    "heldout_query_count": 995,
+    "representation": {
+      "training_query_count": 4005,
+      "training_residual_count": 117371,
+      "metric": {
+        "query_count": 4005,
+        "weighted_candidate_mass": 606198.7074346989,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7106247812053275,
+            1.4608556872034588
+          ],
+          [
+            0.7678439973921819,
+            1.2410207987012862
+          ],
+          [
+            0.8312769895498502,
+            1.1197815002834526
+          ],
+          [
+            0.8996842192741255,
+            1.165745550224807
+          ],
+          [
+            0.8459979541536706,
+            1.2257635237589284
+          ],
+          [
+            0.8523098684306324,
+            1.2026941156036355
+          ],
+          [
+            0.9161535885846231,
+            1.0968538764994615
+          ],
+          [
+            0.8920484087381666,
+            1.1241269268037561
+          ],
+          [
+            0.8510659626497602,
+            1.1721432056793586
+          ],
+          [
+            0.8486921746323494,
+            1.1766809211826381
+          ],
+          [
+            0.8815491166787977,
+            1.1595130064005343
+          ],
+          [
+            0.8393111595912635,
+            1.1406338572800798
+          ],
+          [
+            0.8359741900200585,
+            1.1049831096335916
+          ],
+          [
+            0.8901890890663006,
+            1.1179800919640033
+          ],
+          [
+            0.8947568868245807,
+            1.1147552750554768
+          ],
+          [
+            0.8908359152908182,
+            1.0891196334026993
+          ]
+        ],
+        "maximum_condition_number": 2.055734229709279,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160200,
+        "weighted_candidate_mass": 606198.7074346989,
+        "minimum_sensitivity": 0.0025140058832752105,
+        "maximum_sensitivity": 0.004502264796023186,
+        "anisotropy_ratio": 1.7908728161597223,
+        "labels_used": false
+      },
+      "allocation": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 8,
+        "maximum_allocated_bits": 8,
+        "nonuniform": false,
+        "ablation": "uniform_eight_bits"
+      },
+      "quantizer": {
+        "training_rows": 117371,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00011680618626996875
+          },
+          {
+            "block": 1,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00010239634866593406
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.735765343066305e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.447128104511648e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.086277714231983e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.785803947830573e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.642974717076868e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.329248521476984e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.974948675837368e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.775266567477956e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.584316335851327e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.382647891063243e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.163071859395131e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.0719383074902e-05
+          },
+          {
+            "block": 14,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.816498353146017e-05
+          },
+          {
+            "block": 15,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.645140092587098e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.18341708542713567,
+      "mrr": 0.09197734705272394,
+      "ndcg": 0.11326103203092112
+    }
+  },
+  {
+    "fold": 4,
+    "seed": 20261001,
+    "heldout_query_count": 976,
+    "representation": {
+      "training_query_count": 4024,
+      "training_residual_count": 117943,
+      "metric": {
+        "query_count": 4024,
+        "weighted_candidate_mass": 609033.5221603557,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7396396862935787,
+            1.4452285504487492
+          ],
+          [
+            0.7565674839947829,
+            1.203806753779432
+          ],
+          [
+            0.8610824167051477,
+            1.1335272262072627
+          ],
+          [
+            0.860065178084676,
+            1.227608471413644
+          ],
+          [
+            0.872077192204517,
+            1.1666470411354994
+          ],
+          [
+            0.8967544021839089,
+            1.099975286139352
+          ],
+          [
+            0.8635962898660641,
+            1.105220293843742
+          ],
+          [
+            0.8854164095335769,
+            1.0907853512822627
+          ],
+          [
+            0.8513210230134581,
+            1.17202606416236
+          ],
+          [
+            0.8169004912909642,
+            1.2457066100359868
+          ],
+          [
+            0.9122632015471214,
+            1.1330268623617346
+          ],
+          [
+            0.8539551568728436,
+            1.1515839859046852
+          ],
+          [
+            0.8601458123129906,
+            1.1456296724726804
+          ],
+          [
+            0.9212882171541439,
+            1.0904458132788275
+          ],
+          [
+            0.9031584337503658,
+            1.1233989325416576
+          ],
+          [
+            0.9139908660347945,
+            1.0999449075057397
+          ]
+        ],
+        "maximum_condition_number": 1.9539629595742207,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160960,
+        "weighted_candidate_mass": 609033.5221603557,
+        "minimum_sensitivity": 0.002515381473841876,
+        "maximum_sensitivity": 0.004491107281170497,
+        "anisotropy_ratio": 1.7854577239574678,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003155607231424637,
+        "uniform_objective": 0.0031763228530116354,
+        "proxy_reduction_fraction": 0.006521887901715222
+      },
+      "quantizer": {
+        "training_rows": 117943,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.304326183861122e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.260312122525647e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.730516467243433e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.385110024595633e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.116692672250792e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.871658064890653e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.605729817645624e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.312371210195124e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.952997839311138e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.75475928094238e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.589125743834302e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.388968515442684e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.112189632607624e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.092906162142754e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.513465192867443e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.228105773217976e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.20799180327868852,
+      "mrr": 0.10178571428571428,
+      "ndcg": 0.12683590129805958
+    }
+  },
+  {
+    "fold": 4,
+    "seed": 20261002,
+    "heldout_query_count": 976,
+    "representation": {
+      "training_query_count": 4024,
+      "training_residual_count": 117943,
+      "metric": {
+        "query_count": 4024,
+        "weighted_candidate_mass": 609033.5221603557,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7396396862935787,
+            1.4452285504487492
+          ],
+          [
+            0.7565674839947829,
+            1.203806753779432
+          ],
+          [
+            0.8610824167051477,
+            1.1335272262072627
+          ],
+          [
+            0.860065178084676,
+            1.227608471413644
+          ],
+          [
+            0.872077192204517,
+            1.1666470411354994
+          ],
+          [
+            0.8967544021839089,
+            1.099975286139352
+          ],
+          [
+            0.8635962898660641,
+            1.105220293843742
+          ],
+          [
+            0.8854164095335769,
+            1.0907853512822627
+          ],
+          [
+            0.8513210230134581,
+            1.17202606416236
+          ],
+          [
+            0.8169004912909642,
+            1.2457066100359868
+          ],
+          [
+            0.9122632015471214,
+            1.1330268623617346
+          ],
+          [
+            0.8539551568728436,
+            1.1515839859046852
+          ],
+          [
+            0.8601458123129906,
+            1.1456296724726804
+          ],
+          [
+            0.9212882171541439,
+            1.0904458132788275
+          ],
+          [
+            0.9031584337503658,
+            1.1233989325416576
+          ],
+          [
+            0.9139908660347945,
+            1.0999449075057397
+          ]
+        ],
+        "maximum_condition_number": 1.9539629595742207,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160960,
+        "weighted_candidate_mass": 609033.5221603557,
+        "minimum_sensitivity": 0.002515381473841876,
+        "maximum_sensitivity": 0.004491107281170497,
+        "anisotropy_ratio": 1.7854577239574678,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003155607231424637,
+        "uniform_objective": 0.0031763228530116354,
+        "proxy_reduction_fraction": 0.006521887901715222
+      },
+      "quantizer": {
+        "training_rows": 117943,
+        "iterations": 12,
+        "seed": 20261002,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.363177767023444e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.236525561893359e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.70203400356695e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.364997822558507e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.095208224607632e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.789919229457155e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.590795187046751e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.352898294106126e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.950631697895005e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.766310591250658e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.55351793486625e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.42320335120894e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.156747597036883e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.06008868291974e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.51089386944659e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.194783342536539e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.2151639344262295,
+      "mrr": 0.09766824421025241,
+      "ndcg": 0.12531316128757644
+    }
+  },
+  {
+    "fold": 4,
+    "seed": 20261003,
+    "heldout_query_count": 976,
+    "representation": {
+      "training_query_count": 4024,
+      "training_residual_count": 117943,
+      "metric": {
+        "query_count": 4024,
+        "weighted_candidate_mass": 609033.5221603557,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7396396862935787,
+            1.4452285504487492
+          ],
+          [
+            0.7565674839947829,
+            1.203806753779432
+          ],
+          [
+            0.8610824167051477,
+            1.1335272262072627
+          ],
+          [
+            0.860065178084676,
+            1.227608471413644
+          ],
+          [
+            0.872077192204517,
+            1.1666470411354994
+          ],
+          [
+            0.8967544021839089,
+            1.099975286139352
+          ],
+          [
+            0.8635962898660641,
+            1.105220293843742
+          ],
+          [
+            0.8854164095335769,
+            1.0907853512822627
+          ],
+          [
+            0.8513210230134581,
+            1.17202606416236
+          ],
+          [
+            0.8169004912909642,
+            1.2457066100359868
+          ],
+          [
+            0.9122632015471214,
+            1.1330268623617346
+          ],
+          [
+            0.8539551568728436,
+            1.1515839859046852
+          ],
+          [
+            0.8601458123129906,
+            1.1456296724726804
+          ],
+          [
+            0.9212882171541439,
+            1.0904458132788275
+          ],
+          [
+            0.9031584337503658,
+            1.1233989325416576
+          ],
+          [
+            0.9139908660347945,
+            1.0999449075057397
+          ]
+        ],
+        "maximum_condition_number": 1.9539629595742207,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160960,
+        "weighted_candidate_mass": 609033.5221603557,
+        "minimum_sensitivity": 0.002515381473841876,
+        "maximum_sensitivity": 0.004491107281170497,
+        "anisotropy_ratio": 1.7854577239574678,
+        "labels_used": false
+      },
+      "allocation": [
+        9,
+        9,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        7,
+        7
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 7,
+        "maximum_allocated_bits": 9,
+        "nonuniform": true,
+        "objective": 0.003155607231424637,
+        "uniform_objective": 0.0031763228530116354,
+        "proxy_reduction_fraction": 0.006521887901715222
+      },
+      "quantizer": {
+        "training_rows": 117943,
+        "iterations": 12,
+        "seed": 20261003,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 8.294957660837099e-05
+          },
+          {
+            "block": 1,
+            "bits": 9,
+            "centroids": 512,
+            "occupied_centroids": 512,
+            "transformed_mse": 7.286734762601554e-05
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.721853712107986e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.420920832781121e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.11777897272259e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.836983033688739e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.574923413107172e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.321129280375317e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.953157182782888e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.778268627589568e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.603928679600358e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.3829542088788e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.145399285946041e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.065389945637435e-05
+          },
+          {
+            "block": 14,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.49565801420249e-05
+          },
+          {
+            "block": 15,
+            "bits": 7,
+            "centroids": 128,
+            "occupied_centroids": 128,
+            "transformed_mse": 9.255890472559258e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.21721311475409835,
+      "mrr": 0.10182718579234971,
+      "ndcg": 0.128872536307598
+    }
+  },
+  {
+    "fold": 4,
+    "seed": 20261001,
+    "ablation": "uniform_whitened_8bit",
+    "heldout_query_count": 976,
+    "representation": {
+      "training_query_count": 4024,
+      "training_residual_count": 117943,
+      "metric": {
+        "query_count": 4024,
+        "weighted_candidate_mass": 609033.5221603557,
+        "subquantizers": 16,
+        "block_dimension": 4,
+        "ridge_fraction": 0.001,
+        "trace_normalization_target": 4.0,
+        "eigenvalue_ranges": [
+          [
+            0.7396396862935787,
+            1.4452285504487492
+          ],
+          [
+            0.7565674839947829,
+            1.203806753779432
+          ],
+          [
+            0.8610824167051477,
+            1.1335272262072627
+          ],
+          [
+            0.860065178084676,
+            1.227608471413644
+          ],
+          [
+            0.872077192204517,
+            1.1666470411354994
+          ],
+          [
+            0.8967544021839089,
+            1.099975286139352
+          ],
+          [
+            0.8635962898660641,
+            1.105220293843742
+          ],
+          [
+            0.8854164095335769,
+            1.0907853512822627
+          ],
+          [
+            0.8513210230134581,
+            1.17202606416236
+          ],
+          [
+            0.8169004912909642,
+            1.2457066100359868
+          ],
+          [
+            0.9122632015471214,
+            1.1330268623617346
+          ],
+          [
+            0.8539551568728436,
+            1.1515839859046852
+          ],
+          [
+            0.8601458123129906,
+            1.1456296724726804
+          ],
+          [
+            0.9212882171541439,
+            1.0904458132788275
+          ],
+          [
+            0.9031584337503658,
+            1.1233989325416576
+          ],
+          [
+            0.9139908660347945,
+            1.0999449075057397
+          ]
+        ],
+        "maximum_condition_number": 1.9539629595742207,
+        "labels_used": false
+      },
+      "rate": {
+        "candidate_observations": 160960,
+        "weighted_candidate_mass": 609033.5221603557,
+        "minimum_sensitivity": 0.002515381473841876,
+        "maximum_sensitivity": 0.004491107281170497,
+        "anisotropy_ratio": 1.7854577239574678,
+        "labels_used": false
+      },
+      "allocation": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "allocation_summary": {
+        "total_bits": 128,
+        "minimum_allocated_bits": 8,
+        "maximum_allocated_bits": 8,
+        "nonuniform": false,
+        "ablation": "uniform_eight_bits"
+      },
+      "quantizer": {
+        "training_rows": 117943,
+        "iterations": 12,
+        "seed": 20261001,
+        "total_bits": 128,
+        "payload_bytes_per_document": 16,
+        "block_summaries": [
+          {
+            "block": 0,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00011711617116816342
+          },
+          {
+            "block": 1,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 0.00010189248860115185
+          },
+          {
+            "block": 2,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.730516467243433e-05
+          },
+          {
+            "block": 3,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.385110024595633e-05
+          },
+          {
+            "block": 4,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 9.116692672250792e-05
+          },
+          {
+            "block": 5,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.871658064890653e-05
+          },
+          {
+            "block": 6,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.605729817645624e-05
+          },
+          {
+            "block": 7,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 8.312371210195124e-05
+          },
+          {
+            "block": 8,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.952997839311138e-05
+          },
+          {
+            "block": 9,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.75475928094238e-05
+          },
+          {
+            "block": 10,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.589125743834302e-05
+          },
+          {
+            "block": 11,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.388968515442684e-05
+          },
+          {
+            "block": 12,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.112189632607624e-05
+          },
+          {
+            "block": 13,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 7.092906162142754e-05
+          },
+          {
+            "block": 14,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.849278724985197e-05
+          },
+          {
+            "block": 15,
+            "bits": 8,
+            "centroids": 256,
+            "occupied_centroids": 256,
+            "transformed_mse": 6.611114804400131e-05
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "recall": 0.21004098360655737,
+      "mrr": 0.10345026671870933,
+      "ndcg": 0.1285703798528713
+    }
+  }
+]
