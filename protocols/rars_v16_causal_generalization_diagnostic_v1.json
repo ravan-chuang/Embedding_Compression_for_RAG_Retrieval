@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v16_causal_generalization_diagnostic_v1",
+  "status": "FROZEN_BEFORE_FIRST_V16_MECHANISM_DIAGNOSTIC_RUN",
+  "method_revision_allowed": false,
+  "research_question": "Within two same-encoder prepared development domains, which mechanism best explains weak RARS transport: frozen-candidate headroom, rank capacity, int8 coding, retrieval-objective value, or fit-domain interaction?",
+  "scope": "outcome-informed mechanism decomposition on opened development evidence; not an independent confirmation, unseen-domain test, universal generalization claim, or production benchmark",
+  "parent_evidence": {
+    "post_outcome_status": true,
+    "hypothesis_selected_after_prior_outcomes": true,
+    "observed_pattern": "RARS improves a narrow MS MARCO setting, while setting-specific external diagnostics do not establish a stable advantage over PCA and later global allocation or gating variants fail their gates",
+    "prior_results_used_for_motivation_only": true
+  },
+  "evidence_boundary": {
+    "tier": "OUTCOME_INFORMED_PREPARED_BUNDLE_MECHANISM_DIAGNOSTIC",
+    "allowed_claim": "which preregistered factor is supported within the two named same-encoder development domains",
+    "forbidden_claims": [
+      "independent causal confirmation",
+      "universal domain generalization",
+      "universal encoder generalization",
+      "state of the art",
+      "official BEIR benchmark performance",
+      "production QPS or latency",
+      "superiority over ScaNN or rebuild-allowed quantizers"
+    ]
+  },
+  "data_policy": {
+    "domain_count": 2,
+    "allowed_development_domains": [
+      "fiqa_bge_same_encoder",
+      "scifact_bge_same_encoder"
+    ],
+    "required_roles": [
+      "fit",
+      "evaluation"
+    ],
+    "minimum_fit_queries_per_domain": 150,
+    "minimum_evaluation_queries_per_domain": 200,
+    "fit_and_evaluation_query_ids_must_be_disjoint": true,
+    "same_encoder_id_revision_dimension_pooling_and_normalization_required": true,
+    "source_domain_id": "fiqa_bge_same_encoder",
+    "source_domain_selected_before_outcomes": true,
+    "closed_confirmation_roles_forbidden": [
+      "msmarco_clean_test",
+      "rars_v3_oracle_audit",
+      "rars_v9_future_method_holdout",
+      "trec_dl_2019_test",
+      "beir_nq_confirmation"
+    ],
+    "evaluation_used_for_method_selection": false
+  },
+  "bundle_contract": {
+    "candidate_pool": 100,
+    "metric": "inner_product",
+    "required_arrays": [
+      "query_vectors.float32.npy",
+      "ann_rows.int64.npy",
+      "ann_scores.float32.npy",
+      "ann_residual_rows.int64.npy",
+      "candidate_residuals.float32.npy",
+      "candidate_relevance.uint8.npy",
+      "relevant_counts.int32.npy",
+      "fold_ids.int64.npy"
+    ],
+    "every_file_hash_registered": true,
+    "full_corpus_not_opened_by_evaluator": true
+  },
+  "diagnostic_configuration": {
+    "alpha": 0.75,
+    "top_b": 40,
+    "final_k": 10,
+    "pca_ranks": [
+      16,
+      64
+    ],
+    "rars_rank": 16,
+    "coefficient_dtype": "int8",
+    "payload_bytes_per_document_at_rank16": 16,
+    "target_domain_int8_scales_are_label_free": true,
+    "pooled_fit_weighting": "query_role_balanced_after_domain_concatenation"
+  },
+  "pair_mining": {
+    "protection_window": 16,
+    "maximum_challengers_per_positive": 4,
+    "margin_temperature": 0.02,
+    "damage_scale": 4.0,
+    "promotion_total_loss_mass": 0.5
+  },
+  "basis_optimization": {
+    "steps": 160,
+    "learning_rate": 0.02,
+    "pca_anchor_weight": 0.1,
+    "huber_delta": 0.02,
+    "gradient_norm_clip": 5.0
+  },
+  "factor_matrix": {
+    "candidate_headroom": "same-candidate exact Recall@10 minus Base Recall@10",
+    "rank_capacity": "local PCA rank-64 FP32 minus local PCA rank-16 FP32",
+    "int8_coding": "local PCA rank-16 FP32 minus the same basis encoded as rank-16 int8",
+    "objective_value": "local cutoff-aware RARS rank-16 int8 minus local PCA rank-16 int8",
+    "fit_domain_interaction": "local cutoff-aware RARS rank-16 int8 minus source-domain RARS rank-16 int8",
+    "pooled_repair": "pooled cutoff-aware RARS rank-16 int8 minus source-domain RARS rank-16 int8",
+    "only_one_factor_changes_within_each_named_contrast": true
+  },
+  "diagnostic_thresholds": {
+    "min_headroom": 0.01,
+    "material_headroom": 0.02,
+    "min_capacity_gain": 0.005,
+    "min_coding_gap": 0.005,
+    "min_objective_gain": 0.005,
+    "min_domain_interaction": 0.005,
+    "min_pooled_recovery": 0.5,
+    "pooled_noninferiority": -0.002,
+    "min_improved_queries": 20,
+    "min_net_share": 0.005,
+    "min_gap_recovery": 0.15,
+    "worst_domain_floor": -0.002
+  },
+  "inference": {
+    "confidence": 0.95,
+    "bootstrap_replicates": 20000,
+    "randomization_replicates": 50000,
+    "seed_base": 20261600,
+    "resampling_unit": "query",
+    "domain_rows_reported_separately": true,
+    "different_domains_or_encoders_may_not_be_treated_as_independent_query_samples": true
+  },
+  "decision_order": [
+    "STOP_FROZEN_CANDIDATE_METHOD",
+    "OBJECTIVE_REPAIR_SUPPORTED",
+    "DOMAIN_SHIFT_SUPPORTED",
+    "CODING_BOTTLENECK_SUPPORTED",
+    "CAPACITY_BOTTLENECK_SUPPORTED",
+    "STOP_LEARNING_CLAIM_KEEP_UNIFORM_RPQ",
+    "STOP_RARS_METHOD_EXPANSION"
+  ],
+  "reporting_contract": {
+    "absolute_base_and_same_candidate_exact_metrics_required": true,
+    "all_factor_contrasts_require_point_interval_p_value_and_query_support": true,
+    "int8_saturation_required_for_every_encoded_arm": true,
+    "per_domain_rows_required": true,
+    "equal_domain_summary_must_not_be_described_as_a_larger_query_sample": true,
+    "negative_outcomes_retained": true
+  },
+  "prohibited_actions": [
+    "using any closed confirmation role",
+    "changing alpha rank Top-B pair mining or optimization after evaluation outcomes",
+    "pooling embeddings from different encoders into one basis",
+    "selecting the better domain direction after outcomes",
+    "describing this opened-role diagnostic as confirmatory causal evidence",
+    "using evaluation outcomes to revise V16"
+  ]
+}
