@@ -9,7 +9,7 @@ NOTEBOOK = (
     ROOT / "notebooks/RARS_V16_Same_Encoder_Mechanism_Diagnostic.ipynb"
 )
 PINNED_IMPLEMENTATION_COMMIT = (
-    "54ec8cfc33fe5753d4e54726ec502b488ed30b05"
+    "f14311a8e499caf1f78b214cea1b125facb3f610"
 )
 
 
@@ -47,3 +47,4 @@ def test_v16_notebook_runs_prepare_bundle_freeze_evaluate_in_order() -> None:
     assert "files.download(archive)" in source
     assert "stderr=subprocess.STDOUT" in source
     assert "V16 preparation failed with return code" in source
+    assert "V16 bundle build failed for" in source
