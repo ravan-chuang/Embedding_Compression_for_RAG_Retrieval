@@ -9,7 +9,7 @@ NOTEBOOK = (
     ROOT / "notebooks/RARS_V16_Same_Encoder_Mechanism_Diagnostic.ipynb"
 )
 PINNED_IMPLEMENTATION_COMMIT = (
-    "5f3e16658355931880438d3d4605dbab98079931"
+    "54ec8cfc33fe5753d4e54726ec502b488ed30b05"
 )
 
 
@@ -27,6 +27,10 @@ def test_v16_notebook_is_commit_pinned_and_uses_isolated_virtualenv() -> None:
     assert 're.fullmatch(r"[0-9a-f]{40}"' in source
     assert '"--system-site-packages"' in source
     assert '"numpy==1.26.4"' in source
+    assert '"sentence-transformers==3.4.1"' in source
+    assert '"transformers==4.48.3"' in source
+    assert '"huggingface-hub==0.28.1"' in source
+    assert 'os.environ["TRANSFORMERS_NO_TF"] = "1"' in source
     assert "actual == V16_IMPLEMENTATION_COMMIT" in source
 
 
