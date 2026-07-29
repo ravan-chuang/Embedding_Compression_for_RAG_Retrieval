@@ -3,18 +3,33 @@
   "protocol_id": "rars_v16_causal_generalization_diagnostic_v1",
   "status": "FROZEN_BEFORE_FIRST_V16_MECHANISM_DIAGNOSTIC_RUN",
   "method_revision_allowed": false,
-  "pre_metric_feasibility_amendment": {
-    "revision": 2,
-    "amended_after_preparation_failure_only": true,
-    "retrieval_metrics_observed": false,
-    "sidecar_basis_fitted": false,
-    "trigger": "SciFact has 300 judged queries, so the original requirement of 150 fit plus 200 evaluation queries was arithmetically impossible for disjoint roles",
-    "changes": [
-      "replace independent hash assignment with an exact hash-ranked 60/40 split",
-      "lower the per-domain evaluation minimum from 200 to 100 while retaining the 150-query fit minimum"
-    ],
-    "scientific_effect": "repairs data-role feasibility without changing the encoder, index recipe, candidate pool, method, hyperparameters, factor contrasts, thresholds, inference, or decision order"
-  },
+  "pre_metric_feasibility_amendments": [
+    {
+      "revision": 2,
+      "amended_after_preparation_failure_only": true,
+      "retrieval_metrics_observed": false,
+      "sidecar_basis_fitted": false,
+      "trigger": "SciFact has 300 judged queries, so the original requirement of 150 fit plus 200 evaluation queries was arithmetically impossible for disjoint roles",
+      "changes": [
+        "replace independent hash assignment with an exact hash-ranked 60/40 split",
+        "lower the per-domain evaluation minimum from 200 to 100 while retaining the 150-query fit minimum"
+      ],
+      "scientific_effect": "repairs data-role feasibility without changing the encoder, index recipe, candidate pool, method, hyperparameters, factor contrasts, thresholds, inference, or decision order"
+    },
+    {
+      "revision": 3,
+      "amended_after_model_load_failure_only": true,
+      "retrieval_metrics_observed": false,
+      "sidecar_basis_fitted": false,
+      "trigger": "the originally registered hash b8903db39f65d93ae28d49a37c4f3fa90c5f94e0 belongs to sentence-transformers/all-MiniLM-L6-v2 and is not a BAAI/bge-small-en-v1.5 revision",
+      "changes": [
+        "pin BAAI/bge-small-en-v1.5 to verified repository revision 88885630388d6249d876a3ab145b78b34665b79a",
+        "download the exact snapshot before model construction",
+        "verify required model files, model_type=bert, hidden_size=384, file hashes, output dimension, finite values, and L2 normalization before corpus encoding"
+      ],
+      "scientific_effect": "repairs encoder provenance before data encoding without changing the intended encoder identity, index recipe, candidate pool, method, hyperparameters, factor contrasts, thresholds, inference, or decision order"
+    }
+  ],
   "research_question": "Within two same-encoder prepared development domains, which mechanism best explains weak RARS transport: frozen-candidate headroom, rank capacity, int8 coding, retrieval-objective value, or fit-domain interaction?",
   "scope": "outcome-informed mechanism decomposition on opened development evidence; not an independent confirmation, unseen-domain test, universal generalization claim, or production benchmark",
   "parent_evidence": {
@@ -35,6 +50,14 @@
       "production QPS or latency",
       "superiority over ScaNN or rebuild-allowed quantizers"
     ]
+  },
+  "preparation_environment_contract": {
+    "numpy": "1.26.4",
+    "faiss": "1.12.0",
+    "sentence_transformers": "3.4.1",
+    "transformers": "4.48.3",
+    "huggingface_hub": "0.28.1",
+    "tensorflow_backend_disabled": true
   },
   "data_policy": {
     "domain_count": 2,

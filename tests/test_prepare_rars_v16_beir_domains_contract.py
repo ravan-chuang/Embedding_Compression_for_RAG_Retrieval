@@ -16,13 +16,17 @@ SOURCE = SCRIPT.read_text(encoding="utf-8")
 def test_v16_preparer_pins_one_encoder_and_two_domains() -> None:
     assert MODULE.MODEL_ID == "BAAI/bge-small-en-v1.5"
     assert MODULE.MODEL_REVISION == (
-        "b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"
+        "88885630388d6249d876a3ab145b78b34665b79a"
     )
     assert set(MODULE.DATASETS) == {
         "fiqa_bge_same_encoder",
         "scifact_bge_same_encoder",
     }
     assert "normalize_embeddings=True" in SOURCE
+    assert "snapshot_download(repo_id=MODEL_ID, revision=MODEL_REVISION)" in SOURCE
+    assert "RARS_V16_PINNED_BGE_SNAPSHOT_VERIFIED" in SOURCE
+    assert 'config.get("model_type") != "bert"' in SOURCE
+    assert "Pinned BGE encoder preflight" in SOURCE
 
 
 def test_v16_query_role_is_deterministic_and_domain_separated() -> None:
@@ -55,3 +59,14 @@ def test_v16_preparer_has_no_metric_or_sidecar_training_path() -> None:
     assert "Recall@" not in SOURCE
     assert "fit_cutoff_aware_basis" not in SOURCE
     assert "RARS_V16_SAME_ENCODER_DOMAIN_INPUTS_PREPARED" in SOURCE
+
+
+def test_v16_pinned_model_snapshot_requires_sentence_transformer_files() -> None:
+    required = (
+        "modules.json",
+        "config.json",
+        "1_Pooling/config.json",
+        "pytorch_model.bin",
+        "tokenizer.json",
+    )
+    assert all(name in SOURCE for name in required)

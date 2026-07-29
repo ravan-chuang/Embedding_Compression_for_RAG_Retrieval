@@ -28,10 +28,15 @@ def test_v16_is_frozen_outcome_informed_and_nonconfirmatory() -> None:
     assert "independent causal confirmation" in (
         PROTOCOL["evidence_boundary"]["forbidden_claims"]
     )
-    amendment = PROTOCOL["pre_metric_feasibility_amendment"]
-    assert amendment["revision"] == 2
-    assert amendment["retrieval_metrics_observed"] is False
-    assert amendment["sidecar_basis_fitted"] is False
+    amendments = PROTOCOL["pre_metric_feasibility_amendments"]
+    assert [item["revision"] for item in amendments] == [2, 3]
+    assert all(item["retrieval_metrics_observed"] is False for item in amendments)
+    assert all(item["sidecar_basis_fitted"] is False for item in amendments)
+    assert "all-MiniLM-L6-v2" in amendments[1]["trigger"]
+    assert (
+        "88885630388d6249d876a3ab145b78b34665b79a"
+        in amendments[1]["changes"][0]
+    )
 
 
 def test_v16_uses_exactly_two_named_same_encoder_development_domains() -> None:
@@ -52,6 +57,17 @@ def test_v16_uses_exactly_two_named_same_encoder_development_domains() -> None:
         is True
     )
     assert policy["evaluation_used_for_method_selection"] is False
+
+
+def test_v16_preparation_environment_is_pinned() -> None:
+    assert PROTOCOL["preparation_environment_contract"] == {
+        "numpy": "1.26.4",
+        "faiss": "1.12.0",
+        "sentence_transformers": "3.4.1",
+        "transformers": "4.48.3",
+        "huggingface_hub": "0.28.1",
+        "tensorflow_backend_disabled": True,
+    }
 
 
 def test_v16_factor_matrix_separates_headroom_rank_coding_objective_and_domain() -> None:

@@ -23,7 +23,7 @@ import numpy as np
 
 
 MODEL_ID = "BAAI/bge-small-en-v1.5"
-MODEL_REVISION = "b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"
+MODEL_REVISION = "88885630388d6249d876a3ab145b78b34665b79a"
 DIMENSION = 384
 DATASETS = {
     "fiqa_bge_same_encoder": {
@@ -73,6 +73,44 @@ def atomic_save(path: Path, value: np.ndarray) -> None:
     with temporary.open("wb") as handle:
         np.save(handle, np.asarray(value), allow_pickle=False)
     temporary.replace(path)
+
+
+def verify_model_snapshot(snapshot_dir: Path, output_path: Path) -> dict[str, Any]:
+    required = (
+        "modules.json",
+        "config.json",
+        "1_Pooling/config.json",
+        "pytorch_model.bin",
+        "tokenizer.json",
+    )
+    missing = [
+        relative
+        for relative in required
+        if not (snapshot_dir / relative).is_file()
+    ]
+    if missing:
+        raise ValueError(f"Incomplete pinned BGE snapshot: {missing}")
+    config = json.loads(
+        (snapshot_dir / "config.json").read_text(encoding="utf-8")
+    )
+    if config.get("model_type") != "bert" or int(config.get("hidden_size", -1)) != DIMENSION:
+        raise ValueError("Pinned BGE config does not identify a 384-d BERT model")
+    files = {
+        str(path.relative_to(snapshot_dir)): file_record(path)
+        for path in sorted(snapshot_dir.rglob("*"))
+        if path.is_file()
+    }
+    payload = {
+        "schema_version": 1,
+        "status": "RARS_V16_PINNED_BGE_SNAPSHOT_VERIFIED",
+        "model_id": MODEL_ID,
+        "model_revision": MODEL_REVISION,
+        "snapshot_directory": str(snapshot_dir),
+        "required_files": list(required),
+        "files": files,
+    }
+    atomic_json(output_path, payload)
+    return payload
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -212,6 +250,7 @@ def _build_index(
 def prepare(args: argparse.Namespace) -> dict[str, Any]:
     import faiss
     import torch
+    from huggingface_hub import snapshot_download
     from sentence_transformers import SentenceTransformer
 
     if args.output_root.exists() and any(args.output_root.iterdir()):
@@ -222,11 +261,26 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
     torch.manual_seed(args.seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(args.seed)
+    snapshot_dir = Path(
+        snapshot_download(repo_id=MODEL_ID, revision=MODEL_REVISION)
+    )
+    snapshot_manifest_path = args.output_root / "model_snapshot_manifest.json"
+    snapshot_manifest = verify_model_snapshot(
+        snapshot_dir, snapshot_manifest_path
+    )
     model = SentenceTransformer(
-        MODEL_ID,
-        revision=MODEL_REVISION,
+        str(snapshot_dir),
         device="cuda" if torch.cuda.is_available() else "cpu",
     )
+    probe = _encode(
+        ["RARS V16 pinned BGE encoder preflight."],
+        model=model,
+        batch_size=1,
+    )
+    if not np.allclose(
+        np.linalg.norm(probe, axis=1), 1.0, rtol=0.0, atol=2e-5
+    ):
+        raise ValueError("Pinned BGE encoder preflight is not L2 normalized")
 
     domains: list[dict[str, Any]] = []
     for domain_position, domain_id in enumerate(DATASETS):
@@ -328,6 +382,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
                 "revision": MODEL_REVISION,
                 "dimension": DIMENSION,
                 "normalize_embeddings": True,
+                "snapshot_manifest": file_record(snapshot_manifest_path),
             },
             "document_count": len(doc_ids),
             "eligible_query_count": len(eligible),
@@ -359,6 +414,8 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
         "domains": domains,
         "encoder_id": MODEL_ID,
         "encoder_revision": MODEL_REVISION,
+        "model_snapshot_manifest": file_record(snapshot_manifest_path),
+        "model_snapshot_file_count": len(snapshot_manifest["files"]),
         "index_recipe_identical": True,
         "metrics_computed": False,
         "sidecar_basis_fitted": False,

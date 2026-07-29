@@ -74,6 +74,8 @@ from google.colab import drive
 drive.mount("/content/drive")
 
 import json, os, shutil, subprocess, sys
+os.environ["USE_TF"] = "0"
+os.environ["TRANSFORMERS_NO_TF"] = "1"
 
 subprocess.run(
     [sys.executable, "-m", "pip", "install", "-q", "virtualenv>=20.26,<21"],
@@ -90,7 +92,8 @@ subprocess.run(
     [
         EXPERIMENT_PYTHON, "-m", "pip", "install", "-q",
         "numpy==1.26.4", "faiss-cpu==1.12.0",
-        "sentence-transformers==3.4.1", "pytest>=8,<9",
+        "sentence-transformers==3.4.1", "transformers==4.48.3",
+        "huggingface-hub==0.28.1", "pytest>=8,<9",
     ],
     check=True,
 )
@@ -116,8 +119,11 @@ assert not subprocess.check_output(
 subprocess.run(
     [
         EXPERIMENT_PYTHON, "-c",
-        "import numpy, faiss, torch; "
+        "import importlib.metadata, numpy, faiss, torch; "
         "assert numpy.__version__ == '1.26.4'; "
+        "assert importlib.metadata.version('sentence-transformers') == '3.4.1'; "
+        "assert importlib.metadata.version('transformers') == '4.48.3'; "
+        "assert importlib.metadata.version('huggingface-hub') == '0.28.1'; "
         "print('numpy', numpy.__version__, 'faiss', faiss.__version__, "
         "'torch', torch.__version__, 'cuda', torch.cuda.is_available())",
     ],

@@ -48,6 +48,17 @@ change the method, encoder, index recipe, factor matrix, hyperparameters,
 statistical thresholds, or decision order. SciFact intervals must be
 interpreted with its smaller evaluation sample explicitly visible.
 
+A second preparation-only failure exposed an encoder provenance typo before
+model construction: `b8903db...` belongs to
+`sentence-transformers/all-MiniLM-L6-v2`, not
+`BAAI/bge-small-en-v1.5`. Revision 3 pins the intended BGE model to its
+verified repository revision
+`88885630388d6249d876a3ab145b78b34665b79a`. Preparation now downloads that
+exact snapshot, registers every snapshot-file hash, checks required files and
+the 384-dimensional BERT configuration, and runs a finite, normalized
+one-vector probe before encoding either corpus. No retrieval metric was
+computed and no basis was fit before this correction.
+
 It consumes prepared candidate/residual bundles and never opens a full corpus
 or rebuilds an index. Closed MS MARCO, V3 audit, V9 future, TREC DL, and BEIR
 NQ confirmation paths are rejected.
