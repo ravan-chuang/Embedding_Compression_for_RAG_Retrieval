@@ -28,6 +28,10 @@ def test_v16_is_frozen_outcome_informed_and_nonconfirmatory() -> None:
     assert "independent causal confirmation" in (
         PROTOCOL["evidence_boundary"]["forbidden_claims"]
     )
+    amendment = PROTOCOL["pre_metric_feasibility_amendment"]
+    assert amendment["revision"] == 2
+    assert amendment["retrieval_metrics_observed"] is False
+    assert amendment["sidecar_basis_fitted"] is False
 
 
 def test_v16_uses_exactly_two_named_same_encoder_development_domains() -> None:
@@ -38,6 +42,8 @@ def test_v16_uses_exactly_two_named_same_encoder_development_domains() -> None:
         "scifact_bge_same_encoder",
     ]
     assert policy["required_roles"] == ["fit", "evaluation"]
+    assert policy["minimum_fit_queries_per_domain"] == 150
+    assert policy["minimum_evaluation_queries_per_domain"] == 100
     assert policy["fit_and_evaluation_query_ids_must_be_disjoint"] is True
     assert (
         policy[

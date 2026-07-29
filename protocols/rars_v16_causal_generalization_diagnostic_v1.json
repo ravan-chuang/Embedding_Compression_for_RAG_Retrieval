@@ -3,6 +3,18 @@
   "protocol_id": "rars_v16_causal_generalization_diagnostic_v1",
   "status": "FROZEN_BEFORE_FIRST_V16_MECHANISM_DIAGNOSTIC_RUN",
   "method_revision_allowed": false,
+  "pre_metric_feasibility_amendment": {
+    "revision": 2,
+    "amended_after_preparation_failure_only": true,
+    "retrieval_metrics_observed": false,
+    "sidecar_basis_fitted": false,
+    "trigger": "SciFact has 300 judged queries, so the original requirement of 150 fit plus 200 evaluation queries was arithmetically impossible for disjoint roles",
+    "changes": [
+      "replace independent hash assignment with an exact hash-ranked 60/40 split",
+      "lower the per-domain evaluation minimum from 200 to 100 while retaining the 150-query fit minimum"
+    ],
+    "scientific_effect": "repairs data-role feasibility without changing the encoder, index recipe, candidate pool, method, hyperparameters, factor contrasts, thresholds, inference, or decision order"
+  },
   "research_question": "Within two same-encoder prepared development domains, which mechanism best explains weak RARS transport: frozen-candidate headroom, rank capacity, int8 coding, retrieval-objective value, or fit-domain interaction?",
   "scope": "outcome-informed mechanism decomposition on opened development evidence; not an independent confirmation, unseen-domain test, universal generalization claim, or production benchmark",
   "parent_evidence": {
@@ -35,7 +47,7 @@
       "evaluation"
     ],
     "minimum_fit_queries_per_domain": 150,
-    "minimum_evaluation_queries_per_domain": 200,
+    "minimum_evaluation_queries_per_domain": 100,
     "fit_and_evaluation_query_ids_must_be_disjoint": true,
     "same_encoder_id_revision_dimension_pooling_and_normalization_required": true,
     "source_domain_id": "fiqa_bge_same_encoder",

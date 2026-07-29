@@ -151,21 +151,39 @@ if PREP_COMPLETE.exists():
     print("Reusing complete prepared inputs:", PREP_COMPLETE)
 else:
     PREP_ROOT.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(
-        [
-            EXPERIMENT_PYTHON,
-            str(CLONE / "scripts/prepare_rars_v16_beir_domains.py"),
-            "--cache-root", str(CACHE_ROOT),
-            "--output-root", str(PREP_ROOT),
-            "--seed", "20261600",
-            "--nlist", "128",
-            "--nprobe", "16",
-            "--subquantizers", "32",
-            "--nbits", "8",
-        ],
+    command = [
+        EXPERIMENT_PYTHON,
+        str(CLONE / "scripts/prepare_rars_v16_beir_domains.py"),
+        "--cache-root", str(CACHE_ROOT),
+        "--output-root", str(PREP_ROOT),
+        "--seed", "20261600",
+        "--nlist", "128",
+        "--nprobe", "16",
+        "--subquantizers", "32",
+        "--nbits", "8",
+    ]
+    process = subprocess.Popen(
+        command,
         cwd=CLONE,
-        check=True,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        bufsize=1,
     )
+    output_tail = []
+    assert process.stdout is not None
+    for line in process.stdout:
+        print(line, end="")
+        output_tail.append(line)
+        if len(output_tail) > 400:
+            output_tail.pop(0)
+    return_code = process.wait()
+    if return_code:
+        raise RuntimeError(
+            "V16 preparation failed with return code "
+            f"{return_code}. Last combined output:\\n"
+            + "".join(output_tail)
+        )
 print(json.dumps(json.loads(PREP_COMPLETE.read_text()), indent=2)[:5000])
 """
         ),

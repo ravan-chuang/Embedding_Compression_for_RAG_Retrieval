@@ -37,6 +37,10 @@ DATASETS = {
         "url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip",
     },
 }
+MINIMUM_ROLE_QUERIES = {
+    "fit": 150,
+    "evaluation": 100,
+}
 
 
 def sha256_file(path: Path, chunk_size: int = 8 * 1024 * 1024) -> str:
@@ -92,11 +96,28 @@ def _read_positive_qrels(directory: Path) -> dict[str, set[str]]:
     return output
 
 
-def deterministic_role(query_id: str, domain_id: str) -> str:
+def _role_sort_key(query_id: str, domain_id: str) -> tuple[bytes, str]:
     digest = hashlib.sha256(
-        f"rars-v16-role-v1\0{domain_id}\0{query_id}".encode("utf-8")
+        f"rars-v16-role-v2\0{domain_id}\0{query_id}".encode("utf-8")
     ).digest()
-    return "fit" if int.from_bytes(digest[:8], "big") % 5 < 3 else "evaluation"
+    return digest, query_id
+
+
+def deterministic_roles(
+    query_ids: list[str],
+    domain_id: str,
+) -> dict[str, list[str]]:
+    """Return an exact 60/40, hash-ranked, query-disjoint role split."""
+
+    ranked = sorted(
+        (str(query_id) for query_id in query_ids),
+        key=lambda query_id: _role_sort_key(query_id, domain_id),
+    )
+    fit_count = 3 * len(ranked) // 5
+    return {
+        "fit": sorted(ranked[:fit_count]),
+        "evaluation": sorted(ranked[fit_count:]),
+    }
 
 
 def _download_and_extract(
@@ -227,18 +248,15 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
             and positives
             and all(doc_id in doc_to_row for doc_id in positives)
         )
-        roles = {
-            role: [
-                query_id
-                for query_id in eligible
-                if deterministic_role(query_id, domain_id) == role
-            ]
-            for role in ("fit", "evaluation")
-        }
-        if len(roles["fit"]) < 150 or len(roles["evaluation"]) < 200:
+        roles = deterministic_roles(eligible, domain_id)
+        if any(
+            len(roles[role]) < minimum
+            for role, minimum in MINIMUM_ROLE_QUERIES.items()
+        ):
             raise ValueError(
                 f"{domain_id} deterministic split is undersized: "
-                f"{ {role: len(ids) for role, ids in roles.items()} }"
+                f"{ {role: len(ids) for role, ids in roles.items()} }; "
+                f"minimum={MINIMUM_ROLE_QUERIES}"
             )
         doc_texts = [
             ((row.get("title") or "") + "\n" + (row.get("text") or "")).strip()

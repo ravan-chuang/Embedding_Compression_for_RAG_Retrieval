@@ -26,17 +26,27 @@ def test_v16_preparer_pins_one_encoder_and_two_domains() -> None:
 
 
 def test_v16_query_role_is_deterministic_and_domain_separated() -> None:
-    assert MODULE.deterministic_role("q1", "fiqa_bge_same_encoder") == (
-        MODULE.deterministic_role("q1", "fiqa_bge_same_encoder")
+    query_ids = [str(index) for index in range(300)]
+    fiqa = MODULE.deterministic_roles(query_ids, "fiqa_bge_same_encoder")
+    scifact = MODULE.deterministic_roles(
+        query_ids, "scifact_bge_same_encoder"
     )
-    pairs = {
-        (
-            MODULE.deterministic_role(str(index), "fiqa_bge_same_encoder"),
-            MODULE.deterministic_role(str(index), "scifact_bge_same_encoder"),
-        )
-        for index in range(100)
+    assert fiqa == MODULE.deterministic_roles(
+        query_ids, "fiqa_bge_same_encoder"
+    )
+    assert len(fiqa["fit"]) == 180
+    assert len(fiqa["evaluation"]) == 120
+    assert set(fiqa["fit"]).isdisjoint(fiqa["evaluation"])
+    assert set(fiqa["fit"]) | set(fiqa["evaluation"]) == set(query_ids)
+    assert fiqa != scifact
+
+
+def test_v16_role_minima_are_feasible_for_scifact() -> None:
+    assert MODULE.MINIMUM_ROLE_QUERIES == {
+        "fit": 150,
+        "evaluation": 100,
     }
-    assert any(left != right for left, right in pairs)
+    assert sum(MODULE.MINIMUM_ROLE_QUERIES.values()) <= 300
 
 
 def test_v16_preparer_has_no_metric_or_sidecar_training_path() -> None:

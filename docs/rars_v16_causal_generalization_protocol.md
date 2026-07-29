@@ -36,6 +36,18 @@ only two hash-registered domain IDs:
 - `fiqa_bge_same_encoder`
 - `scifact_bge_same_encoder`
 
+### Pre-metric feasibility amendment
+
+The first preparation attempt exposed an arithmetically impossible data
+contract before any retrieval metric was computed or sidecar basis was fit:
+SciFact has 300 judged queries, while the original disjoint-role minima
+required 150 fit plus 200 evaluation queries. Revision 2 therefore uses an
+exact hash-ranked 60/40 split and lowers only the per-domain evaluation
+minimum to 100 queries. The fit minimum remains 150. This correction does not
+change the method, encoder, index recipe, factor matrix, hyperparameters,
+statistical thresholds, or decision order. SciFact intervals must be
+interpreted with its smaller evaluation sample explicitly visible.
+
 It consumes prepared candidate/residual bundles and never opens a full corpus
 or rebuilds an index. Closed MS MARCO, V3 audit, V9 future, TREC DL, and BEIR
 NQ confirmation paths are rejected.
