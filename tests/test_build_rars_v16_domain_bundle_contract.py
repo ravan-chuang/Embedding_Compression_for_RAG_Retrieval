@@ -27,6 +27,7 @@ def test_v16_bundle_builder_declares_outcome_free_contract() -> None:
     assert '"basis_fitted": False' in source
     assert '"closed_test_opened": False' in source
     assert "ivf.make_direct_map()" in source
+    assert "faiss_module.downcast_index(extracted)" in source
     assert "index.reconstruct_batch" in source
     assert "--qrels-rows" in source
     assert "--source-commit" in source
@@ -45,6 +46,52 @@ def test_v16_fold_assignment_is_domain_separated_and_deterministic() -> None:
         for index in range(100)
     }
     assert any(left != right for left, right in pairs)
+
+
+def test_v16_ivfpq_extraction_downcasts_before_reading_pq() -> None:
+    module = _load_module()
+
+    class GenericIVF:
+        pass
+
+    class PQ:
+        M = 32
+        nbits = 8
+
+    class DowncastIVFPQ:
+        pq = PQ()
+
+    class FakeFaiss:
+        @staticmethod
+        def extract_index_ivf(index):
+            assert index == "serialized-index"
+            return GenericIVF()
+
+        @staticmethod
+        def downcast_index(index):
+            assert isinstance(index, GenericIVF)
+            return DowncastIVFPQ()
+
+    ivf, pq = module._extract_ivfpq("serialized-index", FakeFaiss)
+    assert isinstance(ivf, DowncastIVFPQ)
+    assert pq.M == 32
+    assert pq.nbits == 8
+
+
+def test_v16_ivfpq_extraction_rejects_non_pq_ivf() -> None:
+    module = _load_module()
+
+    class FakeFaiss:
+        @staticmethod
+        def extract_index_ivf(index):
+            return object()
+
+        @staticmethod
+        def downcast_index(index):
+            return index
+
+    with pytest.raises(ValueError, match="IVF-PQ"):
+        module._extract_ivfpq(object(), FakeFaiss)
 
 
 def test_v16_qrels_rows_must_exactly_cover_queries(tmp_path: Path) -> None:

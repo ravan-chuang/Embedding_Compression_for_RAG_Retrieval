@@ -59,6 +59,14 @@ the 384-dimensional BERT configuration, and runs a finite, normalized
 one-vector probe before encoding either corpus. No retrieval metric was
 computed and no basis was fit before this correction.
 
+A third pre-metric implementation failure occurred when Faiss 1.12 returned a
+generic IVF Python wrapper from `extract_index_ivf()`. The serialized indexes
+were valid `IndexIVFPQ` objects, but the generic wrapper did not expose `.pq`,
+so the builder rejected them before candidate search. Revision 4 applies
+`faiss.downcast_index()` before inspecting PQ fields, preserves explicit
+rejection of non-PQ IVF indexes, and streams each builder's combined output.
+This compatibility repair does not change any prepared vector or index byte.
+
 It consumes prepared candidate/residual bundles and never opens a full corpus
 or rebuilds an index. Closed MS MARCO, V3 audit, V9 future, TREC DL, and BEIR
 NQ confirmation paths are rejected.

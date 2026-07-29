@@ -208,32 +208,50 @@ for domain_id in DOMAIN_IDS:
             print("Reusing:", output_dir)
             continue
         output_dir.parent.mkdir(parents=True, exist_ok=True)
-        subprocess.run(
-            [
-                EXPERIMENT_PYTHON,
-                str(CLONE / "scripts/build_rars_v16_domain_bundle.py"),
-                "--domain-id", domain_id,
-                "--encoder-id", prepared["encoder"]["id"],
-                "--encoder-revision", prepared["encoder"]["revision"],
-                "--evidence-role", role,
-                "--query-ids", str(prepared_dir / role / "query_ids.utf8.txt"),
-                "--query-vectors", str(prepared_dir / role / "query_vectors.float32.npy"),
-                "--qrels-rows", str(prepared_dir / role / "qrels_rows.json"),
-                "--embeddings", str(prepared_dir / "embeddings.float16.memmap"),
-                "--embeddings-dtype", "float16",
-                "--index", str(prepared_dir / "frozen_ivfpq.index"),
-                "--output-dir", str(output_dir),
-                "--protocol", str(PROTOCOL),
-                "--source-commit", V16_IMPLEMENTATION_COMMIT,
-                "--document-count", str(prepared["document_count"]),
-                "--dimension", "384",
-                "--nprobe", "16",
-                "--candidate-pool", "100",
-                "--fold-count", "5",
-            ],
+        command = [
+            EXPERIMENT_PYTHON,
+            str(CLONE / "scripts/build_rars_v16_domain_bundle.py"),
+            "--domain-id", domain_id,
+            "--encoder-id", prepared["encoder"]["id"],
+            "--encoder-revision", prepared["encoder"]["revision"],
+            "--evidence-role", role,
+            "--query-ids", str(prepared_dir / role / "query_ids.utf8.txt"),
+            "--query-vectors", str(prepared_dir / role / "query_vectors.float32.npy"),
+            "--qrels-rows", str(prepared_dir / role / "qrels_rows.json"),
+            "--embeddings", str(prepared_dir / "embeddings.float16.memmap"),
+            "--embeddings-dtype", "float16",
+            "--index", str(prepared_dir / "frozen_ivfpq.index"),
+            "--output-dir", str(output_dir),
+            "--protocol", str(PROTOCOL),
+            "--source-commit", V16_IMPLEMENTATION_COMMIT,
+            "--document-count", str(prepared["document_count"]),
+            "--dimension", "384",
+            "--nprobe", "16",
+            "--candidate-pool", "100",
+            "--fold-count", "5",
+        ]
+        process = subprocess.Popen(
+            command,
             cwd=CLONE,
-            check=True,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            bufsize=1,
         )
+        output_tail = []
+        assert process.stdout is not None
+        for line in process.stdout:
+            print(line, end="")
+            output_tail.append(line)
+            if len(output_tail) > 400:
+                output_tail.pop(0)
+        return_code = process.wait()
+        if return_code:
+            raise RuntimeError(
+                f"V16 bundle build failed for {domain_id}/{role} with "
+                f"return code {return_code}. Last combined output:\\n"
+                + "".join(output_tail)
+            )
 """
         ),
         code(

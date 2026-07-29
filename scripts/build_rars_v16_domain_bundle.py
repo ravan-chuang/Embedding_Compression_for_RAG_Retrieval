@@ -173,6 +173,20 @@ def _reconstruct_rows(index: Any, rows: np.ndarray, dimension: int) -> np.ndarra
     return output
 
 
+def _extract_ivfpq(index: Any, faiss_module: Any) -> tuple[Any, Any]:
+    """Downcast Faiss's generic IVF wrapper before inspecting PQ fields."""
+
+    try:
+        extracted = faiss_module.extract_index_ivf(index)
+        ivf = faiss_module.downcast_index(extracted)
+    except Exception as error:
+        raise ValueError("V16 requires a frozen IVF-family Faiss index") from error
+    pq = getattr(ivf, "pq", None)
+    if pq is None:
+        raise ValueError("V16 requires a frozen IVF-PQ index")
+    return ivf, pq
+
+
 def _deterministic_fold(query_id: str, domain_id: str, fold_count: int) -> int:
     payload = (
         "rars_v16_domain_fold_v1\0" + domain_id + "\0" + query_id
@@ -227,12 +241,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     index = faiss.read_index(str(args.index))
     if int(index.d) != args.dimension or int(index.ntotal) != args.document_count:
         raise ValueError("Faiss index dimension/document count changed")
-    try:
-        ivf = faiss.extract_index_ivf(index)
-    except Exception as error:
-        raise ValueError("V16 requires an IVF-family Faiss index") from error
-    if not hasattr(ivf, "pq"):
-        raise ValueError("V16 requires a frozen IVF-PQ index")
+    ivf, pq = _extract_ivfpq(index, faiss)
     ivf.nprobe = int(args.nprobe)
     scores, rows = index.search(
         np.ascontiguousarray(queries, dtype=np.float32), args.candidate_pool
@@ -323,8 +332,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "document_count": int(index.ntotal),
             "nlist": int(ivf.nlist),
             "nprobe": int(ivf.nprobe),
-            "subquantizers": int(ivf.pq.M),
-            "bits_per_subquantizer": int(ivf.pq.nbits),
+            "subquantizers": int(pq.M),
+            "bits_per_subquantizer": int(pq.nbits),
             "metric_type": int(index.metric_type),
         },
         "inputs": {

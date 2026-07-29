@@ -28,6 +28,19 @@
         "verify required model files, model_type=bert, hidden_size=384, file hashes, output dimension, finite values, and L2 normalization before corpus encoding"
       ],
       "scientific_effect": "repairs encoder provenance before data encoding without changing the intended encoder identity, index recipe, candidate pool, method, hyperparameters, factor contrasts, thresholds, inference, or decision order"
+    },
+    {
+      "revision": 4,
+      "amended_after_bundle_build_failure_only": true,
+      "retrieval_metrics_observed": false,
+      "sidecar_basis_fitted": false,
+      "trigger": "Faiss 1.12 extract_index_ivf returned a generic Python wrapper without the IndexIVFPQ pq field, causing a valid prepared IVF-PQ index to be rejected before search",
+      "changes": [
+        "downcast the extracted IVF wrapper with faiss.downcast_index before validating its pq field",
+        "retain an explicit rejection path for non-PQ IVF indexes",
+        "stream combined stdout and stderr for every bundle build"
+      ],
+      "scientific_effect": "repairs Faiss Python-wrapper compatibility before candidate search without changing any prepared vectors, index bytes, candidate policy, method, hyperparameters, factor contrasts, thresholds, inference, or decision order"
     }
   ],
   "research_question": "Within two same-encoder prepared development domains, which mechanism best explains weak RARS transport: frozen-candidate headroom, rank capacity, int8 coding, retrieval-objective value, or fit-domain interaction?",

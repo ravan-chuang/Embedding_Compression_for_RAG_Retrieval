@@ -29,7 +29,7 @@ def test_v16_is_frozen_outcome_informed_and_nonconfirmatory() -> None:
         PROTOCOL["evidence_boundary"]["forbidden_claims"]
     )
     amendments = PROTOCOL["pre_metric_feasibility_amendments"]
-    assert [item["revision"] for item in amendments] == [2, 3]
+    assert [item["revision"] for item in amendments] == [2, 3, 4]
     assert all(item["retrieval_metrics_observed"] is False for item in amendments)
     assert all(item["sidecar_basis_fitted"] is False for item in amendments)
     assert "all-MiniLM-L6-v2" in amendments[1]["trigger"]
@@ -37,6 +37,7 @@ def test_v16_is_frozen_outcome_informed_and_nonconfirmatory() -> None:
         "88885630388d6249d876a3ab145b78b34665b79a"
         in amendments[1]["changes"][0]
     )
+    assert "downcast_index" in amendments[2]["changes"][0]
 
 
 def test_v16_uses_exactly_two_named_same_encoder_development_domains() -> None:
