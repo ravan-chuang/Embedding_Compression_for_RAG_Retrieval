@@ -342,6 +342,13 @@ def test_prepare_preserves_audit_vector_alignment_and_writes_no_metrics(
             },
         },
         "index_payload": {},
+        "doc_id_lineage": {
+            "status": "STAGE1_DOCUMENT_IDS_VERIFIED",
+            "historical_artifacts_modified": False,
+            "authoritative_stage1_doc_ids": _record(
+                source_files["doc_ids.bin"]
+            ),
+        },
     }
     stage3 = {
         "qids": qids,
@@ -401,6 +408,9 @@ def test_prepare_preserves_audit_vector_alignment_and_writes_no_metrics(
     assert prepared["retrieval_performed"] is False
     assert prepared["metrics_computed"] is False
     assert prepared["sidecar_basis_fitted"] is False
+    assert prepared["sources"]["document_id_lineage"] == (
+        stage1["doc_id_lineage"]
+    )
 
 
 def test_resume_requires_every_registered_output_to_verify(
