@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "status": "RARS_V8_DEVELOPMENT_COMPLETE",
+  "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+  "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+  "started": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/development_started.json",
+    "bytes": 3004,
+    "sha256": "7b7fec713fdf74eb7d29baf0af8eb64a47b273291ec9572da5566973861e9222"
+  },
+  "outputs": {
+    "pca_basis_rank16.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/pca_basis_rank16.float32.npy",
+      "bytes": 24704,
+      "sha256": "da3a96814b04690ed0f635cdd0c7ec4b3b99937768c610a7faf2b2034de9cda6"
+    },
+    "rars_basis_rank16.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/rars_basis_rank16.float32.npy",
+      "bytes": 24704,
+      "sha256": "0d3e0cdf94ee5e68e60c63a1736809129d60d9fd9d8e09845b727f8527721bd9"
+    },
+    "pca_scales_rank16.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/pca_scales_rank16.float32.npy",
+      "bytes": 192,
+      "sha256": "53bdd50e4d527a491f0d726460294dbe28aef5f3c496794d99f8b6276eda8110"
+    },
+    "rars_scales_rank16.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/rars_scales_rank16.float32.npy",
+      "bytes": 192,
+      "sha256": "b42de9845a8d64efe6f786cc22d47432ed3c44fb113e3ae772a4415763d417a0"
+    },
+    "oof_base_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/oof_base_recall_at_10.float64.npy",
+      "bytes": 18584,
+      "sha256": "209d5dcec9e635daa66050a3fb374b2ff86df906f1d9691872a9a5d94f8fe458"
+    },
+    "oof_pca_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/oof_pca_recall_at_10.float64.npy",
+      "bytes": 18584,
+      "sha256": "975771dac4089fd8acd2b1ea2eb82c8181cafefd06179f40b22427f1b8904b20"
+    },
+    "oof_rars_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/oof_rars_recall_at_10.float64.npy",
+      "bytes": 18584,
+      "sha256": "dd49b42a4fb01ecc388da98a48848c3e75360ab5b5555b5bf6bd136f73cfd9f6"
+    },
+    "oof_teacher_recall_at_10.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/oof_teacher_recall_at_10.float64.npy",
+      "bytes": 18584,
+      "sha256": "295f8e1c816151d858479458e55222105007ef1317b3d37289e117aa35ed8623"
+    },
+    "pair_support.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/pair_support.json",
+      "bytes": 357,
+      "sha256": "bad31b86124155c00bbb6c830b225dc4f8768753635c8a47fa33489154d2c2c8"
+    },
+    "fold_results.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/fold_results.json",
+      "bytes": 4644,
+      "sha256": "4a5d545652119e505c27211de8def057b9d8f6289fc61643f9cbecea48fa2888"
+    },
+    "development_result.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/development_result.json",
+      "bytes": 3744,
+      "sha256": "8c3e8c40d5ae1b2cd0a514ed3970a3f7512c2cb536d24b2523d5bf61d5bd3893"
+    },
+    "method_freeze.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/development/method_freeze.json",
+      "bytes": 4260,
+      "sha256": "7fc781059ce05bdac4ca203c87b00e73ed237de862380fdd6d0f54b727600fb8"
+    }
+  },
+  "future_method_holdout_opened": false,
+  "oracle_audit_opened": false,
+  "full_corpus_sidecar_encoded": false
+}

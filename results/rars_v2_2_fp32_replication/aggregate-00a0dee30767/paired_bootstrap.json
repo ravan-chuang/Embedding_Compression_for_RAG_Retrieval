@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "sampling_unit": "query",
+  "query_count": 1019,
+  "replicates": 20000,
+  "seed": 20260717,
+  "shared_query_indices_across_all_contrasts": true,
+  "seed_uncertainty_included": false,
+  "interval": "two-sided percentile 95% with numpy method=linear",
+  "statistics_columns": [
+    "seed_42_minus_base",
+    "seed_42_minus_pca_fp32",
+    "seed_43_minus_base",
+    "seed_43_minus_pca_fp32",
+    "seed_44_minus_base",
+    "seed_44_minus_pca_fp32",
+    "heldout_mean_minus_base",
+    "heldout_mean_minus_pca_fp32",
+    "all_seed_mean_minus_base",
+    "all_seed_mean_minus_pca_fp32"
+  ],
+  "contrasts": {
+    "seed_42_minus_base": {
+      "difference": 0.020608439646712464,
+      "ci95_low": 0.008832188420019628,
+      "ci95_high": 0.03287536800785083,
+      "probability_difference_gt_zero": 0.9995,
+      "practical_threshold": 0.01135,
+      "probability_difference_gt_practical_threshold": 0.9325
+    },
+    "seed_42_minus_pca_fp32": {
+      "difference": 0.007196597971867844,
+      "ci95_low": 0.0009813542688910696,
+      "ci95_high": 0.013738959764474975,
+      "probability_difference_gt_zero": 0.9867,
+      "practical_threshold": 0.005,
+      "probability_difference_gt_practical_threshold": 0.73525
+    },
+    "seed_43_minus_base": {
+      "difference": 0.021589793915603533,
+      "ci95_low": 0.009813542688910697,
+      "ci95_high": 0.03434739941118744,
+      "probability_difference_gt_zero": 0.99985,
+      "practical_threshold": 0.01135,
+      "probability_difference_gt_practical_threshold": 0.9481
+    },
+    "seed_43_minus_pca_fp32": {
+      "difference": 0.008177952240758913,
+      "ci95_low": 0.0013084723585214258,
+      "ci95_high": 0.015701668302257114,
+      "probability_difference_gt_zero": 0.988,
+      "practical_threshold": 0.005,
+      "probability_difference_gt_practical_threshold": 0.792
+    },
+    "seed_44_minus_base": {
+      "difference": 0.020608439646712464,
+      "ci95_low": 0.008341511285574092,
+      "ci95_high": 0.033366045142296366,
+      "probability_difference_gt_zero": 0.99955,
+      "practical_threshold": 0.01135,
+      "probability_difference_gt_practical_threshold": 0.92655
+    },
+    "seed_44_minus_pca_fp32": {
+      "difference": 0.007196597971867844,
+      "ci95_low": 0.0009813542688910696,
+      "ci95_high": 0.014066077854105331,
+      "probability_difference_gt_zero": 0.98795,
+      "practical_threshold": 0.005,
+      "probability_difference_gt_practical_threshold": 0.7329
+    },
+    "heldout_mean_minus_base": {
+      "difference": 0.021099116781157997,
+      "ci95_low": 0.009322865554465163,
+      "ci95_high": 0.033366045142296366,
+      "probability_difference_gt_zero": 0.9997,
+      "practical_threshold": 0.01135,
+      "probability_difference_gt_practical_threshold": 0.94115
+    },
+    "heldout_mean_minus_pca_fp32": {
+      "difference": 0.007687275106313379,
+      "ci95_low": 0.0014720314033366045,
+      "ci95_high": 0.014556754988550866,
+      "probability_difference_gt_zero": 0.9912,
+      "practical_threshold": 0.005,
+      "probability_difference_gt_practical_threshold": 0.7851
+    },
+    "all_seed_mean_minus_base": {
+      "difference": 0.020935557736342817,
+      "ci95_low": 0.008995747464834804,
+      "ci95_high": 0.033366045142296366,
+      "probability_difference_gt_zero": 0.99965,
+      "practical_threshold": 0.01135,
+      "probability_difference_gt_practical_threshold": 0.9425
+    },
+    "all_seed_mean_minus_pca_fp32": {
+      "difference": 0.0075237160614982,
+      "ci95_low": 0.001308472358521426,
+      "ci95_high": 0.014066077854105331,
+      "probability_difference_gt_zero": 0.9913,
+      "practical_threshold": 0.005,
+      "probability_difference_gt_practical_threshold": 0.7724
+    }
+  }
+}

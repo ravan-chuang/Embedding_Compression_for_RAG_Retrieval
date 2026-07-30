@@ -1,0 +1,19 @@
+{
+  "protocol_id": "rars_v2_boundary_loss_feasibility_v1",
+  "status": "msmarco_development_bundles_complete",
+  "roles": {
+    "inner_train": {
+      "query_count": 3961,
+      "unique_candidate_document_count": 240599
+    },
+    "inner_validation": {
+      "query_count": 1019,
+      "unique_candidate_document_count": 85542
+    }
+  },
+  "epoch_selection_source": "inner_validation only",
+  "outer_validation_used_for_epoch_selection": false,
+  "outer_validation_built": false,
+  "test_qrels_accessed": false,
+  "nq_test_retuning_authorized": false
+}

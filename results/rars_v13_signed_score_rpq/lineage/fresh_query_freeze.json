@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v13_signed_score_distilled_rpq_v1",
+  "status": "RARS_V13_FRESH_QUERY_FREEZE_COMPLETE",
+  "source_commit": "d8cb761c289fe17ea2c2bfb92059e8b5553cfd74",
+  "environment": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_version": "1.12.0",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "cublas_workspace_config": ":4096:8",
+    "cudnn_benchmark": false
+  },
+  "source_blobs": {
+    "protocols/rars_v13_signed_score_distilled_rpq_v1.json": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/protocols/rars_v13_signed_score_distilled_rpq_v1.json",
+      "bytes": 10436,
+      "sha256": "062440ec13691cfd29314a8eadef6fc3894d55d9e159e629014a7000cfdcdcbc"
+    },
+    "scripts/rars_v13_signed_score_core.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/scripts/rars_v13_signed_score_core.py",
+      "bytes": 18457,
+      "sha256": "851959d4cee6d8d41e9fec3ba01cc236e2775d34cb5602545a3a1c3400b0e965"
+    },
+    "scripts/freeze_rars_v13_fresh_queries.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/scripts/freeze_rars_v13_fresh_queries.py",
+      "bytes": 13594,
+      "sha256": "1dd333badb6d75f09b63bedc39823e814114d16bf0650660f89c6b156a0dad57"
+    },
+    "scripts/train_rars_v8_cutoff_sidecar.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/scripts/train_rars_v8_cutoff_sidecar.py",
+      "bytes": 25763,
+      "sha256": "0aba29c636981f740c4bdda89fa0626dd7df17179326b9d0ef36e67226bef946"
+    }
+  },
+  "inputs": {
+    "queries_train": {
+      "path": "/content/rars-v13-msmarco-train-sources/queries.train.tsv",
+      "bytes": 35157438,
+      "sha256": "4583ebd42180bf0de26a06024d4679fdf627f33cce4b0048ae4c6fc85254506a",
+      "line_count": 808731
+    },
+    "qrels_train": {
+      "path": "/content/rars-v13-msmarco-train-sources/qrels.train.tsv",
+      "bytes": 10589532,
+      "sha256": "641b3c9391ea19e4a3d9e3284299f07be6725ff2dd11591a3d4d3f293db17cf2",
+      "line_count": 532761,
+      "positive_line_count": 532761,
+      "covered_query_count": 59485,
+      "covered_positive_count": 59950
+    },
+    "doc_ids": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_basis_gate0_cache/doc_ids.int64.memmap",
+      "bytes": 8000000,
+      "sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96"
+    },
+    "prior_qid_sources": {
+      "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/splits/msmarco_rars_train_qids.json": {
+        "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/splits/msmarco_rars_train_qids.json",
+        "bytes": 61312,
+        "sha256": "1c648979fba4b81a484c5dcc2c6c11c650193b35eab2f9a3f12350d9f520d0c3",
+        "query_count": 4980
+      },
+      "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/splits/msmarco_rars_validation_qids.json": {
+        "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/splits/msmarco_rars_validation_qids.json",
+        "bytes": 12322,
+        "sha256": "0f5009cd72dc172fa6301288cc2785d3094f16e365347c3364ffd2ce397048a9",
+        "query_count": 1000
+      },
+      "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/splits/msmarco_rars_test_qids.json": {
+        "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/splits/msmarco_rars_test_qids.json",
+        "bytes": 12314,
+        "sha256": "d363de0e3548f4d2006f44d6ea3837e89dd2a299f2ea561719e9b2310bef631e",
+        "query_count": 1000
+      },
+      "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/results/rars_v12_ca_rpq/development/query_ids.utf8.txt": {
+        "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v13/results/rars_v12_ca_rpq/development/query_ids.utf8.txt",
+        "bytes": 17580,
+        "sha256": "2456fac410f941ee7de24a812d9a9f50183b35daea2892ebf26fb226fbb950e0",
+        "query_count": 2500
+      }
+    }
+  },
+  "selection": {
+    "target_query_count": 5000,
+    "eligible_fresh_corpus_covered_queries": 56985,
+    "covered_qids_overlapping_historical_registry": 2500,
+    "selected_qid_hash": "126fe90ad6168ef5472171a94f52619af65b76ebabce66c84b92350a6416d342",
+    "fold_counts": [
+      982,
+      1008,
+      1039,
+      995,
+      976
+    ],
+    "candidate_retrieval_performed": false,
+    "metric_computation_performed": false
+  },
+  "outputs": {
+    "fresh_qrels.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-query-freeze/fresh_qrels.json",
+      "bytes": 154971,
+      "sha256": "31fc35cd0563f9ffc20463e286fc7d370c70ad22f67300b730072b47f2e89991"
+    },
+    "query_vectors.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-query-freeze/query_vectors.float32.npy",
+      "bytes": 7680128,
+      "sha256": "1a5c057ce31c0dc78c1aa1ef45f69b19937db54dc54b92209a7b3d79af76e0f7"
+    },
+    "fold_ids.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-query-freeze/fold_ids.int64.npy",
+      "bytes": 40128,
+      "sha256": "8e04ba31ed51a073dcb9c327df2941c708b25672847976a56bffbdefe0d6a738"
+    },
+    "query_ids.utf8.txt": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-query-freeze/query_ids.utf8.txt",
+      "bytes": 35166,
+      "sha256": "126fe90ad6168ef5472171a94f52619af65b76ebabce66c84b92350a6416d342"
+    },
+    "fresh_query_manifest.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v13-signed-score-rpq/d8cb761c289f/fresh-query-freeze/fresh_query_manifest.json",
+      "bytes": 106282,
+      "sha256": "2a090f94186d7993d371ed1cb14878f49127a0697f5e17e58b2a1635630f6b96"
+    }
+  }
+}

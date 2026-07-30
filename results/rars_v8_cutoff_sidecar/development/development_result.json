@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "status": "RARS_V8_DEVELOPMENT_COMPLETE",
+  "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+  "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+  "query_count": 2307,
+  "metrics": {
+    "base": {
+      "recall": 0.6799234214708858,
+      "mrr": 0.46337802134291073,
+      "ndcg": 0.5121406045386966
+    },
+    "pca_oof": {
+      "recall": 0.6926383470596735,
+      "mrr": 0.4836204168128745,
+      "ndcg": 0.5308973227024587
+    },
+    "rars_oof": {
+      "recall": 0.7028247363097818,
+      "mrr": 0.49352815103790393,
+      "ndcg": 0.5402125269945717
+    },
+    "same_candidate_exact": {
+      "recall": 0.7737682415835863,
+      "mrr": 0.5809661416943601,
+      "ndcg": 0.6243581981875166
+    }
+  },
+  "comparisons": {
+    "rars_vs_base_recall_at_10": {
+      "mean_difference": 0.02290131483889611,
+      "lower": 0.014665510764340412,
+      "upper": 0.03142609449501517,
+      "confidence": 0.95,
+      "replicates": 20000,
+      "improved_queries": 80,
+      "harmed_queries": 25,
+      "unchanged_queries": 2202
+    },
+    "pca_vs_base_recall_at_10": {
+      "mean_difference": 0.012714925588787746,
+      "lower": 0.005346048258922121,
+      "upper": 0.02037277850021673,
+      "confidence": 0.95,
+      "replicates": 20000,
+      "improved_queries": 59,
+      "harmed_queries": 27,
+      "unchanged_queries": 2221
+    },
+    "rars_vs_pca_recall_at_10": {
+      "mean_difference": 0.010186389250108365,
+      "lower": 0.0034677069787602947,
+      "upper": 0.017121803207628954,
+      "confidence": 0.95,
+      "replicates": 20000,
+      "improved_queries": 45,
+      "harmed_queries": 22,
+      "unchanged_queries": 2240
+    }
+  },
+  "candidate_gap_recovery_fraction": 0.24403387220939085,
+  "pair_support": {
+    "total_pairs": 7534,
+    "promotion": {
+      "pairs": 962,
+      "queries": 261,
+      "positive_residual_rows": 265,
+      "challenger_residual_rows": 940,
+      "balanced_weight_sum": 0.5
+    },
+    "protection": {
+      "pairs": 6572,
+      "queries": 1595,
+      "positive_residual_rows": 1643,
+      "challenger_residual_rows": 5961,
+      "balanced_weight_sum": 0.5
+    }
+  },
+  "pca_quantization": {
+    "coefficient_count": 2635936,
+    "saturated_coefficients": 0,
+    "saturation_fraction": 0.0
+  },
+  "final_rars_quantization_on_development_union": {
+    "coefficient_count": 2635936,
+    "saturated_coefficients": 0,
+    "saturation_fraction": 0.0
+  },
+  "final_optimization": {
+    "initial_loss": 0.07568628906025816,
+    "final_loss": 0.08769166847680343,
+    "steps": 160
+  },
+  "decision": {
+    "protocol_id": "rars_v8_cutoff_sidecar_v1",
+    "status": "RARS_V8_DEVELOPMENT_COMPLETE",
+    "decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+    "gates": {
+      "minimum_rars_gain_over_base": true,
+      "rars_base_bootstrap_lower_positive": true,
+      "minimum_gap_recovery": true,
+      "minimum_improved_query_support": true,
+      "positive_net_query_support": true,
+      "promotion_query_support": true,
+      "protection_query_support": true,
+      "minimum_rars_gain_over_pca": true,
+      "rars_pca_bootstrap_lower_positive": true,
+      "pca_or_rars_improves_base": true
+    },
+    "failed_gates": [],
+    "future_access_authorized": false,
+    "interpretation": "Development-only tiering. A separate frozen evaluator is required before opening any prospective method holdout."
+  },
+  "opened_roles": [
+    "oracle_design"
+  ],
+  "future_method_holdout_opened": false,
+  "oracle_audit_opened": false,
+  "full_corpus_sidecar_encoded": false,
+  "interpretation": "Five-fold outcome-informed development evidence. These metrics are not an independent or official MS MARCO evaluation."
+}

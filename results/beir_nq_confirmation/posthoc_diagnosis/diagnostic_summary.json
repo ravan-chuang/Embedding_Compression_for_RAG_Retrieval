@@ -1,0 +1,31 @@
+{
+  "status": "posthoc_exploratory_no_retuning",
+  "method_freeze_commit": "efde5d5a4ed41d141e1ce1d88604390d3963dd21",
+  "audit_freeze_commit": "be80c236e8d39ada73df11092e183728d80d7b24",
+  "eligible_query_count": 3452,
+  "recall_at_10": {
+    "base_m32": 0.3797315565855543,
+    "pca_r16_int8": 0.3781141367323291,
+    "rars_r16_int8": 0.3777037466203167,
+    "exact_top40": 0.46352356122054844,
+    "exact_top100": 0.4880745461568172
+  },
+  "candidate_recall_upper_bound": {
+    "top40": 0.511297798377752,
+    "top100": 0.5755359212050984
+  },
+  "headroom_over_base": {
+    "exact_top40_recall": 0.08379200463499414,
+    "exact_top100_recall": 0.10834298957126293,
+    "qrels_oracle_top40_recall": 0.13156624179219772,
+    "qrels_oracle_top100_recall": 0.19580436461954415
+  },
+  "proxy_relevance_correlations": {
+    "pca_pearson": 0.1745807909695513,
+    "pca_spearman": 0.16666094958120273,
+    "rars_pearson": 0.150202187205734,
+    "rars_spearman": 0.15193724664585923
+  },
+  "go_no_go_decision": "PROCEED_BOUNDARY_LOSS: exact Top-40 teacher has material relevance headroom.",
+  "nq_retuning_authorized": false
+}

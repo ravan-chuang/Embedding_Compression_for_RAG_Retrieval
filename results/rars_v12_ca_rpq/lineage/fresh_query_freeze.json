@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v12_anchored_cutoff_rpq_v1",
+  "status": "RARS_V12_FRESH_QUERY_FREEZE_COMPLETE",
+  "source_commit": "07b0fe09b82babb3b06ffd1649266a656dd07df1",
+  "environment": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_version": "1.12.0",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "cublas_workspace_config": ":4096:8",
+    "cudnn_benchmark": false
+  },
+  "source_blobs": {
+    "protocols/rars_v12_anchored_cutoff_rpq_v1.json": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/protocols/rars_v12_anchored_cutoff_rpq_v1.json",
+      "bytes": 10524,
+      "sha256": "16940ee2bd5580096ff61819bdb36aadc794a08f928cd92dffa1db11cedae31b"
+    },
+    "scripts/rars_v12_ca_rpq_core.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/scripts/rars_v12_ca_rpq_core.py",
+      "bytes": 16148,
+      "sha256": "9e12448c4cdc4d67ce1a9197e8afea2ee6a118181774e27ee1baf178e20136ab"
+    },
+    "scripts/freeze_rars_v12_fresh_queries.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/scripts/freeze_rars_v12_fresh_queries.py",
+      "bytes": 13395,
+      "sha256": "938eaf01ff25cfb3351f0eb973f0050900be09f76c1ef48c4aca94c9d45684cf"
+    },
+    "scripts/train_rars_v8_cutoff_sidecar.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/scripts/train_rars_v8_cutoff_sidecar.py",
+      "bytes": 25763,
+      "sha256": "0aba29c636981f740c4bdda89fa0626dd7df17179326b9d0ef36e67226bef946"
+    }
+  },
+  "inputs": {
+    "queries_train": {
+      "path": "/content/rars-v12-msmarco-train-sources/queries.train.tsv",
+      "bytes": 35157438,
+      "sha256": "4583ebd42180bf0de26a06024d4679fdf627f33cce4b0048ae4c6fc85254506a",
+      "line_count": 808731
+    },
+    "qrels_train": {
+      "path": "/content/rars-v12-msmarco-train-sources/qrels.train.tsv",
+      "bytes": 10589532,
+      "sha256": "641b3c9391ea19e4a3d9e3284299f07be6725ff2dd11591a3d4d3f293db17cf2",
+      "line_count": 532761,
+      "positive_line_count": 532761,
+      "covered_query_count": 59485,
+      "covered_positive_count": 59950
+    },
+    "doc_ids": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_basis_gate0_cache/doc_ids.int64.memmap",
+      "bytes": 8000000,
+      "sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96"
+    },
+    "prior_qid_sources": {
+      "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/splits/msmarco_rars_train_qids.json": {
+        "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/splits/msmarco_rars_train_qids.json",
+        "bytes": 61312,
+        "sha256": "1c648979fba4b81a484c5dcc2c6c11c650193b35eab2f9a3f12350d9f520d0c3",
+        "query_count": 4980
+      },
+      "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/splits/msmarco_rars_validation_qids.json": {
+        "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/splits/msmarco_rars_validation_qids.json",
+        "bytes": 12322,
+        "sha256": "0f5009cd72dc172fa6301288cc2785d3094f16e365347c3364ffd2ce397048a9",
+        "query_count": 1000
+      },
+      "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/splits/msmarco_rars_test_qids.json": {
+        "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/splits/msmarco_rars_test_qids.json",
+        "bytes": 12314,
+        "sha256": "d363de0e3548f4d2006f44d6ea3837e89dd2a299f2ea561719e9b2310bef631e",
+        "query_count": 1000
+      }
+    }
+  },
+  "selection": {
+    "target_query_count": 2500,
+    "eligible_fresh_corpus_covered_queries": 59485,
+    "covered_qids_overlapping_historical_registry": 0,
+    "selected_qid_hash": "2456fac410f941ee7de24a812d9a9f50183b35daea2892ebf26fb226fbb950e0",
+    "fold_counts": [
+      498,
+      451,
+      506,
+      535,
+      510
+    ],
+    "candidate_retrieval_performed": false,
+    "metric_computation_performed": false
+  },
+  "outputs": {
+    "fresh_qrels.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-query-freeze/fresh_qrels.json",
+      "bytes": 77432,
+      "sha256": "225435022cc31f2c9af2d2d7c6ae6c4afea1d247291a95c33f90da88d0352d04"
+    },
+    "query_vectors.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-query-freeze/query_vectors.float32.npy",
+      "bytes": 3840128,
+      "sha256": "40f7cf7ccc9a882edc65342a5c6da3b8e9c42e4b3ae33139ac9c72de3b403fe3"
+    },
+    "fold_ids.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-query-freeze/fold_ids.int64.npy",
+      "bytes": 20128,
+      "sha256": "fe91509d94e8f8e709921cf444683cead8422407872400e78e3427dfeee7d54b"
+    },
+    "query_ids.utf8.txt": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-query-freeze/query_ids.utf8.txt",
+      "bytes": 17580,
+      "sha256": "2456fac410f941ee7de24a812d9a9f50183b35daea2892ebf26fb226fbb950e0"
+    },
+    "fresh_query_manifest.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-query-freeze/fresh_query_manifest.json",
+      "bytes": 53687,
+      "sha256": "43bf0b7ce749d2e38b860e2a6cb961887b7736a98f36ec049f6f10b195c49a8d"
+    }
+  }
+}

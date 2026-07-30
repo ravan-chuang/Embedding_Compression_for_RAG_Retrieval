@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+  "status": "TRAINING_STARTED",
+  "run_id": "4c4de84eb1cd8226371d95f7bf7927970755c98b7765e0e1363c5e4c2b5ae330",
+  "fingerprint_payload": {
+    "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+    "source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+    "trainer_sha256": "61eb3c9cc10ef7032246f28671fdb59bea81ffc2fc29e866c53526fe4e13eae0",
+    "core_sha256": "1ee96d77dde59d365613b1d5b8726a56b05312500584e28cd49e41f7dbe61299",
+    "train_bundle_manifest_sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e",
+    "selection_bundle_manifest_sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d",
+    "pca_basis_sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec",
+    "pca_config_sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4",
+    "configuration": {
+      "rank": 16,
+      "top_b": 40,
+      "final_k": 10,
+      "epochs": 10,
+      "batch_size": 2048,
+      "score_batch_size": 256,
+      "max_negatives_per_positive": 8,
+      "promotion_mix": 0.8,
+      "minimum_margin": 0.0001,
+      "margin_multiplier": 1.0,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.0001,
+      "correction_l2": 0.001,
+      "max_correction": 0.05,
+      "max_grad_norm": 5.0,
+      "seed": 43,
+      "minimum_gain_over_base": 0.01135,
+      "minimum_gain_over_pca": 0.005,
+      "device": "cuda"
+    }
+  },
+  "repo": {
+    "head": "bb9b106e69b9a453756fd800665f701614ce67b3",
+    "clean": true
+  },
+  "environment": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "numpy": "1.26.4",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda"
+  },
+  "data_access": {
+    "inner_train": true,
+    "inner_validation": true,
+    "outer_validation": false,
+    "closed_test": false
+  }
+}

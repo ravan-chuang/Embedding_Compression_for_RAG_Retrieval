@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "decision": "UNSTABLE_NO_QAT",
+  "qat_protocol_definition_authorized": false,
+  "seed_42_role": "observed_stage_a_development_seed",
+  "primary_replication_seeds": [
+    43,
+    44
+  ],
+  "joint_pass_count": 3,
+  "joint_pass_required": 3,
+  "query_count": 1019,
+  "positive_support_fraction": 0.01,
+  "positive_support_queries_required_per_heldout_seed_and_contrast": 11,
+  "conditions": {
+    "all_three_seeds_joint_pass": true,
+    "heldout_seeds_each_positive_vs_both_baselines": true,
+    "heldout_seeds_each_have_required_positive_query_support": false,
+    "heldout_mean_meets_base_threshold": true,
+    "heldout_mean_meets_pca_threshold": true,
+    "all_seed_mean_meets_base_threshold": true,
+    "all_seed_mean_meets_pca_threshold": true,
+    "heldout_base_ci95_low_gt_zero": true,
+    "heldout_pca_ci95_low_gt_zero": true
+  },
+  "failed_conditions": [
+    "heldout_seeds_each_have_required_positive_query_support"
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "status": "RARS_V8_CUTOFF_SIDECAR_CLOSURE_PACKET",
+  "source_commit": "c9d95f15d55e7700db069da69567157f2eed469e",
+  "formal_decision": "GO_TO_RARS_ALGORITHM_CONFIRMATION_PROTOCOL",
+  "packet_scope": "thin closure packet with exact development outputs, small sidecar artifacts, executed notebook, and audited external 1M int8 codes",
+  "files": {
+    "README.md": {
+      "bytes": 5653,
+      "sha256": "1eab6918cc9ca644950c5317a4ee0e094f7a902487e6a5fabcf1eb419dfc2a9c"
+    },
+    "artifact_audit.json": {
+      "bytes": 2550,
+      "sha256": "bcfaf6cd5975e444b2af883b5b19979a34773d2cd4cfabf10d0d5ad9c5d1f90e"
+    },
+    "development/development_complete.json": {
+      "bytes": 4029,
+      "sha256": "335fe0c373a3a06784839ec3d3d4897a0984de84d732a18dd170a42fc908db09"
+    },
+    "development/development_result.json": {
+      "bytes": 3744,
+      "sha256": "8c3e8c40d5ae1b2cd0a514ed3970a3f7512c2cb536d24b2523d5bf61d5bd3893"
+    },
+    "development/development_started.json": {
+      "bytes": 3004,
+      "sha256": "7b7fec713fdf74eb7d29baf0af8eb64a47b273291ec9572da5566973861e9222"
+    },
+    "development/fold_results.json": {
+      "bytes": 4644,
+      "sha256": "4a5d545652119e505c27211de8def057b9d8f6289fc61643f9cbecea48fa2888"
+    },
+    "development/method_freeze.json": {
+      "bytes": 4260,
+      "sha256": "7fc781059ce05bdac4ca203c87b00e73ed237de862380fdd6d0f54b727600fb8"
+    },
+    "development/oof_base_recall_at_10.float64.npy": {
+      "bytes": 18584,
+      "sha256": "209d5dcec9e635daa66050a3fb374b2ff86df906f1d9691872a9a5d94f8fe458"
+    },
+    "development/oof_pca_recall_at_10.float64.npy": {
+      "bytes": 18584,
+      "sha256": "975771dac4089fd8acd2b1ea2eb82c8181cafefd06179f40b22427f1b8904b20"
+    },
+    "development/oof_rars_recall_at_10.float64.npy": {
+      "bytes": 18584,
+      "sha256": "dd49b42a4fb01ecc388da98a48848c3e75360ab5b5555b5bf6bd136f73cfd9f6"
+    },
+    "development/oof_teacher_recall_at_10.float64.npy": {
+      "bytes": 18584,
+      "sha256": "295f8e1c816151d858479458e55222105007ef1317b3d37289e117aa35ed8623"
+    },
+    "development/pair_support.json": {
+      "bytes": 357,
+      "sha256": "bad31b86124155c00bbb6c830b225dc4f8768753635c8a47fa33489154d2c2c8"
+    },
+    "development/pca_basis_rank16.float32.npy": {
+      "bytes": 24704,
+      "sha256": "da3a96814b04690ed0f635cdd0c7ec4b3b99937768c610a7faf2b2034de9cda6"
+    },
+    "development/pca_scales_rank16.float32.npy": {
+      "bytes": 192,
+      "sha256": "53bdd50e4d527a491f0d726460294dbe28aef5f3c496794d99f8b6276eda8110"
+    },
+    "development/rars_basis_rank16.float32.npy": {
+      "bytes": 24704,
+      "sha256": "0d3e0cdf94ee5e68e60c63a1736809129d60d9fd9d8e09845b727f8527721bd9"
+    },
+    "development/rars_scales_rank16.float32.npy": {
+      "bytes": 192,
+      "sha256": "b42de9845a8d64efe6f786cc22d47432ed3c44fb113e3ae772a4415763d417a0"
+    },
+    "executed_notebook/MSMARCO_RARS_v8_Cutoff_Sidecar_Development.ipynb": {
+      "bytes": 35107,
+      "sha256": "6310f5c9cecf805ea2601938e6ad652b11f011f2ccf691db2bbe7691479e04f2"
+    },
+    "sidecars/pca/basis.float32.npy": {
+      "bytes": 24704,
+      "sha256": "da3a96814b04690ed0f635cdd0c7ec4b3b99937768c610a7faf2b2034de9cda6"
+    },
+    "sidecars/pca/manifest.json": {
+      "bytes": 1552,
+      "sha256": "c721400cb82c5c79e0f51a28ce91caaefeb0d69a5e716041b1c23017bd7655d3"
+    },
+    "sidecars/pca/scales.float32.npy": {
+      "bytes": 192,
+      "sha256": "f1997729ff38cbfa4d7b8e0da02e3596d8d29dc6b76ca01a64c2d2d44cb9a5f8"
+    },
+    "sidecars/pca/sidecar_config.json": {
+      "bytes": 600,
+      "sha256": "435593cdfa5ac022aa6119cd926259aa31f8f1ee5e8e2edb4e3509ed699d8349"
+    },
+    "sidecars/rars/basis.float32.npy": {
+      "bytes": 24704,
+      "sha256": "0d3e0cdf94ee5e68e60c63a1736809129d60d9fd9d8e09845b727f8527721bd9"
+    },
+    "sidecars/rars/manifest.json": {
+      "bytes": 1557,
+      "sha256": "5644b14d38fd7a001e74e11114d2acfd273e414316aeed331c9a56bc86be077a"
+    },
+    "sidecars/rars/scales.float32.npy": {
+      "bytes": 192,
+      "sha256": "d32ee1e2cf7a2850bc81b96dfdcc8746d40a2b75a503d9486b5e9f66f24b43ec"
+    },
+    "sidecars/rars/sidecar_config.json": {
+      "bytes": 601,
+      "sha256": "a63fc1a713c1a16106da32362996580a9ec210942d7d0e52e9eb1b6c498fabc7"
+    },
+    "sidecars/sidecars_complete.json": {
+      "bytes": 1579,
+      "sha256": "1738073856e66bfd4fe277774d3e9bc05065e07651dc06f300593bdf61e5102d"
+    },
+    "sidecars/sidecars_result.json": {
+      "bytes": 6630,
+      "sha256": "d6fc237e07c611c8b2c28fdc37149630c8dae185e985627e824746c06f550c90"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_fp32_replication_v1",
+  "training_source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+  "control_commit": "00a0dee30767b04b8c650c28d63f4f662ef61517",
+  "seed42_run_id": "0956f2f51c2183020a9d68ecb6a89987f7bcef99e0587ceb507a05f303a03b83",
+  "trainer_sha256": "61eb3c9cc10ef7032246f28671fdb59bea81ffc2fc29e866c53526fe4e13eae0",
+  "core_sha256": "1ee96d77dde59d365613b1d5b8726a56b05312500584e28cd49e41f7dbe61299",
+  "aggregator_sha256": "64dab39bf6f5b7905552ced2994fa8247265df5ffc7df6c93a44f6a021c3741d",
+  "metric_helper_sha256": "b547ff5961a86917da1ed01ec7aceeab04e4140f14be626a595550fb1bede294",
+  "execution": {
+    "mode": "fresh_child_process",
+    "python_executable": "/usr/bin/python3",
+    "numpy_module_path": "/content/rars-v2.2-numpy126/numpy/__init__.py",
+    "numpy_target": "/content/rars-v2.2-numpy126",
+    "pip_freeze_mode": "base_plus_target_numpy_override"
+  },
+  "versions": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_version": "1.12.0"
+  },
+  "hardware": {
+    "device": "cuda",
+    "gpu_name": "Tesla T4",
+    "compute_capability": "7.5",
+    "cudnn_version": "91900",
+    "cuda_driver_version": "580.82.07"
+  },
+  "determinism": {
+    "deterministic_algorithms_supported_and_enabled": true,
+    "cudnn_deterministic": false,
+    "cudnn_benchmark": false,
+    "cublas_workspace_config": "UNSET"
+  },
+  "pip_freeze_sha256": "8263d67870d6b514a24668758a70cca80d4f1581f6ddaf32cdcecf6bf4a86e06",
+  "protocol_sha256": "014d30b9740348f0b44e9d8e8d305e3f5a1ec219b561e30ac988079d54604d10",
+  "created_utc": "2026-07-18T17:20:03.883646+00:00"
+}

@@ -1,0 +1,3086 @@
+{
+  "pca16": [
+    {
+      "fold": 0,
+      "training_query_count": 4018,
+      "heldout_query_count": 982,
+      "training_residual_count": 242475,
+      "encoding": {
+        "coefficient_count": 4453936,
+        "saturated_coefficients": 3,
+        "saturation_fraction": 6.735615419709668e-07
+      },
+      "metrics": {
+        "recall": 0.14358452138492872,
+        "mrr": 0.0659772734619985,
+        "ndcg": 0.08408469232985522
+      }
+    },
+    {
+      "fold": 1,
+      "training_query_count": 3992,
+      "heldout_query_count": 1008,
+      "training_residual_count": 242012,
+      "encoding": {
+        "coefficient_count": 4453936,
+        "saturated_coefficients": 3,
+        "saturation_fraction": 6.735615419709668e-07
+      },
+      "metrics": {
+        "recall": 0.13988095238095238,
+        "mrr": 0.06069184618291761,
+        "ndcg": 0.07881734936577835
+      }
+    },
+    {
+      "fold": 2,
+      "training_query_count": 3961,
+      "heldout_query_count": 1039,
+      "training_residual_count": 240490,
+      "encoding": {
+        "coefficient_count": 4453936,
+        "saturated_coefficients": 2,
+        "saturation_fraction": 4.4904102798064453e-07
+      },
+      "metrics": {
+        "recall": 0.16008982996470963,
+        "mrr": 0.07142016896588599,
+        "ndcg": 0.09183245695970749
+      }
+    },
+    {
+      "fold": 3,
+      "training_query_count": 4005,
+      "heldout_query_count": 995,
+      "training_residual_count": 241160,
+      "encoding": {
+        "coefficient_count": 4453936,
+        "saturated_coefficients": 2,
+        "saturation_fraction": 4.4904102798064453e-07
+      },
+      "metrics": {
+        "recall": 0.1592964824120603,
+        "mrr": 0.07816862088218872,
+        "ndcg": 0.09665159788066806
+      }
+    },
+    {
+      "fold": 4,
+      "training_query_count": 4024,
+      "heldout_query_count": 976,
+      "training_residual_count": 242486,
+      "encoding": {
+        "coefficient_count": 4453936,
+        "saturated_coefficients": 1,
+        "saturation_fraction": 2.2452051399032226e-07
+      },
+      "metrics": {
+        "recall": 0.17520491803278687,
+        "mrr": 0.07904184556336197,
+        "ndcg": 0.1014552480576928
+      }
+    }
+  ],
+  "signed_score": [
+    {
+      "fold": 0,
+      "seed": 20261001,
+      "training_query_count": 4018,
+      "heldout_query_count": 982,
+      "training_residual_count": 242475,
+      "statistics": {
+        "query_count": 4018,
+        "candidate_observations": 160720,
+        "block_observations": 2571520,
+        "known_positive_observations": 1084,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.8082287851482834
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242475,
+        "iterations": 12,
+        "seed": 20261001,
+        "omp_threads": 1,
+        "coefficient_mse": 8.721774065634236e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 84,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.617236560428463,
+        "signed_score_objective_after": 11.483006915764753,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490321,
+            "training_block_rms": 0.03436152785315607,
+            "drift_radius": 0.00515422917797341,
+            "objective_before": 1.0230852850438552,
+            "objective_after": 1.010855050163957
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03184687314079295,
+            "drift_radius": 0.004777030971118943,
+            "objective_before": 1.0131653783580983,
+            "objective_after": 1.0012748879462607
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03095679238662737,
+            "drift_radius": 0.004643518857994106,
+            "objective_before": 0.9243223193011187,
+            "objective_after": 0.9133699530804158
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03043343586726753,
+            "drift_radius": 0.004565015380090129,
+            "objective_before": 0.9065552931781261,
+            "objective_after": 0.8965451755949332
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.029953399341648836,
+            "drift_radius": 0.004493009901247325,
+            "objective_before": 0.8106812981657987,
+            "objective_after": 0.8013286439218724
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.02954902198688489,
+            "drift_radius": 0.004432353298032734,
+            "objective_before": 0.7724740796215221,
+            "objective_after": 0.7630345506930044
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490321,
+            "training_block_rms": 0.02915726765007966,
+            "drift_radius": 0.004373590147511949,
+            "objective_before": 0.7592781133689871,
+            "objective_after": 0.7501743895264431
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.028693448727380298,
+            "drift_radius": 0.004304017309107045,
+            "objective_before": 0.6939532643475342,
+            "objective_after": 0.6853214849511193
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.028223559960633426,
+            "drift_radius": 0.004233533994095014,
+            "objective_before": 0.7006576492385398,
+            "objective_after": 0.6923892943446417
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027828526780535195,
+            "drift_radius": 0.004174279017080279,
+            "objective_before": 0.63329825662687,
+            "objective_after": 0.6263536573943326
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027504464603364007,
+            "drift_radius": 0.004125669690504601,
+            "objective_before": 0.6031130400409203,
+            "objective_after": 0.5964046144749741
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027094540531004872,
+            "drift_radius": 0.0040641810796507305,
+            "objective_before": 0.5905341169353515,
+            "objective_after": 0.5841893973613775
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.02674608234347376,
+            "drift_radius": 0.004011912351521064,
+            "objective_before": 0.5983109307262555,
+            "objective_after": 0.5916242752134511
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.02641566305586596,
+            "drift_radius": 0.0039623494583798935,
+            "objective_before": 0.5611132328808385,
+            "objective_after": 0.5550432862549451
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.026047685265250045,
+            "drift_radius": 0.003907152789787507,
+            "objective_before": 0.5327371620631018,
+            "objective_after": 0.5269559273408486
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.025689338950300847,
+            "drift_radius": 0.003853400842545127,
+            "objective_before": 0.4939571405315462,
+            "objective_after": 0.48814232750216163
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.1670061099796334,
+        "mrr": 0.078338263343355,
+        "ndcg": 0.09894394128145852
+      },
+      "challenger_metrics": {
+        "recall": 0.1670061099796334,
+        "mrr": 0.07819359583616202,
+        "ndcg": 0.09887741781068027
+      }
+    },
+    {
+      "fold": 0,
+      "seed": 20261002,
+      "training_query_count": 4018,
+      "heldout_query_count": 982,
+      "training_residual_count": 242475,
+      "statistics": {
+        "query_count": 4018,
+        "candidate_observations": 160720,
+        "block_observations": 2571520,
+        "known_positive_observations": 1084,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.8082287851482834
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242475,
+        "iterations": 12,
+        "seed": 20261002,
+        "omp_threads": 1,
+        "coefficient_mse": 8.716501179151237e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 105,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.628732292320406,
+        "signed_score_objective_after": 11.49566049805289,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490321,
+            "training_block_rms": 0.03436152785315607,
+            "drift_radius": 0.00515422917797341,
+            "objective_before": 1.0351749275153317,
+            "objective_after": 1.0222951322069225
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03184687314079295,
+            "drift_radius": 0.004777030971118943,
+            "objective_before": 1.0111867732977846,
+            "objective_after": 0.9998457456812528
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03095679238662737,
+            "drift_radius": 0.004643518857994106,
+            "objective_before": 0.9106146294116578,
+            "objective_after": 0.9000612105831036
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03043343586726753,
+            "drift_radius": 0.004565015380090129,
+            "objective_before": 0.896462086379585,
+            "objective_after": 0.8857358648953008
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490321,
+            "training_block_rms": 0.029953399341648836,
+            "drift_radius": 0.004493009901247325,
+            "objective_before": 0.8100922476326929,
+            "objective_after": 0.8012944557688274
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490321,
+            "training_block_rms": 0.02954902198688489,
+            "drift_radius": 0.004432353298032734,
+            "objective_before": 0.7737046757960419,
+            "objective_after": 0.7650380566066638
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490321,
+            "training_block_rms": 0.02915726765007966,
+            "drift_radius": 0.004373590147511949,
+            "objective_before": 0.7545039910204576,
+            "objective_after": 0.7458405316949129
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.028693448727380298,
+            "drift_radius": 0.004304017309107045,
+            "objective_before": 0.6976223589210744,
+            "objective_after": 0.689281048266944
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.028223559960633426,
+            "drift_radius": 0.004233533994095014,
+            "objective_before": 0.7008516489494412,
+            "objective_after": 0.6929837430900857
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027828526780535195,
+            "drift_radius": 0.004174279017080279,
+            "objective_before": 0.6356501542529976,
+            "objective_after": 0.6281992996345513
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027504464603364007,
+            "drift_radius": 0.004125669690504601,
+            "objective_before": 0.6101453473549484,
+            "objective_after": 0.6033180240531749
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027094540531004872,
+            "drift_radius": 0.0040641810796507305,
+            "objective_before": 0.5890919063039198,
+            "objective_after": 0.5825070623155849
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.02674608234347376,
+            "drift_radius": 0.004011912351521064,
+            "objective_before": 0.6037415726072194,
+            "objective_after": 0.5972607150958388
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490321,
+            "training_block_rms": 0.02641566305586596,
+            "drift_radius": 0.0039623494583798935,
+            "objective_before": 0.5647257499716849,
+            "objective_after": 0.5585020606550533
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.026047685265250045,
+            "drift_radius": 0.003907152789787507,
+            "objective_before": 0.5343073376149856,
+            "objective_after": 0.5280951899992319
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.025689338950300847,
+            "drift_radius": 0.003853400842545127,
+            "objective_before": 0.5008568852905217,
+            "objective_after": 0.4954023575054391
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.16395112016293278,
+        "mrr": 0.07772524488410436,
+        "ndcg": 0.09778002734611091
+      },
+      "challenger_metrics": {
+        "recall": 0.1680244399185336,
+        "mrr": 0.0779668961950021,
+        "ndcg": 0.09883170242454531
+      }
+    },
+    {
+      "fold": 0,
+      "seed": 20261003,
+      "training_query_count": 4018,
+      "heldout_query_count": 982,
+      "training_residual_count": 242475,
+      "statistics": {
+        "query_count": 4018,
+        "candidate_observations": 160720,
+        "block_observations": 2571520,
+        "known_positive_observations": 1084,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.8082287851482834
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242475,
+        "iterations": 12,
+        "seed": 20261003,
+        "omp_threads": 1,
+        "coefficient_mse": 8.724136569071561e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 92,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.657935762788984,
+        "signed_score_objective_after": 11.523227981903675,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03436152785315607,
+            "drift_radius": 0.00515422917797341,
+            "objective_before": 1.0374072503870404,
+            "objective_after": 1.0250228839924118
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03184687314079295,
+            "drift_radius": 0.004777030971118943,
+            "objective_before": 1.0007201182888388,
+            "objective_after": 0.9889936347476936
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03095679238662737,
+            "drift_radius": 0.004643518857994106,
+            "objective_before": 0.9130025617465299,
+            "objective_after": 0.9019432105056091
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.03043343586726753,
+            "drift_radius": 0.004565015380090129,
+            "objective_before": 0.912328389904618,
+            "objective_after": 0.9018749872991114
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.029953399341648836,
+            "drift_radius": 0.004493009901247325,
+            "objective_before": 0.816951202645664,
+            "objective_after": 0.8069524504686639
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.02954902198688489,
+            "drift_radius": 0.004432353298032734,
+            "objective_before": 0.7721064557428727,
+            "objective_after": 0.7632679903701196
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.02915726765007966,
+            "drift_radius": 0.004373590147511949,
+            "objective_before": 0.7632964144823856,
+            "objective_after": 0.7551828449802498
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.028693448727380298,
+            "drift_radius": 0.004304017309107045,
+            "objective_before": 0.6985033315634144,
+            "objective_after": 0.6895542886051299
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.028223559960633426,
+            "drift_radius": 0.004233533994095014,
+            "objective_before": 0.7082737026218935,
+            "objective_after": 0.6994963367176642
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027828526780535195,
+            "drift_radius": 0.004174279017080279,
+            "objective_before": 0.6430035336196767,
+            "objective_after": 0.635830216348691
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027504464603364007,
+            "drift_radius": 0.004125669690504601,
+            "objective_before": 0.6064499793103219,
+            "objective_after": 0.6000905356538156
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.027094540531004872,
+            "drift_radius": 0.0040641810796507305,
+            "objective_before": 0.5914422005969144,
+            "objective_after": 0.5845836872370846
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.02674608234347376,
+            "drift_radius": 0.004011912351521064,
+            "objective_before": 0.6013395852454421,
+            "objective_after": 0.5945541408783546
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.02641566305586596,
+            "drift_radius": 0.0039623494583798935,
+            "objective_before": 0.5679133754294081,
+            "objective_after": 0.5617425672491587
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.026047685265250045,
+            "drift_radius": 0.003907152789787507,
+            "objective_before": 0.526476016588277,
+            "objective_after": 0.5209651349295282
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 612058.5303490323,
+            "training_block_rms": 0.025689338950300847,
+            "drift_radius": 0.003853400842545127,
+            "objective_before": 0.49872164461564894,
+            "objective_after": 0.49317307192038906
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.16395112016293278,
+        "mrr": 0.0780044774189377,
+        "ndcg": 0.09794985380766028
+      },
+      "challenger_metrics": {
+        "recall": 0.16395112016293278,
+        "mrr": 0.07818187695988103,
+        "ndcg": 0.09809725098810188
+      }
+    },
+    {
+      "fold": 1,
+      "seed": 20261001,
+      "training_query_count": 3992,
+      "heldout_query_count": 1008,
+      "training_residual_count": 242012,
+      "statistics": {
+        "query_count": 3992,
+        "candidate_observations": 159680,
+        "block_observations": 2554880,
+        "known_positive_observations": 1074,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.8044348940413655
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242012,
+        "iterations": 12,
+        "seed": 20261001,
+        "omp_threads": 1,
+        "coefficient_mse": 8.712041744729504e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 84,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.53419621191161,
+        "signed_score_objective_after": 11.40269182303876,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03436724259381638,
+            "drift_radius": 0.005155086389072456,
+            "objective_before": 1.0090921980126057,
+            "objective_after": 0.9969820784363885
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03183739823847826,
+            "drift_radius": 0.004775609735771739,
+            "objective_before": 0.9947716186648728,
+            "objective_after": 0.9829828521669199
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03094850124745771,
+            "drift_radius": 0.004642275187118656,
+            "objective_before": 0.9039063847862994,
+            "objective_after": 0.8939505605169284
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.030421065115354858,
+            "drift_radius": 0.0045631597673032286,
+            "objective_before": 0.8819184800478483,
+            "objective_after": 0.8723838366253911
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.029922071757053536,
+            "drift_radius": 0.00448831076355803,
+            "objective_before": 0.8194016426529128,
+            "objective_after": 0.8094506172845457
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02956667688587482,
+            "drift_radius": 0.004435001532881223,
+            "objective_before": 0.7520985070240211,
+            "objective_after": 0.7430526310558035
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02913553629555927,
+            "drift_radius": 0.00437033044433389,
+            "objective_before": 0.7459190578960057,
+            "objective_after": 0.7367121493681852
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02868332593094593,
+            "drift_radius": 0.00430249888964189,
+            "objective_before": 0.6935473289204926,
+            "objective_after": 0.6857392021066353
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02821465376788089,
+            "drift_radius": 0.0042321980651821335,
+            "objective_before": 0.7033476211148002,
+            "objective_after": 0.6953420169105561
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027837539327542994,
+            "drift_radius": 0.004175630899131449,
+            "objective_before": 0.6481123774588787,
+            "objective_after": 0.6405360929256841
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027467961964736835,
+            "drift_radius": 0.004120194294710525,
+            "objective_before": 0.590519270996688,
+            "objective_after": 0.5841967477531882
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027096473694922463,
+            "drift_radius": 0.004064471054238369,
+            "objective_before": 0.5923342834078026,
+            "objective_after": 0.5856802767356928
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.026750525073184424,
+            "drift_radius": 0.004012578760977664,
+            "objective_before": 0.599991442037295,
+            "objective_after": 0.593829895697745
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02642223291966006,
+            "drift_radius": 0.003963334937949009,
+            "objective_before": 0.573261398849349,
+            "objective_after": 0.5670250014138194
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02601920668560368,
+            "drift_radius": 0.003902881002840552,
+            "objective_before": 0.5329570763236157,
+            "objective_after": 0.5270004910857571
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02567947972975077,
+            "drift_radius": 0.003851921959462615,
+            "objective_before": 0.49301752371814134,
+            "objective_after": 0.48782737295550765
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.18154761904761904,
+        "mrr": 0.0843076814058957,
+        "ndcg": 0.10698870648545213
+      },
+      "challenger_metrics": {
+        "recall": 0.18154761904761904,
+        "mrr": 0.08425650352733687,
+        "ndcg": 0.10694687510321402
+      }
+    },
+    {
+      "fold": 1,
+      "seed": 20261002,
+      "training_query_count": 3992,
+      "heldout_query_count": 1008,
+      "training_residual_count": 242012,
+      "statistics": {
+        "query_count": 3992,
+        "candidate_observations": 159680,
+        "block_observations": 2554880,
+        "known_positive_observations": 1074,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.8044348940413655
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242012,
+        "iterations": 12,
+        "seed": 20261002,
+        "omp_threads": 1,
+        "coefficient_mse": 8.71178854140453e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 86,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.53001374222194,
+        "signed_score_objective_after": 11.396587455167337,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03436724259381638,
+            "drift_radius": 0.005155086389072456,
+            "objective_before": 0.9992997260045564,
+            "objective_after": 0.9867463316296178
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03183739823847826,
+            "drift_radius": 0.004775609735771739,
+            "objective_before": 0.996330096081886,
+            "objective_after": 0.9846079077322892
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03094850124745771,
+            "drift_radius": 0.004642275187118656,
+            "objective_before": 0.9060968453561007,
+            "objective_after": 0.8954306624897949
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.030421065115354858,
+            "drift_radius": 0.0045631597673032286,
+            "objective_before": 0.8910145358531146,
+            "objective_after": 0.8805176786664521
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.029922071757053536,
+            "drift_radius": 0.00448831076355803,
+            "objective_before": 0.8049460532976795,
+            "objective_after": 0.7956042846785483
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02956667688587482,
+            "drift_radius": 0.004435001532881223,
+            "objective_before": 0.7528474872595305,
+            "objective_after": 0.744633920885914
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02913553629555927,
+            "drift_radius": 0.00437033044433389,
+            "objective_before": 0.7408152166337653,
+            "objective_after": 0.7314999358188066
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02868332593094593,
+            "drift_radius": 0.00430249888964189,
+            "objective_before": 0.697198997496097,
+            "objective_after": 0.68925985141727
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805253,
+            "training_block_rms": 0.02821465376788089,
+            "drift_radius": 0.0042321980651821335,
+            "objective_before": 0.701287988697414,
+            "objective_after": 0.6934152250654548
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027837539327542994,
+            "drift_radius": 0.004175630899131449,
+            "objective_before": 0.6499859861954864,
+            "objective_after": 0.6422348749703841
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027467961964736835,
+            "drift_radius": 0.004120194294710525,
+            "objective_before": 0.5919890208106029,
+            "objective_after": 0.5853286766593175
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027096473694922463,
+            "drift_radius": 0.004064471054238369,
+            "objective_before": 0.5954227709563165,
+            "objective_after": 0.5887913539029652
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.026750525073184424,
+            "drift_radius": 0.004012578760977664,
+            "objective_before": 0.5978137346792265,
+            "objective_after": 0.591937682258931
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02642223291966006,
+            "drift_radius": 0.003963334937949009,
+            "objective_before": 0.5728222262772639,
+            "objective_after": 0.5663487585632138
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02601920668560368,
+            "drift_radius": 0.003902881002840552,
+            "objective_before": 0.535580495007594,
+            "objective_after": 0.5292307997594727
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02567947972975077,
+            "drift_radius": 0.003851921959462615,
+            "objective_before": 0.49656256161531864,
+            "objective_after": 0.49099951066889436
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.18154761904761904,
+        "mrr": 0.08338726694381457,
+        "ndcg": 0.10598679525746603
+      },
+      "challenger_metrics": {
+        "recall": 0.18055555555555555,
+        "mrr": 0.08360418241370624,
+        "ndcg": 0.10592050557386112
+      }
+    },
+    {
+      "fold": 1,
+      "seed": 20261003,
+      "training_query_count": 3992,
+      "heldout_query_count": 1008,
+      "training_residual_count": 242012,
+      "statistics": {
+        "query_count": 3992,
+        "candidate_observations": 159680,
+        "block_observations": 2554880,
+        "known_positive_observations": 1074,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.8044348940413655
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242012,
+        "iterations": 12,
+        "seed": 20261003,
+        "omp_threads": 1,
+        "coefficient_mse": 8.715045260032639e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 100,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.541032905653736,
+        "signed_score_objective_after": 11.405810730918198,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03436724259381638,
+            "drift_radius": 0.005155086389072456,
+            "objective_before": 0.9972062375263988,
+            "objective_after": 0.9851650187965167
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03183739823847826,
+            "drift_radius": 0.004775609735771739,
+            "objective_before": 1.011430182126722,
+            "objective_after": 0.9992476725268661
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.03094850124745771,
+            "drift_radius": 0.004642275187118656,
+            "objective_before": 0.8970389811294338,
+            "objective_after": 0.8877040564151882
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.030421065115354858,
+            "drift_radius": 0.0045631597673032286,
+            "objective_before": 0.8845543599728576,
+            "objective_after": 0.8737403916450678
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.029922071757053536,
+            "drift_radius": 0.00448831076355803,
+            "objective_before": 0.8157358778843838,
+            "objective_after": 0.8060190250046668
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02956667688587482,
+            "drift_radius": 0.004435001532881223,
+            "objective_before": 0.7587683830518462,
+            "objective_after": 0.7496278432717415
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02913553629555927,
+            "drift_radius": 0.00437033044433389,
+            "objective_before": 0.7333162784267371,
+            "objective_after": 0.7241417584416291
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02868332593094593,
+            "drift_radius": 0.00430249888964189,
+            "objective_before": 0.7002091222793815,
+            "objective_after": 0.6913959601932075
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02821465376788089,
+            "drift_radius": 0.0042321980651821335,
+            "objective_before": 0.7138250554066919,
+            "objective_after": 0.7050485236120373
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027837539327542994,
+            "drift_radius": 0.004175630899131449,
+            "objective_before": 0.6454096772211911,
+            "objective_after": 0.6372868030393443
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027467961964736835,
+            "drift_radius": 0.004120194294710525,
+            "objective_before": 0.5935524672150425,
+            "objective_after": 0.5871024287058395
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.027096473694922463,
+            "drift_radius": 0.004064471054238369,
+            "objective_before": 0.5899088517494254,
+            "objective_after": 0.5838448856500391
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.026750525073184424,
+            "drift_radius": 0.004012578760977664,
+            "objective_before": 0.5975319199505356,
+            "objective_after": 0.5909572329953454
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02642223291966006,
+            "drift_radius": 0.003963334937949009,
+            "objective_before": 0.5725212251803704,
+            "objective_after": 0.5662215958077134
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02601920668560368,
+            "drift_radius": 0.003902881002840552,
+            "objective_before": 0.5328446686365866,
+            "objective_after": 0.5268189679605144
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 607492.1638805254,
+            "training_block_rms": 0.02567947972975077,
+            "drift_radius": 0.003851921959462615,
+            "objective_before": 0.49717961789613374,
+            "objective_after": 0.49148856685246556
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.18353174603174602,
+        "mrr": 0.08316050957420004,
+        "ndcg": 0.1065445660768926
+      },
+      "challenger_metrics": {
+        "recall": 0.18353174603174602,
+        "mrr": 0.08302823444192492,
+        "ndcg": 0.10642721178938842
+      }
+    },
+    {
+      "fold": 2,
+      "seed": 20261001,
+      "training_query_count": 3961,
+      "heldout_query_count": 1039,
+      "training_residual_count": 240490,
+      "statistics": {
+        "query_count": 3961,
+        "candidate_observations": 158440,
+        "block_observations": 2535040,
+        "known_positive_observations": 1041,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1393185292530466,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.809536326536833
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 240490,
+        "iterations": 12,
+        "seed": 20261001,
+        "omp_threads": 1,
+        "coefficient_mse": 8.703254570718855e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 94,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.443896330645725,
+        "signed_score_objective_after": 11.309564077993182,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.0343234589211274,
+            "drift_radius": 0.005148518838169109,
+            "objective_before": 1.0083682631451496,
+            "objective_after": 0.9958427384348785
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.03181425140280646,
+            "drift_radius": 0.004772137710420969,
+            "objective_before": 0.9922744452732446,
+            "objective_after": 0.9804746247679362
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.030937658322091995,
+            "drift_radius": 0.004640648748313799,
+            "objective_before": 0.8872370646910108,
+            "objective_after": 0.8755530042051297
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.030417668608738183,
+            "drift_radius": 0.004562650291310727,
+            "objective_before": 0.8998456093564635,
+            "objective_after": 0.8891107046589739
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.02991214276487936,
+            "drift_radius": 0.0044868214147319035,
+            "objective_before": 0.7789996726159174,
+            "objective_after": 0.7696530535487771
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.029535288584037922,
+            "drift_radius": 0.0044302932876056885,
+            "objective_before": 0.7687844095238757,
+            "objective_after": 0.7604175943455659
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.029110798612385542,
+            "drift_radius": 0.0043666197918578314,
+            "objective_before": 0.7436309369826147,
+            "objective_after": 0.735021266958059
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.028651085146705123,
+            "drift_radius": 0.004297662772005768,
+            "objective_before": 0.6886561185934339,
+            "objective_after": 0.6798873832957681
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.028188554602309814,
+            "drift_radius": 0.004228283190346472,
+            "objective_before": 0.6870280222345944,
+            "objective_after": 0.6795288116814103
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.027809231012501504,
+            "drift_radius": 0.004171384651875225,
+            "objective_before": 0.6444228662730724,
+            "objective_after": 0.6363135531378032
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.027454877934486185,
+            "drift_radius": 0.0041182316901729275,
+            "objective_before": 0.5952203998460724,
+            "objective_after": 0.5890095232684185
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.027077543453735094,
+            "drift_radius": 0.0040616315180602635,
+            "objective_before": 0.5789396162904533,
+            "objective_after": 0.5725021820546448
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.0267213375073366,
+            "drift_radius": 0.00400820062610049,
+            "objective_before": 0.5986779351343567,
+            "objective_after": 0.5913780038759986
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.026394957282435325,
+            "drift_radius": 0.003959243592365299,
+            "objective_before": 0.5754422299937784,
+            "objective_after": 0.5695576242593853
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.02599630382120875,
+            "drift_radius": 0.003899445573181312,
+            "objective_before": 0.5227389687901892,
+            "objective_after": 0.5173549766456171
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.025648480401115056,
+            "drift_radius": 0.003847272060167258,
+            "objective_before": 0.47362977190151134,
+            "objective_after": 0.46795903285485285
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.1952197625922361,
+        "mrr": 0.09091961134790778,
+        "ndcg": 0.1152411483777585
+      },
+      "challenger_metrics": {
+        "recall": 0.19618222649983957,
+        "mrr": 0.09044869150740181,
+        "ndcg": 0.11509372765579295
+      }
+    },
+    {
+      "fold": 2,
+      "seed": 20261002,
+      "training_query_count": 3961,
+      "heldout_query_count": 1039,
+      "training_residual_count": 240490,
+      "statistics": {
+        "query_count": 3961,
+        "candidate_observations": 158440,
+        "block_observations": 2535040,
+        "known_positive_observations": 1041,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1393185292530466,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.809536326536833
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 240490,
+        "iterations": 12,
+        "seed": 20261002,
+        "omp_threads": 1,
+        "coefficient_mse": 8.70013318490237e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 75,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.410013345642804,
+        "signed_score_objective_after": 11.27719640513805,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.0343234589211274,
+            "drift_radius": 0.005148518838169109,
+            "objective_before": 1.0151573373777916,
+            "objective_after": 1.0019925867494173
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.03181425140280646,
+            "drift_radius": 0.004772137710420969,
+            "objective_before": 0.9860671951035782,
+            "objective_after": 0.9743001894652188
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.030937658322091995,
+            "drift_radius": 0.004640648748313799,
+            "objective_before": 0.8842866974853536,
+            "objective_after": 0.8744807454926996
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.030417668608738183,
+            "drift_radius": 0.004562650291310727,
+            "objective_before": 0.8979805285942882,
+            "objective_after": 0.8868197488023881
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.02991214276487936,
+            "drift_radius": 0.0044868214147319035,
+            "objective_before": 0.7772982104871473,
+            "objective_after": 0.767836791604966
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.029535288584037922,
+            "drift_radius": 0.0044302932876056885,
+            "objective_before": 0.7710783213207234,
+            "objective_after": 0.7621363684126933
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 603582.935576496,
+            "training_block_rms": 0.029110798612385542,
+            "drift_radius": 0.0043666197918578314,
+            "objective_before": 0.7432691099434139,
+            "objective_after": 0.7348245730660973
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.028651085146705123,
+            "drift_radius": 0.004297662772005768,
+            "objective_before": 0.6799767112595817,
+            "objective_after": 0.6720234713242605
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.028188554602309814,
+            "drift_radius": 0.004228283190346472,
+            "objective_before": 0.6853457897601292,
+            "objective_after": 0.6771733575711547
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.027809231012501504,
+            "drift_radius": 0.004171384651875225,
+            "objective_before": 0.6396119587477754,
+            "objective_after": 0.6327527878139478
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.027454877934486185,
+            "drift_radius": 0.0041182316901729275,
+            "objective_before": 0.596125170444766,
+            "objective_after": 0.589136501214347
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.027077543453735094,
+            "drift_radius": 0.0040616315180602635,
+            "objective_before": 0.5684706795743101,
+            "objective_after": 0.5622631754413867
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.0267213375073366,
+            "drift_radius": 0.00400820062610049,
+            "objective_before": 0.5958774149580144,
+            "objective_after": 0.5892863089094029
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.026394957282435325,
+            "drift_radius": 0.003959243592365299,
+            "objective_before": 0.5681423194304863,
+            "objective_after": 0.562229467359267
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.02599630382120875,
+            "drift_radius": 0.003899445573181312,
+            "objective_before": 0.5278420794150296,
+            "objective_after": 0.5216382731958783
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.025648480401115056,
+            "drift_radius": 0.003847272060167258,
+            "objective_before": 0.47348382174043957,
+            "objective_after": 0.46830205871490294
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.20291947385306383,
+        "mrr": 0.09157844080846969,
+        "ndcg": 0.11756609043446642
+      },
+      "challenger_metrics": {
+        "recall": 0.2038819377606673,
+        "mrr": 0.0914142108559818,
+        "ndcg": 0.11764863920780662
+      }
+    },
+    {
+      "fold": 2,
+      "seed": 20261003,
+      "training_query_count": 3961,
+      "heldout_query_count": 1039,
+      "training_residual_count": 240490,
+      "statistics": {
+        "query_count": 3961,
+        "candidate_observations": 158440,
+        "block_observations": 2535040,
+        "known_positive_observations": 1041,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1393185292530466,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.809536326536833
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 240490,
+        "iterations": 12,
+        "seed": 20261003,
+        "omp_threads": 1,
+        "coefficient_mse": 8.701635670149699e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 88,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.430568068951034,
+        "signed_score_objective_after": 11.300448101204399,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.0343234589211274,
+            "drift_radius": 0.005148518838169109,
+            "objective_before": 1.0213287336775125,
+            "objective_after": 1.008936683123819
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.03181425140280646,
+            "drift_radius": 0.004772137710420969,
+            "objective_before": 0.9815511862031275,
+            "objective_after": 0.9702897343760963
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 603582.935576496,
+            "training_block_rms": 0.030937658322091995,
+            "drift_radius": 0.004640648748313799,
+            "objective_before": 0.8877107958436778,
+            "objective_after": 0.8775447621459853
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.030417668608738183,
+            "drift_radius": 0.004562650291310727,
+            "objective_before": 0.8989383435509284,
+            "objective_after": 0.8881130407431289
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.02991214276487936,
+            "drift_radius": 0.0044868214147319035,
+            "objective_before": 0.778313536077415,
+            "objective_after": 0.7694758349702351
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 603582.935576496,
+            "training_block_rms": 0.029535288584037922,
+            "drift_radius": 0.0044302932876056885,
+            "objective_before": 0.7716972419964652,
+            "objective_after": 0.7628480886440508
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.029110798612385542,
+            "drift_radius": 0.0043666197918578314,
+            "objective_before": 0.7454927578552722,
+            "objective_after": 0.7368101830525768
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.028651085146705123,
+            "drift_radius": 0.004297662772005768,
+            "objective_before": 0.6857482820196262,
+            "objective_after": 0.6774218598086132
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.028188554602309814,
+            "drift_radius": 0.004228283190346472,
+            "objective_before": 0.6894128190891033,
+            "objective_after": 0.6819474588189529
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.027809231012501504,
+            "drift_radius": 0.004171384651875225,
+            "objective_before": 0.6416109398914526,
+            "objective_after": 0.6347166579364167
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.027454877934486185,
+            "drift_radius": 0.0041182316901729275,
+            "objective_before": 0.5891512411820856,
+            "objective_after": 0.5827290272185084
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.027077543453735094,
+            "drift_radius": 0.0040616315180602635,
+            "objective_before": 0.5681895695129399,
+            "objective_after": 0.5617848246576023
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.0267213375073366,
+            "drift_radius": 0.00400820062610049,
+            "objective_before": 0.5938147941194676,
+            "objective_after": 0.58729148765135
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.026394957282435325,
+            "drift_radius": 0.003959243592365299,
+            "objective_before": 0.5758914571285031,
+            "objective_after": 0.5695252340126338
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764957,
+            "training_block_rms": 0.02599630382120875,
+            "drift_radius": 0.003899445573181312,
+            "objective_before": 0.5254175391076749,
+            "objective_after": 0.5196525073696598
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 603582.9355764958,
+            "training_block_rms": 0.025648480401115056,
+            "drift_radius": 0.003847272060167258,
+            "objective_before": 0.47629883169578224,
+            "objective_after": 0.4713607166747921
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.1952197625922361,
+        "mrr": 0.08989833020150634,
+        "ndcg": 0.11466109813086597
+      },
+      "challenger_metrics": {
+        "recall": 0.19906961822264996,
+        "mrr": 0.09016720900743999,
+        "ndcg": 0.11569162197813573
+      }
+    },
+    {
+      "fold": 3,
+      "seed": 20261001,
+      "training_query_count": 4005,
+      "heldout_query_count": 995,
+      "training_residual_count": 241160,
+      "statistics": {
+        "query_count": 4005,
+        "candidate_observations": 160200,
+        "block_observations": 2563200,
+        "known_positive_observations": 1073,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.808178703780804
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 241160,
+        "iterations": 12,
+        "seed": 20261001,
+        "omp_threads": 1,
+        "coefficient_mse": 8.707188681000844e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 98,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.544873193208993,
+        "signed_score_objective_after": 11.408636564440451,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.034383897243317064,
+            "drift_radius": 0.0051575845864975595,
+            "objective_before": 1.0119434683947175,
+            "objective_after": 1.000692507552622
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.031836803442598524,
+            "drift_radius": 0.004775520516389778,
+            "objective_before": 1.000765815314144,
+            "objective_after": 0.9885900596067241
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456846,
+            "training_block_rms": 0.030925734672853682,
+            "drift_radius": 0.004638860200928052,
+            "objective_before": 0.8963906263258928,
+            "objective_after": 0.8858514135647952
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.030408829733366765,
+            "drift_radius": 0.004561324460005014,
+            "objective_before": 0.8952502577649117,
+            "objective_after": 0.8841449712030308
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02990881714611692,
+            "drift_radius": 0.004486322571917538,
+            "objective_before": 0.7957433719190805,
+            "objective_after": 0.7857942930790777
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.029523143420167257,
+            "drift_radius": 0.004428471513025088,
+            "objective_before": 0.7794848984336722,
+            "objective_after": 0.7707774948174997
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.029124003229275615,
+            "drift_radius": 0.004368600484391342,
+            "objective_before": 0.7565294144513155,
+            "objective_after": 0.7475325782759842
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.028672383500527195,
+            "drift_radius": 0.004300857525079079,
+            "objective_before": 0.6941222698393177,
+            "objective_after": 0.6847203248549111
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.028190666514111846,
+            "drift_radius": 0.004228599977116777,
+            "objective_before": 0.6958837180834561,
+            "objective_after": 0.6876482636717814
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.027806841980461357,
+            "drift_radius": 0.004171026297069203,
+            "objective_before": 0.6306769298326702,
+            "objective_after": 0.6237369375284604
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02744856973403087,
+            "drift_radius": 0.004117285460104631,
+            "objective_before": 0.6024385680680721,
+            "objective_after": 0.5956718349567439
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02708529026016386,
+            "drift_radius": 0.004062793539024579,
+            "objective_before": 0.6006060297139723,
+            "objective_after": 0.5932378435421535
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.026715721588414176,
+            "drift_radius": 0.004007358238262126,
+            "objective_before": 0.5889289652781299,
+            "objective_after": 0.5822191459061995
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02638642659566307,
+            "drift_radius": 0.00395796398934946,
+            "objective_before": 0.5694358619097316,
+            "objective_after": 0.5628584900764929
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.026014273821042464,
+            "drift_radius": 0.0039021410731563694,
+            "objective_before": 0.5328223662953723,
+            "objective_after": 0.5268367934771193
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456846,
+            "training_block_rms": 0.0256756583164412,
+            "drift_radius": 0.0038513487474661798,
+            "objective_before": 0.49385063158454073,
+            "objective_after": 0.4883236123268597
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.1914572864321608,
+        "mrr": 0.0963280689160086,
+        "ndcg": 0.11840213130552531
+      },
+      "challenger_metrics": {
+        "recall": 0.1914572864321608,
+        "mrr": 0.09594320810401212,
+        "ndcg": 0.1181123702129886
+      }
+    },
+    {
+      "fold": 3,
+      "seed": 20261002,
+      "training_query_count": 4005,
+      "heldout_query_count": 995,
+      "training_residual_count": 241160,
+      "statistics": {
+        "query_count": 4005,
+        "candidate_observations": 160200,
+        "block_observations": 2563200,
+        "known_positive_observations": 1073,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.808178703780804
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 241160,
+        "iterations": 12,
+        "seed": 20261002,
+        "omp_threads": 1,
+        "coefficient_mse": 8.707288361620158e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 81,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.522591761778536,
+        "signed_score_objective_after": 11.391623729485048,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456846,
+            "training_block_rms": 0.034383897243317064,
+            "drift_radius": 0.0051575845864975595,
+            "objective_before": 1.008650116555563,
+            "objective_after": 0.9969296190285838
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.031836803442598524,
+            "drift_radius": 0.004775520516389778,
+            "objective_before": 0.998127502616912,
+            "objective_after": 0.9866147958949129
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.030925734672853682,
+            "drift_radius": 0.004638860200928052,
+            "objective_before": 0.8916156727323019,
+            "objective_after": 0.8816590329966391
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.030408829733366765,
+            "drift_radius": 0.004561324460005014,
+            "objective_before": 0.8893867997699034,
+            "objective_after": 0.8796469211578771
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02990881714611692,
+            "drift_radius": 0.004486322571917538,
+            "objective_before": 0.7902942421317497,
+            "objective_after": 0.7816288976504566
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.029523143420167257,
+            "drift_radius": 0.004428471513025088,
+            "objective_before": 0.7829896435789823,
+            "objective_after": 0.7737335773557502
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.029124003229275615,
+            "drift_radius": 0.004368600484391342,
+            "objective_before": 0.759079247120963,
+            "objective_after": 0.7501169754319742
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.028672383500527195,
+            "drift_radius": 0.004300857525079079,
+            "objective_before": 0.6957084618757254,
+            "objective_after": 0.686468046390142
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.028190666514111846,
+            "drift_radius": 0.004228599977116777,
+            "objective_before": 0.6918718374322133,
+            "objective_after": 0.6840699888627882
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.027806841980461357,
+            "drift_radius": 0.004171026297069203,
+            "objective_before": 0.6328733167573123,
+            "objective_after": 0.625942164833869
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02744856973403087,
+            "drift_radius": 0.004117285460104631,
+            "objective_before": 0.6022125648333962,
+            "objective_after": 0.5960248468282949
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456846,
+            "training_block_rms": 0.02708529026016386,
+            "drift_radius": 0.004062793539024579,
+            "objective_before": 0.5966109190916936,
+            "objective_after": 0.5901757480756632
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.026715721588414176,
+            "drift_radius": 0.004007358238262126,
+            "objective_before": 0.5889685040338962,
+            "objective_after": 0.5821942756903643
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02638642659566307,
+            "drift_radius": 0.00395796398934946,
+            "objective_before": 0.5710464993254087,
+            "objective_after": 0.5642421165115087
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.026014273821042464,
+            "drift_radius": 0.0039021410731563694,
+            "objective_before": 0.5313233929038371,
+            "objective_after": 0.5261462967348177
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.0256756583164412,
+            "drift_radius": 0.0038513487474661798,
+            "objective_before": 0.4918330410186551,
+            "objective_after": 0.4860304260413853
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.19195979899497487,
+        "mrr": 0.09533700247268087,
+        "ndcg": 0.11774769259126323
+      },
+      "challenger_metrics": {
+        "recall": 0.19095477386934673,
+        "mrr": 0.09527558427055914,
+        "ndcg": 0.11755177699092895
+      }
+    },
+    {
+      "fold": 3,
+      "seed": 20261003,
+      "training_query_count": 4005,
+      "heldout_query_count": 995,
+      "training_residual_count": 241160,
+      "statistics": {
+        "query_count": 4005,
+        "candidate_observations": 160200,
+        "block_observations": 2563200,
+        "known_positive_observations": 1073,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.808178703780804
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 241160,
+        "iterations": 12,
+        "seed": 20261003,
+        "omp_threads": 1,
+        "coefficient_mse": 8.715509466128424e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 114,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.557293011187399,
+        "signed_score_objective_after": 11.419576098462903,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.034383897243317064,
+            "drift_radius": 0.0051575845864975595,
+            "objective_before": 1.0097404980904285,
+            "objective_after": 0.9967920420602348
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.031836803442598524,
+            "drift_radius": 0.004775520516389778,
+            "objective_before": 0.9999222129983077,
+            "objective_after": 0.9882131594427699
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.030925734672853682,
+            "drift_radius": 0.004638860200928052,
+            "objective_before": 0.900352272050681,
+            "objective_after": 0.889911833294847
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.030408829733366765,
+            "drift_radius": 0.004561324460005014,
+            "objective_before": 0.8979439307265468,
+            "objective_after": 0.887763602956099
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02990881714611692,
+            "drift_radius": 0.004486322571917538,
+            "objective_before": 0.7946534730792572,
+            "objective_after": 0.7842920004203965
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.029523143420167257,
+            "drift_radius": 0.004428471513025088,
+            "objective_before": 0.7860012330385153,
+            "objective_after": 0.7761522073240884
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.029124003229275615,
+            "drift_radius": 0.004368600484391342,
+            "objective_before": 0.7476090158709678,
+            "objective_after": 0.739370328923116
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.028672383500527195,
+            "drift_radius": 0.004300857525079079,
+            "objective_before": 0.7092935197095092,
+            "objective_after": 0.699328991971623
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.028190666514111846,
+            "drift_radius": 0.004228599977116777,
+            "objective_before": 0.6914036736296041,
+            "objective_after": 0.6831491815416081
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.027806841980461357,
+            "drift_radius": 0.004171026297069203,
+            "objective_before": 0.6378043619540456,
+            "objective_after": 0.6300841608692004
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02744856973403087,
+            "drift_radius": 0.004117285460104631,
+            "objective_before": 0.6017726113239348,
+            "objective_after": 0.5951312890886521
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02708529026016386,
+            "drift_radius": 0.004062793539024579,
+            "objective_before": 0.595275850049891,
+            "objective_after": 0.5880738685833045
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.026715721588414176,
+            "drift_radius": 0.004007358238262126,
+            "objective_before": 0.5913849265606961,
+            "objective_after": 0.5849537908556235
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.02638642659566307,
+            "drift_radius": 0.00395796398934946,
+            "objective_before": 0.5693220290849579,
+            "objective_after": 0.5633067637529813
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456847,
+            "training_block_rms": 0.026014273821042464,
+            "drift_radius": 0.0039021410731563694,
+            "objective_before": 0.5307330320732836,
+            "objective_after": 0.5249473205251691
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 610070.2283456846,
+            "training_block_rms": 0.0256756583164412,
+            "drift_radius": 0.0038513487474661798,
+            "objective_before": 0.49408037094674784,
+            "objective_after": 0.4881055568531667
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.18693467336683417,
+        "mrr": 0.09986240727446757,
+        "ndcg": 0.11989743929998951
+      },
+      "challenger_metrics": {
+        "recall": 0.18693467336683417,
+        "mrr": 0.1004351120682779,
+        "ndcg": 0.12033311608869138
+      }
+    },
+    {
+      "fold": 4,
+      "seed": 20261001,
+      "training_query_count": 4024,
+      "heldout_query_count": 976,
+      "training_residual_count": 242486,
+      "statistics": {
+        "query_count": 4024,
+        "candidate_observations": 160960,
+        "block_observations": 2575360,
+        "known_positive_observations": 1052,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.80729980093581
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242486,
+        "iterations": 12,
+        "seed": 20261001,
+        "omp_threads": 1,
+        "coefficient_mse": 8.699749741936103e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 95,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.597593424269936,
+        "signed_score_objective_after": 11.463917415176336,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.03437048815487163,
+            "drift_radius": 0.005155573223230744,
+            "objective_before": 1.003223490953319,
+            "objective_after": 0.9907333463266641
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.03182127265762345,
+            "drift_radius": 0.004773190898643518,
+            "objective_before": 0.9903483664476725,
+            "objective_after": 0.978693498410181
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586282,
+            "training_block_rms": 0.03093173176783779,
+            "drift_radius": 0.004639759765175669,
+            "objective_before": 0.9225689899545482,
+            "objective_after": 0.9120020700943752
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.030435800105666558,
+            "drift_radius": 0.004565370015849984,
+            "objective_before": 0.9106046947129602,
+            "objective_after": 0.899921653539844
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.029917260274393644,
+            "drift_radius": 0.004487589041159047,
+            "objective_before": 0.7820623649106854,
+            "objective_after": 0.7728318494359514
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02953213721094559,
+            "drift_radius": 0.004429820581641838,
+            "objective_before": 0.7845485180616616,
+            "objective_after": 0.7754658159684461
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586282,
+            "training_block_rms": 0.02912114146091,
+            "drift_radius": 0.0043681712191365,
+            "objective_before": 0.7568306616043088,
+            "objective_after": 0.7479600397125378
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02864960090217898,
+            "drift_radius": 0.004297440135326847,
+            "objective_before": 0.6978306033699618,
+            "objective_after": 0.6892348788422307
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.028176841658451038,
+            "drift_radius": 0.004226526248767655,
+            "objective_before": 0.6874467904181312,
+            "objective_after": 0.6797988406036329
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02781597256351144,
+            "drift_radius": 0.0041723958845267155,
+            "objective_before": 0.6469794530243133,
+            "objective_after": 0.6396773953099433
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.027461297643405307,
+            "drift_radius": 0.004119194646510796,
+            "objective_before": 0.6112269109876074,
+            "objective_after": 0.6044243683265169
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.027089102052255537,
+            "drift_radius": 0.0040633653078383306,
+            "objective_before": 0.592984709995301,
+            "objective_after": 0.5870162422256663
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02672330297683333,
+            "drift_radius": 0.004008495446524999,
+            "objective_before": 0.5990794333096158,
+            "objective_after": 0.5924569052055111
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02638926535898739,
+            "drift_radius": 0.003958389803848108,
+            "objective_before": 0.5883147466896183,
+            "objective_after": 0.5813404918347187
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.026006185246490135,
+            "drift_radius": 0.00390092778697352,
+            "objective_before": 0.5301017423090247,
+            "objective_after": 0.5239075958722442
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.025673340768029667,
+            "drift_radius": 0.00385100111520445,
+            "objective_before": 0.493441947521193,
+            "objective_after": 0.48845242346787043
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.21106557377049182,
+        "mrr": 0.10097254748894093,
+        "ndcg": 0.12676620524227747
+      },
+      "challenger_metrics": {
+        "recall": 0.21311475409836064,
+        "mrr": 0.10126162828519383,
+        "ndcg": 0.12743580290790207
+      }
+    },
+    {
+      "fold": 4,
+      "seed": 20261002,
+      "training_query_count": 4024,
+      "heldout_query_count": 976,
+      "training_residual_count": 242486,
+      "statistics": {
+        "query_count": 4024,
+        "candidate_observations": 160960,
+        "block_observations": 2575360,
+        "known_positive_observations": 1052,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.80729980093581
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242486,
+        "iterations": 12,
+        "seed": 20261002,
+        "omp_threads": 1,
+        "coefficient_mse": 8.710666588740423e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 100,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.611051625714257,
+        "signed_score_objective_after": 11.475201858522817,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.03437048815487163,
+            "drift_radius": 0.005155573223230744,
+            "objective_before": 1.016188217602366,
+            "objective_after": 1.0038253677825426
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.03182127265762345,
+            "drift_radius": 0.004773190898643518,
+            "objective_before": 0.9946695590741034,
+            "objective_after": 0.9828697361645468
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.03093173176783779,
+            "drift_radius": 0.004639759765175669,
+            "objective_before": 0.9168676867430869,
+            "objective_after": 0.9054995633434202
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 612822.975958628,
+            "training_block_rms": 0.030435800105666558,
+            "drift_radius": 0.004565370015849984,
+            "objective_before": 0.9073265734944668,
+            "objective_after": 0.896842381097919
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586282,
+            "training_block_rms": 0.029917260274393644,
+            "drift_radius": 0.004487589041159047,
+            "objective_before": 0.7818372781075772,
+            "objective_after": 0.7729773984744972
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02953213721094559,
+            "drift_radius": 0.004429820581641838,
+            "objective_before": 0.7865994954819026,
+            "objective_after": 0.7766785559998116
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02912114146091,
+            "drift_radius": 0.0043681712191365,
+            "objective_before": 0.7633012322719097,
+            "objective_after": 0.7541571030661273
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02864960090217898,
+            "drift_radius": 0.004297440135326847,
+            "objective_before": 0.6903309819850266,
+            "objective_after": 0.6814530869014215
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586282,
+            "training_block_rms": 0.028176841658451038,
+            "drift_radius": 0.004226526248767655,
+            "objective_before": 0.6905267500511402,
+            "objective_after": 0.6825922779731626
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02781597256351144,
+            "drift_radius": 0.0041723958845267155,
+            "objective_before": 0.6482294145653621,
+            "objective_after": 0.6410539975639434
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.027461297643405307,
+            "drift_radius": 0.004119194646510796,
+            "objective_before": 0.6126819146163544,
+            "objective_after": 0.6056554491250555
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.027089102052255537,
+            "drift_radius": 0.0040633653078383306,
+            "objective_before": 0.5922577438390387,
+            "objective_after": 0.5858135769429017
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02672330297683333,
+            "drift_radius": 0.004008495446524999,
+            "objective_before": 0.5992424768937001,
+            "objective_after": 0.5928330301698312
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02638926535898739,
+            "drift_radius": 0.003958389803848108,
+            "objective_before": 0.5871881667695937,
+            "objective_after": 0.5806897712885366
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.026006185246490135,
+            "drift_radius": 0.00390092778697352,
+            "objective_before": 0.5257602803644692,
+            "objective_after": 0.5201089254700509
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.025673340768029667,
+            "drift_radius": 0.00385100111520445,
+            "objective_before": 0.49804385385414407,
+            "objective_after": 0.4921516371590401
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.2151639344262295,
+        "mrr": 0.10221913218839448,
+        "ndcg": 0.12882523578494098
+      },
+      "challenger_metrics": {
+        "recall": 0.2151639344262295,
+        "mrr": 0.10139498763986468,
+        "ndcg": 0.12820145170916278
+      }
+    },
+    {
+      "fold": 4,
+      "seed": 20261003,
+      "training_query_count": 4024,
+      "heldout_query_count": 976,
+      "training_residual_count": 242486,
+      "statistics": {
+        "query_count": 4024,
+        "candidate_observations": 160960,
+        "block_observations": 2575360,
+        "known_positive_observations": 1052,
+        "active_centroid_cells": 4096,
+        "minimum_observation_weight": 1.1349481722077706,
+        "maximum_observation_weight": 10.0,
+        "mean_observation_weight": 3.80729980093581
+      },
+      "rpq_summary": {
+        "rank": 64,
+        "subquantizers": 16,
+        "bits_per_subquantizer": 8,
+        "payload_bytes_per_document": 16,
+        "codebook_bytes": 65536,
+        "training_rows": 242486,
+        "iterations": 12,
+        "seed": 20261003,
+        "omp_threads": 1,
+        "coefficient_mse": 8.702748164068907e-05
+      },
+      "update_summary": {
+        "active_centroids": 4096,
+        "inactive_centroids": 0,
+        "clipped_centroids": 104,
+        "maximum_centroid_drift_fraction": 0.15,
+        "signed_score_objective_before": 11.61244400315427,
+        "signed_score_objective_after": 11.479230688282808,
+        "objective_nonincreasing": true,
+        "objective_increases": 0,
+        "assignment_changes": 0,
+        "fixed_assignments": true,
+        "anchor_ratio": 1.0,
+        "maximum_drift_fraction": 0.15,
+        "jitter": 1e-08,
+        "block_summaries": [
+          {
+            "block": 0,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.03437048815487163,
+            "drift_radius": 0.005155573223230744,
+            "objective_before": 1.0043621960569584,
+            "objective_after": 0.9918723389460742
+          },
+          {
+            "block": 1,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.03182127265762345,
+            "drift_radius": 0.004773190898643518,
+            "objective_before": 0.9921637149536296,
+            "objective_after": 0.9811563757068549
+          },
+          {
+            "block": 2,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.03093173176783779,
+            "drift_radius": 0.004639759765175669,
+            "objective_before": 0.9250292800168538,
+            "objective_after": 0.9139631312755272
+          },
+          {
+            "block": 3,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.030435800105666558,
+            "drift_radius": 0.004565370015849984,
+            "objective_before": 0.9107602242597521,
+            "objective_after": 0.9001586149736787
+          },
+          {
+            "block": 4,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586282,
+            "training_block_rms": 0.029917260274393644,
+            "drift_radius": 0.004487589041159047,
+            "objective_before": 0.7916088387564174,
+            "objective_after": 0.7820229951841496
+          },
+          {
+            "block": 5,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02953213721094559,
+            "drift_radius": 0.004429820581641838,
+            "objective_before": 0.789570104800148,
+            "objective_after": 0.7802601486755434
+          },
+          {
+            "block": 6,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02912114146091,
+            "drift_radius": 0.0043681712191365,
+            "objective_before": 0.7594018158715607,
+            "objective_after": 0.7508063191461897
+          },
+          {
+            "block": 7,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02864960090217898,
+            "drift_radius": 0.004297440135326847,
+            "objective_before": 0.6909807910786823,
+            "objective_after": 0.68245704915828
+          },
+          {
+            "block": 8,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.028176841658451038,
+            "drift_radius": 0.004226526248767655,
+            "objective_before": 0.6892886085337869,
+            "objective_after": 0.6814882069591089
+          },
+          {
+            "block": 9,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02781597256351144,
+            "drift_radius": 0.0041723958845267155,
+            "objective_before": 0.6556954799386605,
+            "objective_after": 0.6480267107057202
+          },
+          {
+            "block": 10,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.027461297643405307,
+            "drift_radius": 0.004119194646510796,
+            "objective_before": 0.6041838277170645,
+            "objective_after": 0.5984195640207942
+          },
+          {
+            "block": 11,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.027089102052255537,
+            "drift_radius": 0.0040633653078383306,
+            "objective_before": 0.5920877479678515,
+            "objective_after": 0.5852135390624117
+          },
+          {
+            "block": 12,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02672330297683333,
+            "drift_radius": 0.004008495446524999,
+            "objective_before": 0.6009044259423371,
+            "objective_after": 0.5946858881704372
+          },
+          {
+            "block": 13,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.02638926535898739,
+            "drift_radius": 0.003958389803848108,
+            "objective_before": 0.585455498504518,
+            "objective_after": 0.5787918790560386
+          },
+          {
+            "block": 14,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.026006185246490135,
+            "drift_radius": 0.00390092778697352,
+            "objective_before": 0.5236177275170838,
+            "objective_after": 0.5180037739713284
+          },
+          {
+            "block": 15,
+            "active_centroids": 256,
+            "observation_mass": 612822.9759586281,
+            "training_block_rms": 0.025673340768029667,
+            "drift_radius": 0.00385100111520445,
+            "objective_before": 0.4973337212389987,
+            "objective_after": 0.4919041532706846
+          }
+        ]
+      },
+      "unsupervised_metrics": {
+        "recall": 0.21055327868852458,
+        "mrr": 0.10102133749674733,
+        "ndcg": 0.12672424457611256
+      },
+      "challenger_metrics": {
+        "recall": 0.20952868852459017,
+        "mrr": 0.10186621779859485,
+        "ndcg": 0.12716838485520615
+      }
+    }
+  ]
+}

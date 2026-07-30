@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v12_anchored_cutoff_rpq_v1",
+  "status": "RARS_V12_FRESH_DEVELOPMENT_BUNDLE_FROZEN",
+  "source_commit": "07b0fe09b82babb3b06ffd1649266a656dd07df1",
+  "role_id": "fresh_train_development",
+  "query_count": 2500,
+  "candidate_count": 100,
+  "candidate_residual_count": 175790,
+  "fold_counts": [
+    498,
+    451,
+    506,
+    535,
+    510
+  ],
+  "environment": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_version": "1.12.0",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "cublas_workspace_config": ":4096:8",
+    "cudnn_benchmark": false
+  },
+  "index_contract": {
+    "dimension": 384,
+    "nlist": 512,
+    "serialized_nprobe": 16,
+    "subquantizers": 32,
+    "nbits": 8,
+    "ntotal": 1000000,
+    "metric_type": 0,
+    "metric": "inner_product",
+    "runtime_nprobe": 16
+  },
+  "restricted_corpus": true,
+  "positive_qrels_in_corpus": 2521,
+  "positive_candidate_hits": 882,
+  "source_blobs": {
+    "protocols/rars_v12_anchored_cutoff_rpq_v1.json": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/protocols/rars_v12_anchored_cutoff_rpq_v1.json",
+      "bytes": 10524,
+      "sha256": "16940ee2bd5580096ff61819bdb36aadc794a08f928cd92dffa1db11cedae31b"
+    },
+    "scripts/rars_v12_ca_rpq_core.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/scripts/rars_v12_ca_rpq_core.py",
+      "bytes": 16148,
+      "sha256": "9e12448c4cdc4d67ce1a9197e8afea2ee6a118181774e27ee1baf178e20136ab"
+    },
+    "scripts/freeze_rars_v12_fresh_queries.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/scripts/freeze_rars_v12_fresh_queries.py",
+      "bytes": 13395,
+      "sha256": "938eaf01ff25cfb3351f0eb973f0050900be09f76c1ef48c4aca94c9d45684cf"
+    },
+    "scripts/build_rars_v12_fresh_bundle.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/scripts/build_rars_v12_fresh_bundle.py",
+      "bytes": 13780,
+      "sha256": "9a70dec8bed6f37da7aed13df13aab6ca696ac44e76aca2124032492fe16cf66"
+    },
+    "scripts/evaluate_rars_v6_1m_headroom.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/scripts/evaluate_rars_v6_1m_headroom.py",
+      "bytes": 46206,
+      "sha256": "1ee10e56b6dd8fbc34ad9976b2e41575e568b3c333a70671abbb43215de22b32"
+    },
+    "scripts/train_rars_v8_cutoff_sidecar.py": {
+      "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v12/scripts/train_rars_v8_cutoff_sidecar.py",
+      "bytes": 25763,
+      "sha256": "0aba29c636981f740c4bdda89fa0626dd7df17179326b9d0ef36e67226bef946"
+    }
+  },
+  "inputs": {
+    "fresh_query_freeze": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-query-freeze/fresh_query_freeze.json",
+      "bytes": 5416,
+      "sha256": "3d144f48e69ae47a95a312c0253ce206648051f1b4a857d98027cb78116061aa"
+    },
+    "fresh_query_manifest": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-query-freeze/fresh_query_manifest.json",
+      "bytes": 53687,
+      "sha256": "43bf0b7ce749d2e38b860e2a6cb961887b7736a98f36ec049f6f10b195c49a8d"
+    },
+    "embeddings": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_basis_gate0_cache/embeddings.fp16.memmap",
+      "bytes": 768000000,
+      "sha256": "358e386c0e63b20cefc60ebd160754645d59fbb0f4ac16aa2e03843d59958ba0"
+    },
+    "doc_ids": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_basis_gate0_cache/doc_ids.int64.memmap",
+      "bytes": 8000000,
+      "sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96"
+    },
+    "index": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/msmarco_1m_pq_residual_gate3/frozen_ivfpq_m32_nlist512.index",
+      "bytes": 41183924,
+      "sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8"
+    }
+  },
+  "files": {
+    "query_vectors.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/query_vectors.float32.npy",
+      "bytes": 3840128,
+      "sha256": "40f7cf7ccc9a882edc65342a5c6da3b8e9c42e4b3ae33139ac9c72de3b403fe3"
+    },
+    "fold_ids.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/fold_ids.int64.npy",
+      "bytes": 20128,
+      "sha256": "fe91509d94e8f8e709921cf444683cead8422407872400e78e3427dfeee7d54b"
+    },
+    "ann_rows.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/ann_rows.int64.npy",
+      "bytes": 2000128,
+      "sha256": "d602dd207dd73c02a2ad561f5d9fe1f8f4d38106495ba60e9dce3231f971d535"
+    },
+    "ann_scores.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/ann_scores.float32.npy",
+      "bytes": 1000128,
+      "sha256": "9523fa60a850929501f067b218e85d8a1764e9e096ed3da6d59c155f0ef256eb"
+    },
+    "ann_residual_rows.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/ann_residual_rows.int64.npy",
+      "bytes": 2000128,
+      "sha256": "254425bfb2891e2c879c16b42645b5ace44bd8feb12332bfce68bb481817b863"
+    },
+    "candidate_doc_rows.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/candidate_doc_rows.int64.npy",
+      "bytes": 1406448,
+      "sha256": "7a0d5d8ed829819e4784c999225d24452d0175e649ce50adc4757951312542c9"
+    },
+    "candidate_residuals.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/candidate_residuals.float32.npy",
+      "bytes": 270013568,
+      "sha256": "20e8685e6376fb3cef07eb00763e6bff2b715c370db90bb6d4d716186e9fedcc"
+    },
+    "candidate_relevance.uint8.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/candidate_relevance.uint8.npy",
+      "bytes": 250128,
+      "sha256": "84ba71832183ae376a17b90dcda027e6db9c046bfd8832386c70a7dc1170e462"
+    },
+    "relevant_counts.int32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/relevant_counts.int32.npy",
+      "bytes": 10128,
+      "sha256": "df61411438da9a0740eab6807f8585eb9a1dd8d5185bacedd79b2be1e53dd37f"
+    },
+    "query_ids.utf8.txt": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v12-ca-rpq/07b0fe09b82b/fresh-development-bundle/query_ids.utf8.txt",
+      "bytes": 17580,
+      "sha256": "2456fac410f941ee7de24a812d9a9f50183b35daea2892ebf26fb226fbb950e0"
+    }
+  },
+  "candidate_retrieval_performed_after_query_freeze": true,
+  "metrics_computed": false,
+  "old_rars_holdout_opened": false
+}

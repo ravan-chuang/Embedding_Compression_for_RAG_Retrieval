@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v5_pq_aware_100k_pilot_v1",
+  "status": "RARS_V5_PQ_AWARE_100K_CLOSURE_PACKET",
+  "source_commit": "93105ae1895974e28b34952c2dd777f037c6e0bf",
+  "run_id": "3820883ba4aae9c5b58f815f9a42ec484d793f171bd22eb45d9f1c70df9b7dd9",
+  "formal_decision": "STOP_PQ_AWARE_100K_PILOT",
+  "packet_scope": "thin closure packet with exact JSON, executed notebook, per-query Recall@100, and verified external binary registrations",
+  "files": {
+    "README.md": {
+      "bytes": 4150,
+      "sha256": "8afce0f32c6a9bab80b2e7295139d1894a841c818896d17b4e90da27e1921f82"
+    },
+    "artifact_audit.json": {
+      "bytes": 5208,
+      "sha256": "7bc0f317316adb65e368681a432f44b08d4856f50341698a901acf483b513772"
+    },
+    "executed_notebook/MSMARCO_RARS_v5_PQ_Aware_100K_Pilot.ipynb": {
+      "bytes": 33333,
+      "sha256": "89a7daa4da625cef81b81d3606543613e3b6233ee1a0c63a4e7773db22b9a249"
+    },
+    "per_query_recall_at_100.json": {
+      "bytes": 20653,
+      "sha256": "ea30319a3535dfb97c5cba7f60fefa201eb2e4c3f987a64c63cadaed58a749a7"
+    },
+    "pilot_result.json": {
+      "bytes": 2055,
+      "sha256": "79b81e82ebb43b8c62ffa9e4b45de111a4f448c28c50513817b3d3b33f4789b9"
+    },
+    "training_complete.json": {
+      "bytes": 3395,
+      "sha256": "f912cc6a188c23f1fd64c48b379db976b8378ae59d490e33ed85405f11d3fce6"
+    },
+    "training_history.json": {
+      "bytes": 1719,
+      "sha256": "cb4b042581324ddff336e4c527bf1005f278883f3f2d160fdfd257a11feb095d"
+    },
+    "training_started.json": {
+      "bytes": 1556,
+      "sha256": "757e90b724c5fe826d376004784edd18c13c0b7dc1fe9f9927d9445dfa50f59f"
+    }
+  }
+}

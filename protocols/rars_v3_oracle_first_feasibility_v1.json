@@ -1,0 +1,243 @@
+{
+  "protocol_id": "rars_v3_oracle_first_feasibility_v1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_FIRST_ORACLE_RUN",
+  "research_question": "Does a label-aware but non-deployable 0/8/16/32-byte progressive residual-code oracle expose broad, compression-consistent Recall@10 headroom over the best design-frozen 640-byte matched-access comparator, including a strong fixed 16-byte sidecar?",
+  "scope": "development-only matched-access feasibility; no learned allocator, storage-compression claim, QAT, deployment, or external confirmation",
+  "parent_lineage": {
+    "closed_v2_2_commit": "32291e2aed75a99999e83e5d168b1133b70cc866",
+    "parent_training_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+    "parent_v2_2_protocol_id": "rars_v2_2_boundary_loss_development_v1",
+    "parent_inner_train_manifest_sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e",
+    "parent_inner_train_source_manifest_sha256": "084b31bf280e919380520a6b88ed5e27b880b473e87dda31132e33e1463dba17",
+    "parent_inner_train_query_manifest_sha256": "57a3f543387443d8cd68c0c0ba57f7af77969b85dcb0b527b1de045e70d4b832",
+    "closed_inner_validation_query_manifest_sha256": "a1e46416720edf5ae2690793fbc55bdb0eaaa717e22a507cedb955f722506e79",
+    "parent_v2_2_split_audit_sha256": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f",
+    "outer_validation_split_sha256": "1d816f01d46c2f8891af72ceedcdfa06ab1a790b2cc96fbe72019b36a348eac1",
+    "clean_test_split_sha256": "9b8b277585aedb31fc85d4f5cf8a3996443fcdd03193d833eae978ef58f2b24c",
+    "frozen_doc_ids_sha256": "99b85b2f051c85490cf6b7bdcff35712236d06ca0d987cb5b385a147bff90e96",
+    "frozen_pca_basis_sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec",
+    "frozen_pca_config_sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4",
+    "frozen_pca_scales_sha256": "7f2efa852dc11b6079e1d23e153de00e45119e4d3cfba40c97be0c72e3fc3bf6",
+    "frozen_pca_codes_sha256": "20bc05d1e5e645e85ca23ff07a420da8e732a311ecb2a2969025b21cde1ad41f"
+  },
+  "data_policy": {
+    "source_pool": {
+      "role_id": "inner_train",
+      "query_count": 3961,
+      "evidence_status": "DEVELOPMENT_ONLY",
+      "historical_disclosure": "All 3,961 queries previously participated in v2 development. The new audit role is withheld only from v3 design; it is not independent or untouched confirmation."
+    },
+    "split_rule": {
+      "hash": "u64_big_endian(SHA256('rars_v3_split_v1\\0' || canonical_qid_utf8)[0:8]) mod 10",
+      "oracle_design_buckets": [0, 1, 2, 3, 4, 5],
+      "oracle_audit_buckets": [6, 7],
+      "future_method_holdout_buckets": [8, 9],
+      "resampling_or_balancing_allowed": false
+    },
+    "roles": {
+      "oracle_design": {
+        "query_count": 2307,
+        "source_order_newline_qid_sha256": "952219a667ecfcd8cad5e18475531ceba73720054fae3344227dbdd008491fb6",
+        "numeric_sorted_newline_qid_sha256": "fd1d351a848ee9650fb898ef51ce16f64d1712d39179259d52dc94dcf93956b4",
+        "materialized_role_labels_allowed_for": [
+          "registered baseline selection",
+          "design-fold diagnostics",
+          "oracle implementation validation"
+        ]
+      },
+      "oracle_audit": {
+        "query_count": 851,
+        "source_order_newline_qid_sha256": "60a760cf5e8b8a4f9c238bc52a24448d3699e271d99fe15af69d80aec39ecc8a",
+        "numeric_sorted_newline_qid_sha256": "e636bec43a8ff0de91ba2073b74f5ec5f4c22ac6fd2808654d7dd6c7c54a2bf9",
+        "role_labels_materialization_allowed_only_after_design_freeze": true,
+        "candidate_arrays_allowed_only_after_design_freeze_in_evaluator": true
+      },
+      "future_method_holdout": {
+        "query_count": 803,
+        "source_order_newline_qid_sha256": "41a1908b386cdf8bcd5e2905b88d99e66e3e1b392916c55643f36bd215ae95a8",
+        "numeric_sorted_newline_qid_sha256": "8e4c2516af5c82f5caefbe03842cecda36b7bb9c810c4aeb90a05e7aca7181d3",
+        "candidate_retrieval_allowed_in_this_gate": false,
+        "role_labels_or_metrics_allowed_in_this_gate": false
+      }
+    },
+    "design_fold_rule": "u64_big_endian(SHA256('rars_v3_fold_v1\\0' || canonical_qid_utf8)[0:8]) mod 5",
+    "design_fold_counts": [463, 468, 470, 436, 470],
+    "forbidden_outcome_roles": [
+      "v2.2 inner_validation",
+      "burned outer validation",
+      "clean MS MARCO test",
+      "BEIR NQ",
+      "TREC DL 2019",
+      "future_method_holdout"
+    ],
+    "label_lineage_disclosure": "The ephemeral v2.2 inner_train bundle may first be re-materialized with the exact frozen v2.2 builder, which necessarily reopens the historical shared qrels JSON and reproduces the preregistered parent hashes. V3 builder/evaluator code does not open qrels. It reuses only the exact hash-registered candidate_relevance and relevant_counts arrays in that parent bundle. A separate V3 process selects oracle_design label rows before design and oracle_audit label rows only after design_freeze.json is durable. The parent source array is procedurally, not cryptographically, sealed; this is a development audit, not independent confirmation. Future-holdout identity rows are written only for split auditing; their candidate and label payload rows are never selected or written by V3. Closed-role rows are used only for identity-overlap auditing and never for candidates, labels, or metrics."
+  },
+  "frozen_retrieval": {
+    "dataset": "MS MARCO passage 1M development corpus",
+    "embedding_dimension": 384,
+    "base_index": "the exact hash-registered v2.2 inner_train IVF-PQ M32 nlist512 nprobe16 candidate arrays",
+    "nprobe": 16,
+    "candidate_k": 100,
+    "correction_depth": 40,
+    "final_k": 10,
+    "tie_break": "score descending, document_id ascending",
+    "base_index_mutation_allowed": false,
+    "candidate_retrieval_performed_in_v3": false,
+    "candidate_source": "deterministic row subset of the exact frozen v2.2 inner_train Top-100 arrays",
+    "candidate_reordering_allowed": false
+  },
+  "progressive_representation": {
+    "basis": "one uncentered second-moment truncated-SVD rank-32 residual basis fit without labels on oracle_design candidate-union residuals",
+    "rank": 32,
+    "sample_count_maximum": 100000,
+    "sample_seed": 42,
+    "orientation": "largest-absolute entry in every basis column must be non-negative",
+    "tiers_code_bytes": [0, 8, 16, 32],
+    "prefix_contract": "8, 16, and 32 are prefixes of the same ordered rank-32 code; per-tier basis fitting is forbidden",
+    "coefficient_dtype": "int8",
+    "scale": "one design-frozen global max-absolute scale per coefficient: max_abs / 127",
+    "rounding": "numpy.rint then clip to [-127, 127]",
+    "accumulation_dtype": "float32",
+    "alpha": 0.75,
+    "zero_tier": "no sidecar read and exactly zero correction"
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "numpy_quantile_method": "linear",
+    "blas_configuration_must_be_recorded": true,
+    "singular_values_and_adjacent_gaps_must_be_recorded": true,
+    "faiss_required_by_v3_candidate_builder_or_evaluator": false
+  },
+  "score_references": {
+    "Exact40": "ann score plus exact FP32 query-residual dot product at frozen base ranks 1 through 40; ranks 41 through 100 remain base",
+    "Exact100": "ann score plus exact FP32 query-residual dot product for all frozen Top-100 candidates",
+    "QrelCandidate100": "candidate-pool relevance packing ceiling; diagnostic only",
+    "interpretation": "Exact40 and Exact100 are compression-consistent score-rescore references, not qrels-optimal or deployable methods"
+  },
+  "matched_access_oracle": {
+    "label": "QUERY_LABEL_ORACLE_NON_DEPLOYABLE",
+    "action_tiers_code_bytes": [0, 8, 16, 32],
+    "variable_candidates": "frozen base ranks 1 through 40",
+    "fixed_candidates": "ranks 41 through 100 use rate 0 and still compete for Top-10",
+    "budget_curve_bytes_per_query": [0, 320, 640, 1280],
+    "primary_budget_bytes_per_query": 640,
+    "objective": "maximize judged-relevant count in final Top-10, equivalent to maximizing per-query Recall@10",
+    "solver": "exact dynamic program over every stable score threshold, Top-10 selected count, and 8-byte budget unit",
+    "optimality_requirement": "enumerate all candidate-rate threshold keys and return the proven global optimum",
+    "objective_ties": [
+      "minimum accessed code bytes",
+      "deterministic threshold and ascending document-ID traversal"
+    ],
+    "storage_caveat": "This oracle assumes a full rank-32 progressive code could exist. It constrains accessed code bytes, not persistent serialized storage."
+  },
+  "registered_matched_baselines": {
+    "primary_selection_role": "oracle_design",
+    "selection_metric": "highest Recall@10; ties use fewer accessed bytes then lexical method name",
+    "audit_reselection_allowed": false,
+    "eligible_640_byte_methods": [
+      "frozen_pca_rank16_int8",
+      "uniform_progressive_rank16_int8",
+      "residual_norm_top20_rank32_else0",
+      "base_boundary_top20_rank32_else0",
+      "design_candidate_exposure_top20_rank32_else0"
+    ],
+    "secondary_only": [
+      "ten_seed_random_top20_rank32_else0",
+      "uniform_progressive_rank8_int8",
+      "uniform_progressive_rank32_int8",
+      "Exact40",
+      "Exact100",
+      "QrelCandidate100"
+    ]
+  },
+  "metric_contract": {
+    "primary_metric": "macro mean Recall@10 over queries",
+    "primary_contrast": "Oracle16 minus the design-frozen best matched 16-byte baseline",
+    "required_support": [
+      "improved, harmed, unchanged query counts",
+      "positive and negative gain mass",
+      "top-1-percent positive gain concentration",
+      "effective positive support",
+      "paired query bootstrap interval"
+    ],
+    "bootstrap": {
+      "replicates": 20000,
+      "confidence": 0.95,
+      "rng": "NumPy PCG64",
+      "seed": 20260719,
+      "same_resample_indices_for_all_methods": true
+    },
+    "counterfactual_recovery": {
+      "primary_reference": "positive per-query Exact40-minus-design-frozen-primary-comparator Recall mass",
+      "secondary_reference": "positive per-query Exact40-minus-Base Recall mass, reported but not gated",
+      "comparator_CFR8_minimum": 0.2,
+      "comparator_CFR16_minimum": 0.35,
+      "minimum_comparator_relative_oracle_positive_gain_mass_reducing_exact40_top10_distance": 0.7
+    }
+  },
+  "access_gate": {
+    "minimum_exact40_gain_over_comparator": 0.01,
+    "minimum_oracle_gain_over_comparator": 0.01,
+    "minimum_bootstrap_lower_bound": 0.005,
+    "minimum_positive_support_queries": 40,
+    "minimum_positive_support_fraction": 0.05,
+    "expected_effective_audit_support_queries": 43,
+    "maximum_harm_to_positive_mass_ratio": 0.3333333333333333,
+    "maximum_top_1pct_positive_gain_concentration": 0.4,
+    "minimum_effective_positive_support": 30.0,
+    "minimum_comparator_counterfactual_recovery_fraction_8b": 0.2,
+    "minimum_comparator_counterfactual_recovery_fraction_16b": 0.35,
+    "minimum_comparator_positive_gain_mass_with_exact_distance_reduction_fraction": 0.7,
+    "minimum_positive_design_folds": 4,
+    "minimum_worst_design_fold_gain": -0.002
+  },
+  "formal_decisions": {
+    "INVALID": "Any lineage, split, hash, solver-optimality, byte-budget, artifact, or access-policy check fails",
+    "KILL_NO_SCORE_HEADROOM": "Exact40 leaves less than 0.010 Recall@10 over the frozen primary comparator or has no positive comparator-relative compression-recovery mass",
+    "STOP_NO_HEADROOM": "The matched-access oracle fails any primary effect, CI, support, harm, concentration, fold, or recovery gate",
+    "GO_TO_STATIC_STORAGE_ORACLE": "All matched-access checks pass; this authorizes only a separately frozen static-storage oracle protocol"
+  },
+  "later_stage_guards": {
+    "learned_allocator_allowed_before_static_storage_oracle": false,
+    "qat_allowed": false,
+    "deployment_claim_allowed": false,
+    "storage_compression_claim_allowed": false,
+    "external_test_access_allowed": false,
+    "go_result_is_method_success": false
+  },
+  "artifact_policy": {
+    "exact_clean_git_head_required": true,
+    "canonical_run_fingerprint_required": true,
+    "candidate_freeze_must_be_qrels_and_label_free": true,
+    "design_freeze_required_before_audit_role_labels_are_materialized_or_audit_arrays_are_loaded": true,
+    "design_freeze_must_register": [
+      "basis, scales, singular values, adjacent singular-value gaps, and sample rows",
+      "all registered baseline per-query scores and selected primary comparator",
+      "design oracle scores, rate assignments, fold diagnostics, and exact-solver preflight",
+      "access gates, bootstrap contract, budgets, and execution environment",
+      "protocol, source, builder, core, and evaluator hashes",
+      "split audit, future identity, bundle-freeze summary, query role manifests, candidate arrays, and design role labels"
+    ],
+    "partial_run_reuse_allowed": false,
+    "complete_run_reuse": "only when the fingerprint and every top-level and design-freeze registered output hash match recursively",
+    "source_builder": "scripts/build_msmarco_rars_v3_oracle_bundles.py",
+    "role_label_materializer": "scripts/materialize_rars_v3_role_labels.py",
+    "core": "scripts/rars_v3_oracle_core.py",
+    "evaluator": "scripts/evaluate_rars_v3_oracle_first_feasibility.py"
+  },
+  "prohibited_actions": [
+    "editing this protocol after any oracle result is observed",
+    "using v2.2 inner-validation, outer, clean-test, NQ, or TREC outcomes",
+    "reading or materializing future_method_holdout labels or metrics in this gate",
+    "materializing oracle_audit labels before design_freeze.json is durable and verified",
+    "retrieving or reordering candidates instead of subsetting the exact frozen v2.2 inner_train arrays",
+    "fitting a separate basis or scale for each tier",
+    "calling the query-label oracle a deployable method",
+    "claiming persistent-storage savings from the accessed-byte oracle",
+    "starting training, QAT, or an external evaluation from this result"
+  ],
+  "method_revision_allowed": false,
+  "outcome_informed_revision_allowed": false
+}

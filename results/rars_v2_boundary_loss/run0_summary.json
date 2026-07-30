@@ -1,0 +1,32 @@
+{
+  "status": "no_go_implementation_mismatch_diagnostic",
+  "protocol_id": "rars_v2_boundary_loss_feasibility_v1",
+  "source_commit": "e4e25a845593fb76a84809ee93e92e0477a91ef1",
+  "seed": 42,
+  "development_dataset": "MS MARCO 1M clean validation",
+  "query_count": 1000,
+  "smoke_1_epoch": {
+    "base_recall_at_10": 0.6766666666666667,
+    "boundary_int8_recall_at_10": 0.6866666666666668,
+    "int8_gain_over_base": 0.01,
+    "pca_recall_at_10": 0.7043333333333334,
+    "improved_queries": 15,
+    "harmed_queries": 5
+  },
+  "registered_5_epochs": {
+    "boundary_fp32_recall_at_10": 0.3835,
+    "boundary_int8_recall_at_10": 0.3845,
+    "int8_gain_over_base": -0.29216666666666663,
+    "int8_gain_over_pca": -0.31983333333333336,
+    "improved_queries": 52,
+    "harmed_queries": 352,
+    "decision": "NO_GO_OR_REVISE"
+  },
+  "audit_findings": [
+    "training pairs included relevant candidates at ranks 41-100 although inference corrected only Top-40",
+    "unbounded correction magnitude caused FP32 and int8 collapse together",
+    "the failure is not primarily caused by int8 quantization"
+  ],
+  "test_qrels_accessed": false,
+  "beir_nq_used_for_retuning": false
+}

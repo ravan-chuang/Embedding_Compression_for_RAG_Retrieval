@@ -1,0 +1,172 @@
+[
+  {
+    "fold": 0,
+    "training_query_count": 1844,
+    "validation_query_count": 463,
+    "training_pair_support": {
+      "total_pairs": 5932,
+      "promotion": {
+        "pairs": 764,
+        "queries": 207,
+        "positive_residual_rows": 210,
+        "challenger_residual_rows": 753,
+        "balanced_weight_sum": 0.4999999701976776
+      },
+      "protection": {
+        "pairs": 5168,
+        "queries": 1254,
+        "positive_residual_rows": 1292,
+        "challenger_residual_rows": 4758,
+        "balanced_weight_sum": 0.4999999403953552
+      }
+    },
+    "optimization_initial_loss": 0.07550542851576687,
+    "optimization_final_loss": 0.08781959093566997,
+    "quantization": {
+      "coefficient_count": 2635936,
+      "saturated_coefficients": 0,
+      "saturation_fraction": 0.0
+    },
+    "validation_rars": {
+      "recall": 0.7424406047516199,
+      "mrr": 0.5160350029140526,
+      "ndcg": 0.5666699323727797
+    }
+  },
+  {
+    "fold": 1,
+    "training_query_count": 1839,
+    "validation_query_count": 468,
+    "training_pair_support": {
+      "total_pairs": 6030,
+      "promotion": {
+        "pairs": 774,
+        "queries": 211,
+        "positive_residual_rows": 215,
+        "challenger_residual_rows": 756,
+        "balanced_weight_sum": 0.5
+      },
+      "protection": {
+        "pairs": 5256,
+        "queries": 1274,
+        "positive_residual_rows": 1314,
+        "challenger_residual_rows": 4823,
+        "balanced_weight_sum": 0.4999999403953552
+      }
+    },
+    "optimization_initial_loss": 0.07574453487421572,
+    "optimization_final_loss": 0.08765205822536473,
+    "quantization": {
+      "coefficient_count": 2635936,
+      "saturated_coefficients": 0,
+      "saturation_fraction": 0.0
+    },
+    "validation_rars": {
+      "recall": 0.6876780626780628,
+      "mrr": 0.48089981006647675,
+      "ndcg": 0.5257142841483401
+    }
+  },
+  {
+    "fold": 2,
+    "training_query_count": 1837,
+    "validation_query_count": 470,
+    "training_pair_support": {
+      "total_pairs": 6038,
+      "promotion": {
+        "pairs": 738,
+        "queries": 201,
+        "positive_residual_rows": 205,
+        "challenger_residual_rows": 721,
+        "balanced_weight_sum": 0.5
+      },
+      "protection": {
+        "pairs": 5300,
+        "queries": 1284,
+        "positive_residual_rows": 1325,
+        "challenger_residual_rows": 4838,
+        "balanced_weight_sum": 0.5
+      }
+    },
+    "optimization_initial_loss": 0.07482604266695415,
+    "optimization_final_loss": 0.08677496118333976,
+    "quantization": {
+      "coefficient_count": 2635936,
+      "saturated_coefficients": 0,
+      "saturation_fraction": 0.0
+    },
+    "validation_rars": {
+      "recall": 0.6861702127659575,
+      "mrr": 0.4789311043566363,
+      "ndcg": 0.5266730329470946
+    }
+  },
+  {
+    "fold": 3,
+    "training_query_count": 1871,
+    "validation_query_count": 436,
+    "training_pair_support": {
+      "total_pairs": 6122,
+      "promotion": {
+        "pairs": 794,
+        "queries": 216,
+        "positive_residual_rows": 219,
+        "challenger_residual_rows": 779,
+        "balanced_weight_sum": 0.5
+      },
+      "protection": {
+        "pairs": 5328,
+        "queries": 1292,
+        "positive_residual_rows": 1332,
+        "challenger_residual_rows": 4900,
+        "balanced_weight_sum": 0.4999999403953552
+      }
+    },
+    "optimization_initial_loss": 0.07713079797857882,
+    "optimization_final_loss": 0.08843311298633424,
+    "quantization": {
+      "coefficient_count": 2635936,
+      "saturated_coefficients": 0,
+      "saturation_fraction": 0.0
+    },
+    "validation_rars": {
+      "recall": 0.7110091743119266,
+      "mrr": 0.5093026430755788,
+      "ndcg": 0.5552959934561281
+    }
+  },
+  {
+    "fold": 4,
+    "training_query_count": 1837,
+    "validation_query_count": 470,
+    "training_pair_support": {
+      "total_pairs": 6014,
+      "promotion": {
+        "pairs": 778,
+        "queries": 209,
+        "positive_residual_rows": 211,
+        "challenger_residual_rows": 762,
+        "balanced_weight_sum": 0.5
+      },
+      "protection": {
+        "pairs": 5236,
+        "queries": 1276,
+        "positive_residual_rows": 1309,
+        "challenger_residual_rows": 4830,
+        "balanced_weight_sum": 0.5
+      }
+    },
+    "optimization_initial_loss": 0.07515246140927685,
+    "optimization_final_loss": 0.08824916192648309,
+    "quantization": {
+      "coefficient_count": 2635936,
+      "saturated_coefficients": 0,
+      "saturation_fraction": 0.0
+    },
+    "validation_rars": {
+      "recall": 0.6879432624113476,
+      "mrr": 0.4838947990543735,
+      "ndcg": 0.5281328882435111
+    }
+  }
+]

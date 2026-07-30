@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "registry_id": "rars_v2_data_access_registry_v1",
+  "msmarco_outer_validation_v1": {
+    "query_count": 1000,
+    "evidence_status": "BURNED_DEVELOPMENT_ONLY",
+    "first_outcome_access_commit": "e4e25a845593fb76a84809ee93e92e0477a91ef1",
+    "method_revision_after_access": true,
+    "documented_revision_commit": "07aed4aa6b6d07d1ee6e860c0e0632136231b230",
+    "selection_allowed": false,
+    "future_use": [
+      "reproduce_existing_v2_1_result",
+      "clearly labeled historical development diagnosis"
+    ],
+    "confirmatory_claim_allowed": false
+  },
+  "beir_nq_official_test": {
+    "evidence_status": "USED_BY_RARS_V1_CONFIRMATION_AND_POSTHOC_METHOD_MOTIVATION",
+    "v2_confirmatory_reuse_allowed": false
+  },
+  "trec_dl_2019": {
+    "evidence_status": "USED_BY_RARS_V1_EXTERNAL_SENSITIVITY",
+    "v2_confirmatory_reuse_allowed": false
+  },
+  "new_v2_external_test": {
+    "evidence_status": "NOT_SELECTED",
+    "required_initial_state": "SEALED_UNOPENED"
+  }
+}

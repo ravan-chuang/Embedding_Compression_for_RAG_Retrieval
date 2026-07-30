@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_fp32_replication_v1",
+  "parent_protocol_id": "rars_v2_2_boundary_loss_development_v1",
+  "replication_protocol": {
+    "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v2_2_replication_control/protocols/rars_v2_2_fp32_replication_v1.json",
+    "bytes": 16504,
+    "sha256": "014d30b9740348f0b44e9d8e8d305e3f5a1ec219b561e30ac988079d54604d10"
+  },
+  "aggregator": {
+    "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v2_2_replication_control/scripts/aggregate_rars_v2_2_fp32_replication.py",
+    "bytes": 58263,
+    "sha256": "64dab39bf6f5b7905552ced2994fa8247265df5ffc7df6c93a44f6a021c3741d"
+  },
+  "metric_helper": {
+    "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v2_2_replication_control/scripts/train_boundary_loss_sidecar.py",
+    "bytes": 26455,
+    "sha256": "b547ff5961a86917da1ed01ec7aceeab04e4140f14be626a595550fb1bede294"
+  },
+  "environment_manifest": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/replication_environment.json",
+    "bytes": 1720,
+    "sha256": "4de4f768f0a921954bf58800218f68d6c1df8e2a2f2141cb65367b7b62187dc7"
+  },
+  "split_audit": {
+    "path": "/content/rars-v2.2-bb9b106e69b9/bundles/v2_2_split_audit.json",
+    "bytes": 2937,
+    "sha256": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f"
+  },
+  "train_bundle_manifest": {
+    "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/v2_2_manifest.json",
+    "bytes": 4124,
+    "sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e"
+  },
+  "selection_bundle_manifest": {
+    "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/v2_2_manifest.json",
+    "bytes": 4182,
+    "sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d"
+  },
+  "query_manifest": {
+    "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_validation/query_manifest.json",
+    "bytes": 24694,
+    "sha256": "a1e46416720edf5ae2690793fbc55bdb0eaaa717e22a507cedb955f722506e79"
+  },
+  "pca_basis": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars_pca_comparator_v1/bases/pca_unweighted_rank16.float32.npy",
+    "bytes": 24704,
+    "sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec"
+  },
+  "pca_config": {
+    "path": "/content/Embedding_Compression_for_RAG_Retrieval_rars_v2_2/results/rars_pca_comparator/selected_pca_config.json",
+    "bytes": 908,
+    "sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4"
+  },
+  "runs": {
+    "42": {
+      "directory": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/seed42-fp32-stage-a",
+      "run_id": "0956f2f51c2183020a9d68ecb6a89987f7bcef99e0587ceb507a05f303a03b83",
+      "training_complete_sha256": "67d155c5d00c3e8751e265cf6b3b5d7d4a3bc237010713fa49af48966c99ca4a",
+      "fingerprint_payload": {
+        "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+        "source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+        "trainer_sha256": "61eb3c9cc10ef7032246f28671fdb59bea81ffc2fc29e866c53526fe4e13eae0",
+        "core_sha256": "1ee96d77dde59d365613b1d5b8726a56b05312500584e28cd49e41f7dbe61299",
+        "train_bundle_manifest_sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e",
+        "selection_bundle_manifest_sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d",
+        "pca_basis_sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec",
+        "pca_config_sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4",
+        "configuration": {
+          "rank": 16,
+          "top_b": 40,
+          "final_k": 10,
+          "epochs": 10,
+          "batch_size": 2048,
+          "score_batch_size": 256,
+          "max_negatives_per_positive": 8,
+          "promotion_mix": 0.8,
+          "minimum_margin": 0.0001,
+          "margin_multiplier": 1.0,
+          "learning_rate": 0.0001,
+          "weight_decay": 0.0001,
+          "correction_l2": 0.001,
+          "max_correction": 0.05,
+          "max_grad_norm": 5.0,
+          "seed": 42,
+          "minimum_gain_over_base": 0.01135,
+          "minimum_gain_over_pca": 0.005,
+          "device": "cuda"
+        }
+      }
+    },
+    "43": {
+      "directory": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/seed43-fp32",
+      "run_id": "4c4de84eb1cd8226371d95f7bf7927970755c98b7765e0e1363c5e4c2b5ae330",
+      "training_complete_sha256": "4bc3ea503db94c9b709dccd813210f28ede158f9d8d9eb0ea2f08f7110e8e89e",
+      "fingerprint_payload": {
+        "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+        "source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+        "trainer_sha256": "61eb3c9cc10ef7032246f28671fdb59bea81ffc2fc29e866c53526fe4e13eae0",
+        "core_sha256": "1ee96d77dde59d365613b1d5b8726a56b05312500584e28cd49e41f7dbe61299",
+        "train_bundle_manifest_sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e",
+        "selection_bundle_manifest_sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d",
+        "pca_basis_sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec",
+        "pca_config_sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4",
+        "configuration": {
+          "rank": 16,
+          "top_b": 40,
+          "final_k": 10,
+          "epochs": 10,
+          "batch_size": 2048,
+          "score_batch_size": 256,
+          "max_negatives_per_positive": 8,
+          "promotion_mix": 0.8,
+          "minimum_margin": 0.0001,
+          "margin_multiplier": 1.0,
+          "learning_rate": 0.0001,
+          "weight_decay": 0.0001,
+          "correction_l2": 0.001,
+          "max_correction": 0.05,
+          "max_grad_norm": 5.0,
+          "seed": 43,
+          "minimum_gain_over_base": 0.01135,
+          "minimum_gain_over_pca": 0.005,
+          "device": "cuda"
+        }
+      }
+    },
+    "44": {
+      "directory": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/seed44-fp32",
+      "run_id": "31f8dc9f41426d026797bc63864dcce713b475cbcb6c6c226517aa0cba6bc547",
+      "training_complete_sha256": "b877a4c17c7b2e23d70f5af0317f4f8adbbd9d2dd7f68664b90104973a6d19b3",
+      "fingerprint_payload": {
+        "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+        "source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+        "trainer_sha256": "61eb3c9cc10ef7032246f28671fdb59bea81ffc2fc29e866c53526fe4e13eae0",
+        "core_sha256": "1ee96d77dde59d365613b1d5b8726a56b05312500584e28cd49e41f7dbe61299",
+        "train_bundle_manifest_sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e",
+        "selection_bundle_manifest_sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d",
+        "pca_basis_sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec",
+        "pca_config_sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4",
+        "configuration": {
+          "rank": 16,
+          "top_b": 40,
+          "final_k": 10,
+          "epochs": 10,
+          "batch_size": 2048,
+          "score_batch_size": 256,
+          "max_negatives_per_positive": 8,
+          "promotion_mix": 0.8,
+          "minimum_margin": 0.0001,
+          "margin_multiplier": 1.0,
+          "learning_rate": 0.0001,
+          "weight_decay": 0.0001,
+          "correction_l2": 0.001,
+          "max_correction": 0.05,
+          "max_grad_norm": 5.0,
+          "seed": 44,
+          "minimum_gain_over_base": 0.01135,
+          "minimum_gain_over_pca": 0.005,
+          "device": "cuda"
+        }
+      }
+    }
+  },
+  "fingerprints_invariant_except_seed": true,
+  "bundle_rebuild_validation": "accepted only because rebuilt manifests, split audit, and all bundle file records exactly match the frozen hashes",
+  "environment": {
+    "schema_version": 1,
+    "protocol_id": "rars_v2_2_fp32_replication_v1",
+    "training_source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+    "control_commit": "00a0dee30767b04b8c650c28d63f4f662ef61517",
+    "seed42_run_id": "0956f2f51c2183020a9d68ecb6a89987f7bcef99e0587ceb507a05f303a03b83",
+    "trainer_sha256": "61eb3c9cc10ef7032246f28671fdb59bea81ffc2fc29e866c53526fe4e13eae0",
+    "core_sha256": "1ee96d77dde59d365613b1d5b8726a56b05312500584e28cd49e41f7dbe61299",
+    "aggregator_sha256": "64dab39bf6f5b7905552ced2994fa8247265df5ffc7df6c93a44f6a021c3741d",
+    "metric_helper_sha256": "b547ff5961a86917da1ed01ec7aceeab04e4140f14be626a595550fb1bede294",
+    "execution": {
+      "mode": "fresh_child_process",
+      "python_executable": "/usr/bin/python3",
+      "numpy_module_path": "/content/rars-v2.2-numpy126/numpy/__init__.py",
+      "numpy_target": "/content/rars-v2.2-numpy126",
+      "pip_freeze_mode": "base_plus_target_numpy_override"
+    },
+    "versions": {
+      "python_version": "3.12.13",
+      "numpy_version": "1.26.4",
+      "torch_version": "2.11.0+cu128",
+      "torch_cuda_version": "12.8",
+      "faiss_version": "1.12.0"
+    },
+    "hardware": {
+      "device": "cuda",
+      "gpu_name": "Tesla T4",
+      "compute_capability": "7.5",
+      "cudnn_version": "91900",
+      "cuda_driver_version": "580.82.07"
+    },
+    "determinism": {
+      "deterministic_algorithms_supported_and_enabled": true,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "cublas_workspace_config": "UNSET"
+    },
+    "pip_freeze_sha256": "8263d67870d6b514a24668758a70cca80d4f1581f6ddaf32cdcecf6bf4a86e06",
+    "protocol_sha256": "014d30b9740348f0b44e9d8e8d305e3f5a1ec219b561e30ac988079d54604d10",
+    "created_utc": "2026-07-18T17:20:03.883646+00:00"
+  }
+}

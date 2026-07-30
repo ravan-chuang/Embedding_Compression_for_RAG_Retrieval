@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v8_cutoff_sidecar_v1",
+  "method": "rars",
+  "files": {
+    "basis.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/basis.float32.npy",
+      "bytes": 24704,
+      "sha256": "0d3e0cdf94ee5e68e60c63a1736809129d60d9fd9d8e09845b727f8527721bd9"
+    },
+    "scales.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/scales.float32.npy",
+      "bytes": 192,
+      "sha256": "d32ee1e2cf7a2850bc81b96dfdcc8746d40a2b75a503d9486b5e9f66f24b43ec"
+    },
+    "codes.int8.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/codes.int8.npy",
+      "bytes": 16000128,
+      "sha256": "f7ae81b07c8423f0527d68d535ba89be56eb9f86bcb630306e3d9699e57948b4"
+    },
+    "sidecar_config.json": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v8-cutoff-sidecar/c9d95f15d55e/sidecars/rars/sidecar_config.json",
+      "bytes": 601,
+      "sha256": "a63fc1a713c1a16106da32362996580a9ec210942d7d0e52e9eb1b6c498fabc7"
+    }
+  },
+  "quantization": {
+    "coefficient_count": 16000000,
+    "saturated_coefficients": 0,
+    "saturation_fraction": 0.0
+  },
+  "storage": {
+    "code_payload_bytes_per_document": 16,
+    "representation_bytes": 16025024,
+    "representation_bytes_per_document": 16.025024,
+    "external_document_id_bytes_duplicated": 0,
+    "configuration_bytes_excluded_from_representation": 601
+  }
+}

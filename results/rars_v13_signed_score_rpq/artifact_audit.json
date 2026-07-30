@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "RARS_V13_COMMITTED_CLOSURE_AUDITED",
+  "audit_date": "2026-07-23",
+  "source_commit": "d8cb761c289fe17ea2c2bfb92059e8b5553cfd74",
+  "formal_decision": "STOP_SIGNED_SCORE_RPQ_NO_STABLE_ADVANTAGE",
+  "source_archive": {
+    "filename": "rars-v13-signed-score-rpq-d8cb761c289f.zip",
+    "bytes": 16423941,
+    "sha256": "809e73f46ee0e1886e1264757dbc95aefafb679a6cc7eba8277044d91d53f4ec"
+  },
+  "executed_notebook": {
+    "filename": "MSMARCO_RARS_v13_Signed_Score_RPQ_Development.ipynb",
+    "bytes": 38354,
+    "sha256": "208235069a2435dea6360a7b2b0ffa2edd20ad60074b027cbae866ee65d2a6cc",
+    "cell_sources_match_source_commit": true,
+    "code_execution_counts": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "error_output_count": 0
+  },
+  "packet_verification": {
+    "status": "RARS_V13_PACKET_VERIFIED",
+    "verified_output_count": 38,
+    "query_count": 5000,
+    "primary_gain": 0.0006,
+    "primary_ci95": [-0.0006, 0.0018],
+    "primary_randomization_p_value": 0.25501744982550173,
+    "changed_query_support": {
+      "improved": 6,
+      "harmed": 3,
+      "unchanged": 4991
+    },
+    "seed_gains": [0.0006, 0.0006, 0.0006],
+    "seed_changed_query_stability": {
+      "changed_counts": [9, 11, 9],
+      "union_count": 29,
+      "pairwise_overlap_counts": [0, 0, 0],
+      "three_way_overlap_count": 0
+    },
+    "fold_gains": [
+      0.0,
+      0.0,
+      0.0009624639076034649,
+      0.0,
+      0.0020491803278688526
+    ]
+  },
+  "external_full_corpus_payload": {
+    "path_in_original_packet": "development/full_corpus_signed_score_assignments.uint8.memmap",
+    "committed_to_git": false,
+    "document_count": 1000000,
+    "shape": [1000000, 16],
+    "dtype": "uint8",
+    "bytes": 16000000,
+    "bytes_per_document": 16,
+    "sha256": "3896c1fcbba37997c7881c723af8e6b38dbf619f36aa0153ddc78e97cd28e664",
+    "minimum_occupied_centroids_per_block": 256,
+    "maximum_occupied_centroids_per_block": 256,
+    "verified_before_repository_import": true
+  },
+  "closure_scope": "all decision-bearing arrays and lineage are committed; only the independently hashed 16 MB full-corpus payload is external"
+}

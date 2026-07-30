@@ -1,0 +1,65 @@
+{
+  "protocol_id": "rars_v2_boundary_loss_feasibility_v1",
+  "role_id": "inner_train",
+  "split_role": "train",
+  "source": "MS MARCO 1M clean deterministic development split",
+  "query_count": 3961,
+  "candidate_count": 100,
+  "residual_scope": "candidate_union",
+  "unique_candidate_document_count": 240599,
+  "files": {
+    "query_vectors.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/query_vectors.float32.npy",
+      "bytes": 6084224,
+      "sha256": "763c2365a58ee24ae98666dab5ae3092b52f4fb6dcf1124947ee52222e7f7c32"
+    },
+    "ann_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/ann_rows.int64.npy",
+      "bytes": 3168928,
+      "sha256": "f84c715e8143cb640ec982a87414ebee3abfbe31c47f39b6d10d1b6b7c317a4c"
+    },
+    "ann_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/ann_scores.float32.npy",
+      "bytes": 1584528,
+      "sha256": "20a27d35ff2209cc488e206062c6a228c44ef50fe7ac0af4450ffe95dfe7fc4d"
+    },
+    "candidate_relevance.uint8.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/candidate_relevance.uint8.npy",
+      "bytes": 396228,
+      "sha256": "989e127425b26ce5ad0294c38874c26b82274e46628239f41b22e15e24245ec7"
+    },
+    "relevant_counts.int32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/relevant_counts.int32.npy",
+      "bytes": 15972,
+      "sha256": "0b67a344d7392889ec8ae88679c1f4955f776dc7ffc409028861c70ff33bd9c0"
+    },
+    "candidate_doc_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/candidate_doc_rows.int64.npy",
+      "bytes": 1924920,
+      "sha256": "4e9e371d118e57b4268cbbd9cab6b86bb8c628d47fc0a8ff3a85b86a4fb3856c"
+    },
+    "ann_residual_rows.int64.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/ann_residual_rows.int64.npy",
+      "bytes": 3168928,
+      "sha256": "3fd8cda475c0219211fba88073f7fa8b3967e8ec14c1a3f38428336fce5593f5"
+    },
+    "pca_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/pca_scores.float32.npy",
+      "bytes": 1584528,
+      "sha256": "23f4625aca00dcd36c3678ebfe3db587069a9c440967571b6aa702b4d8c80796"
+    },
+    "rars_scores.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/rars_scores.float32.npy",
+      "bytes": 1584528,
+      "sha256": "fde5047aedb511da17be57656b8611679c1ff09def35aaaccda2077eb9058b86"
+    },
+    "candidate_residuals.float32.npy": {
+      "path": "/content/rars-v2.2-bb9b106e69b9/bundles/inner_train/candidate_residuals.float32.npy",
+      "bytes": 369560192,
+      "sha256": "396a2d8190e8aa7cab3c14226d9da541110f96100aca8121118151f9b30c1b24"
+    }
+  },
+  "development_qrels_used": true,
+  "test_qrels_accessed": false,
+  "nq_test_retuning_authorized": false
+}

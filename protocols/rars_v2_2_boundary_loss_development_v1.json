@@ -1,0 +1,88 @@
+{
+  "protocol_id": "rars_v2_2_boundary_loss_development_v1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_V2_2_TRAINING",
+  "research_question": "Can a PCA-warm-started rank-16 FP32 bilinear residual scorer recover MS MARCO Top-10 relevance boundary errors better than FP32 PCA before any quantization is introduced?",
+  "scope": "development feasibility only",
+  "data_policy": {
+    "fit_role_id": "inner_train",
+    "selection_role_id": "inner_validation",
+    "outer_validation": {
+      "role_id": "msmarco_outer_validation_v1",
+      "evidence_status": "BURNED_DEVELOPMENT_ONLY",
+      "selection_allowed": false,
+      "trainer_access_allowed": false,
+      "confirmatory_claim_allowed": false
+    },
+    "clean_msmarco_test_access_allowed": false,
+    "beir_nq_test_access_allowed": false,
+    "trec_dl_2019_access_allowed": false,
+    "new_external_test": "TBD and SEALED_UNOPENED until the full v2 method and evaluator are frozen",
+    "source_qrels_disclosure": "The legacy 6,980-query MS MARCO qrels container was opened and parsed by the source bundle builder. Only inner-train and inner-validation entries entered bundle labels, loss, selection, or metrics. This is development data, not untouched evidence."
+  },
+  "frozen_index": {
+    "candidate_k": 100,
+    "final_k": 10,
+    "correction_depth": 40,
+    "base_index_mutation_allowed": false
+  },
+  "stage_a_fp32_method": {
+    "rank": 16,
+    "query_projection_initialization": "alpha times the frozen PCA rank-16 basis",
+    "document_projection_initialization": "the frozen PCA rank-16 basis",
+    "query_gate": "absent",
+    "quantization": "absent",
+    "score": "ann_score + 0.05 * tanh(dot(qWq, residualWd) / 0.05) for frozen ANN positions 1 through 40",
+    "maximum_absolute_per_document_correction": 0.05,
+    "dynamic_pair_mining": "recomputed from current FP32 rankings at the start of every epoch",
+    "promotion_pairs": "correctable relevant candidates currently outside Top-10 versus currently retrieved unjudged-as-negative Top-10 candidates",
+    "protection_pairs": "currently retrieved relevant candidates versus the highest-scoring correctable unjudged-as-negative candidates outside Top-10",
+    "promotion_loss_mass": 0.8,
+    "protection_loss_mass": 0.2,
+    "query_weighting": "equal total weight per contributing query within each pair type",
+    "target_margin": "max(0.0001, one times the current local rank-10/rank-11 score gap)",
+    "unjudged_candidate_treatment": "unjudged-as-negative",
+    "maximum_negatives_per_positive": 8
+  },
+  "optimization": {
+    "maximum_epochs": 10,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "correction_l2": 0.001,
+    "maximum_gradient_norm": 5.0,
+    "seed_for_first_gate": 42,
+    "epoch_selection": "highest inner-validation FP32 Recall@10, with epoch 0 PCA warm-start eligible and earliest epoch winning ties"
+  },
+  "stage_a_stop_rule": {
+    "minimum_gain_over_base_recall_at_10": 0.01135,
+    "minimum_gain_over_pca_fp32_recall_at_10": 0.005,
+    "both_thresholds_required": true,
+    "failure_action": "STOP_RANK16_LEARNED_SIDECAR",
+    "success_action": "run frozen FP32 seeds 42, 43, and 44 before defining a QAT stage"
+  },
+  "later_stage_guards": {
+    "qat_allowed_before_stage_a_pass": false,
+    "outer_evaluation_allowed_before_three_seed_fp32_replication": false,
+    "full_corpus_int8_deployment_claim_allowed_before_export_and_serving_parity": false,
+    "required_preclaim_decomposition": [
+      "base_m32",
+      "exact_top40_direct_dot_product",
+      "pca_r16_fp32",
+      "pca_r16_int8",
+      "rars_v1_r16_fp32",
+      "rars_v1_r16_int8",
+      "boundary_r16_fp32",
+      "boundary_r16_int8"
+    ]
+  },
+  "artifact_policy": {
+    "exact_clean_git_head_required": true,
+    "canonical_run_fingerprint_required": true,
+    "partial_run_reuse_allowed": false,
+    "complete_run_reuse": "only when the full run fingerprint and every output hash match",
+    "trainer": "scripts/train_boundary_loss_sidecar_v2_2.py",
+    "bundle_freezer": "scripts/freeze_rars_v2_2_inner_bundles.py"
+  },
+  "method_revision_allowed": false,
+  "outcome_informed_revision_allowed": false
+}

@@ -1,0 +1,199 @@
+{
+  "protocol_id": "beir_nq_rars_pca_confirmation_v1",
+  "status": "ready_for_design_freeze_before_test_qrels_access",
+  "created_date": "2026-07-14",
+  "research_question": "Does score-error-weighted RARS outperform an ordinary storage-matched residual-PCA sidecar on an independent corpus and query set?",
+  "dataset": {
+    "benchmark": "BEIR",
+    "dataset_id": "nq",
+    "dataset_name": "Natural Questions",
+    "test_archive": {
+      "url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nq.zip",
+      "bytes": 498307926,
+      "md5": "d4d3d2e48787a744b6f6e691ff534307",
+      "sha256": "2553bf7bfbab47b1436ca00a34bce57320e18e611fd00999a2a3a1b4714be752",
+      "stage1_members_allowed": [
+        "corpus.jsonl"
+      ],
+      "stage3_members_allowed": [
+        "queries.jsonl",
+        "qrels/test.tsv"
+      ]
+    },
+    "train_archive": {
+      "url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nq-train.zip",
+      "bytes": 1405702846,
+      "md5": "966435435932347d5513f56fed19161c",
+      "sha256": "3aa8eec8d67174d85c055fce6971fa3127e830335842696756373f491bf391c9",
+      "stage1_members_allowed": [
+        "queries.jsonl",
+        "qrels/train.tsv"
+      ],
+      "corpus_member_prohibited": true
+    },
+    "reference_corpus_documents": 2680000,
+    "reference_test_queries": 3452,
+    "available_splits": [
+      "train",
+      "test"
+    ],
+    "corpus_policy": "full_beir_nq_corpus_only",
+    "qrels_policy": "require_all_positive_in_corpus",
+    "test_qrels_access_before_method_freeze": false
+  },
+  "embedding": {
+    "model": "BAAI/bge-small-en-v1.5",
+    "dimension": 384,
+    "model_snapshot_policy": "save one local Stage-1 snapshot and hash every snapshot file before test access; all later query encoding must load that snapshot",
+    "document_storage_dtype": "float16",
+    "document_compute_dtype": "float32",
+    "query_storage_and_compute_dtype": "float32",
+    "normalize_documents": true,
+    "normalize_queries": true,
+    "document_text": "title newline text when title is non-empty, otherwise text",
+    "query_text": "raw BEIR query text without an added instruction prefix",
+    "batch_size_is_operational_only": true
+  },
+  "query_usage": {
+    "fit_and_validation_source": "BEIR NQ train split query IDs and texts",
+    "train_qrels_relevance_values_used": false,
+    "split_hash": "sha256('beir_nq_rars_pca_confirmation_v1:' + qid)",
+    "train_rule": "uint64(first_16_hex) modulo 10 in {1,2,3,4,5,6,7,8,9}",
+    "validation_rule": "uint64(first_16_hex) modulo 10 equals 0",
+    "test_source": "all official BEIR NQ test query IDs remaining after identity-only prior-overlap exclusions",
+    "test_qrels_access_gate": "method artifacts, selected configs, evaluator, protocol, and pre-qrels manifest must be committed and hashed first",
+    "prior_overlap_rule": "exclude exact query-ID overlap only within the same declared dataset namespace, or exact normalized-query-text overlap across datasets; freeze exclusions before retrieval outcomes",
+    "query_text_normalization": "Unicode NFKC, casefold, collapse all whitespace runs, and strip",
+    "minimum_final_test_queries": 3000
+  },
+  "base_index": {
+    "type": "IndexIVFPQ",
+    "metric": "inner_product",
+    "m": 32,
+    "nbits": 8,
+    "nlist": 2048,
+    "nprobe": 32,
+    "training_document_sample_max": 300000,
+    "training_seed": 42,
+    "coarse_kmeans_iterations": 25,
+    "pq_kmeans_iterations": 25,
+    "build_backend": "single_faiss_gpu_nvidia_t4",
+    "search_backend": "single_faiss_gpu_nvidia_t4",
+    "gpu_float16_lookup_tables": false,
+    "candidate_k": 100,
+    "final_k": 10,
+    "frozen_after_build": true
+  },
+  "shared_sidecar": {
+    "rank": 16,
+    "coefficient_dtype": "int8",
+    "quantizer": "per_coefficient_symmetric_maxabs",
+    "document_order": "identical_to_frozen_index_row_order",
+    "candidate_k": 100,
+    "final_k": 10
+  },
+  "pca": {
+    "method_id": "pca_r16_int8",
+    "basis": "top right singular vectors of an unweighted document-residual sample",
+    "residual_sample_max": 300000,
+    "sample_seed": 42,
+    "sampling": "uniform document rows without replacement, then residual covariance eigendecomposition",
+    "query_labels_used": false,
+    "qrels_used": false
+  },
+  "rars": {
+    "method_id": "rars_r16_int8",
+    "basis": "score_error_weighted",
+    "weight": "absolute exact-minus-IVF-PQ candidate score error",
+    "fit_queries": "train partition only",
+    "residual_sample_draws": 300000,
+    "sampling": "draw document rows with replacement in proportion to summed absolute fit-query candidate score error; aggregate duplicate draw counts before residual covariance eigendecomposition",
+    "method_revision_allowed": false,
+    "query_labels_used": false,
+    "qrels_used": false
+  },
+  "validation": {
+    "selection_signal": "exact Top-10 candidate overlap within the frozen Top-100 candidate pool",
+    "ranking_tie_rule": "stable descending score order preserving frozen candidate order",
+    "qrels_used": false,
+    "alphas": [
+      -2.0,
+      -1.5,
+      -1.0,
+      -0.75,
+      -0.5,
+      -0.25,
+      -0.1,
+      0.0,
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "top_b": [
+      10,
+      20,
+      40,
+      100
+    ],
+    "selection_rule": "for each sidecar, choose the smallest Top-B retaining at least 90% of its maximum validation overlap gain; within that Top-B choose highest overlap; ties by smaller absolute alpha then smaller numeric alpha"
+  },
+  "evaluation": {
+    "systems": [
+      "base_m32",
+      "pca_r16_int8",
+      "rars_r16_int8"
+    ],
+    "primary_metric": "recall@10",
+    "primary_contrast": "rars_r16_int8_minus_pca_r16_int8",
+    "primary_support_rule": "two-sided 95% paired-bootstrap confidence-interval lower bound is greater than zero",
+    "secondary_metrics": [
+      "success@10",
+      "mrr@10",
+      "ndcg@10"
+    ],
+    "secondary_contrasts": [
+      "pca_r16_int8_minus_base_m32",
+      "rars_r16_int8_minus_base_m32"
+    ],
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260720,
+    "interval": "two_sided_percentile_95",
+    "one_shot": true,
+    "all_queries_reported": true,
+    "per_query_metrics_required": true
+  },
+  "freeze_order": [
+    "verify source archive MD5 without opening test qrels",
+    "build full-corpus embeddings and frozen IVF-PQ index",
+    "derive train and validation partitions from NQ train query IDs",
+    "fit PCA and RARS bases and encode both sidecars",
+    "select PCA and RARS alpha and Top-B using validation proxy only",
+    "freeze selected configs, evaluator, hashes, and pre-qrels manifest in Git",
+    "only then access test qrels for identity and coverage audits",
+    "freeze the eligible test-query manifest and qrels hash in a second Git commit",
+    "run Base, PCA, and RARS once, bootstrap once, write all outputs, and stop"
+  ],
+  "forbidden_before_test_qrels_gate": [
+    "opening, parsing, or summarizing qrels/test.tsv",
+    "test-query retrieval",
+    "test-query metric computation",
+    "test-informed exclusions",
+    "test-informed changes to basis, alpha, Top-B, rank, nprobe, candidate depth, metric, or evaluator"
+  ],
+  "decision_rules": {
+    "positive": "claim qualified independent RARS advantage over storage-matched PCA",
+    "null": "claim no established RARS advantage; emphasize residual-sidecar behavior and uncertainty",
+    "negative": "report that ordinary residual PCA generalizes better under this setting"
+  },
+  "resource_estimates": {
+    "document_embeddings_float16_gb": 2.06,
+    "one_rank16_int8_sidecar_codes_gb": 0.043,
+    "two_sidecar_codes_gb": 0.086,
+    "recommended_working_storage_gb": 20,
+    "note": "Estimates use the published approximately 2.68M-document corpus size. Document vectors are stored as float16 and converted to float32 for Faiss and residual computations. Record exact bytes after preparation. Runtime and operational batch sizes are hardware-dependent."
+  }
+}

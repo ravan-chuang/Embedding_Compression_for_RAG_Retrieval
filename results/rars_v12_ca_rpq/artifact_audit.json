@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "RARS_V12_COMMITTED_CLOSURE_AUDITED",
+  "audit_date": "2026-07-22",
+  "source_commit": "07b0fe09b82babb3b06ffd1649266a656dd07df1",
+  "formal_decision": "STOP_CA_RPQ_NO_STABLE_ADVANTAGE",
+  "source_archive": {
+    "filename": "rars-v12-ca-rpq-07b0fe09b82b.zip",
+    "bytes": 16321391,
+    "sha256": "3d2d4e34bcbfa1f7e49aef0b2cefeb9659e7669e00bced40e4480315fd9a3a44"
+  },
+  "executed_notebook": {
+    "filename": "MSMARCO_RARS_v12_Anchored_Cutoff_RPQ_Development.ipynb",
+    "bytes": 36828,
+    "sha256": "57c57a9c15bc18171a91d36282933760566da8af5701a6ad24e3d2e6016ebe95",
+    "cell_sources_match_source_commit": true,
+    "code_execution_counts": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "error_output_count": 0
+  },
+  "packet_verification": {
+    "status": "RARS_V12_PACKET_VERIFIED",
+    "verified_output_count": 33,
+    "query_count": 2500,
+    "primary_gain": 0.0002,
+    "primary_ci95": [-0.0026, 0.0032],
+    "primary_randomization_p_value": 0.4965550344496555,
+    "seed_gains": [0.0002, 0.0012, -0.001],
+    "fold_gains": [
+      0.002008032128514056,
+      -0.0022172949002217295,
+      -0.001976284584980237,
+      -0.0009345794392523365,
+      0.00392156862745098
+    ]
+  },
+  "external_full_corpus_payload": {
+    "path_in_original_packet": "development/full_corpus_ca_rpq_codes.uint8.memmap",
+    "committed_to_git": false,
+    "document_count": 1000000,
+    "shape": [1000000, 16],
+    "dtype": "uint8",
+    "bytes": 16000000,
+    "bytes_per_document": 16,
+    "sha256": "0e54d760ad1f67cf787ef5214412a3c242e0b2dd7736f162b2a77b985b2aad20",
+    "minimum_occupied_centroids_per_block": 256,
+    "maximum_occupied_centroids_per_block": 256,
+    "verified_before_repository_import": true
+  },
+  "closure_scope": "all decision-bearing arrays and lineage are committed; only the independently hashed 16 MB full-corpus payload is external"
+}

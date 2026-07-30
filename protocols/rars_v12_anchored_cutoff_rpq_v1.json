@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v12_anchored_cutoff_rpq_v1",
+  "status": "FROZEN_BEFORE_FIRST_V12_FRESH_DEVELOPMENT_RUN",
+  "research_question": "On genuinely disjoint MS MARCO training queries whose positives occur in the existing frozen 1M corpus, can one closed-form, PCA-anchored cutoff-weighted update of a rank-64 RPQ codebook improve Recall@10 over the storage-identical unsupervised rank-64 RPQ baseline without fold, seed, MRR, nDCG, payload, or centroid-drift failure?",
+  "scope": "fresh-query method development only; no old holdout reuse, independent confirmation, official MS MARCO score, ScaNN claim, SOTA claim, or production-kernel claim",
+  "parent_evidence": {
+    "v11_source_commit": "927fd9e169eb281c6d33787a6862fdbb67099097",
+    "v11_formal_decision": "GO_TO_SEPARATE_CA_RPQ_CUTOFF_PROTOCOL",
+    "v11_base_recall_at_10": 0.6799234214708858,
+    "v11_pca_rank16_int8_recall_at_10": 0.6926383470596735,
+    "v11_pca_rank64_fp32_recall_at_10": 0.7250036121947696,
+    "v11_pca_rank64_rpq16x8_recall_at_10": 0.7208857101574918,
+    "v11_rank64_headroom_retention_fraction": 0.8727678571428572,
+    "runtime_packet_read_allowed": false,
+    "interpretation": "V11 outcomes are disclosed design motivation only. The V12 executable accepts no V11 packet path and refits both baseline and challenger within every fresh-data training fold."
+  },
+  "evidence_boundary": {
+    "tier": "FRESH_QUERY_FIVE_FOLD_METHOD_DEVELOPMENT",
+    "allowed_claim": "the preregistered anchored cutoff-aware centroid update did or did not show stable out-of-fold advantage over its storage-identical unsupervised rank-64 RPQ initializer on the frozen 1M-corpus restricted development task",
+    "forbidden_claims": [
+      "independent confirmation",
+      "official MS MARCO development or leaderboard performance",
+      "generalization beyond the frozen 1M restricted corpus",
+      "ScaNN implementation or superiority",
+      "production-kernel latency or QPS",
+      "state of the art",
+      "opening any old RARS holdout"
+    ]
+  },
+  "fresh_query_freeze": {
+    "source_dataset": "MS MARCO passage ranking v1 training queries and qrels",
+    "official_queries_archive_url": "https://msmarco.z22.web.core.windows.net/msmarcoranking/queries.tar.gz",
+    "official_qrels_url": "https://msmarco.z22.web.core.windows.net/msmarcoranking/qrels.train.tsv",
+    "queries_member": "queries.train.tsv",
+    "target_query_count": 2500,
+    "selection_rule": "among train qids with text and at least one positive passage id in the exact frozen 1M doc-id array, exclude every qid in the three historical 6,980-query split files, sort by SHA256('rars_v12_fresh_train_selection_v1\\0' || canonical_qid_utf8), and take the first 2,500",
+    "selection_seed_offsets": "none",
+    "minimum_corpus_covered_positive_per_query": 1,
+    "relevance_denominator": "all positive qrels for that query whose passage id occurs in the frozen 1M corpus",
+    "restricted_corpus_disclosure_required": true,
+    "prior_qid_sources": [
+      "splits/msmarco_rars_train_qids.json",
+      "splits/msmarco_rars_validation_qids.json",
+      "splits/msmarco_rars_test_qids.json"
+    ],
+    "embedding": {
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "model_revision": "b8903db39f65d93ae28d49a37c4f3fa90c5f94e0",
+      "dimension": 384,
+      "normalize_embeddings": true,
+      "batch_size": 256
+    },
+    "fold_rule": "u64_big_endian(SHA256('rars_v12_fresh_fold_v1\\0' || canonical_qid_utf8)[0:8]) mod 5",
+    "fold_count": 5,
+    "minimum_queries_per_fold": 400,
+    "query_or_fold_resampling_allowed": false,
+    "freeze_must_precede_candidate_or_metric_computation": true
+  },
+  "frozen_index_contract": {
+    "document_count": 1000000,
+    "embedding_dimension": 384,
+    "metric": "inner_product",
+    "nlist": 512,
+    "nprobe": 16,
+    "subquantizers": 32,
+    "bits_per_subquantizer": 8,
+    "index_bytes": 41183924,
+    "index_sha256": "863637a68933a33f3d4c32920f492cab4e52ba83b12863d6f5854e1cc937f0e8",
+    "candidate_pool": 100,
+    "final_cutoff": 10,
+    "correction_depth": 40,
+    "immutable_components": [
+      "query encoder weights",
+      "document embeddings",
+      "coarse quantizer",
+      "inverted lists",
+      "base PQ codebooks",
+      "base PQ codes"
+    ]
+  },
+  "method": {
+    "id": "pca64_anchored_cutoff_rpq16x8",
+    "basis": "one deterministic uncentred PCA rank-64 basis fit only on candidate residual rows reached by the four training folds; the held-out fold contributes no basis, codebook, pair, weight, or hyperparameter information",
+    "rank": 64,
+    "subquantizers": 16,
+    "block_dimension": 4,
+    "bits_per_subquantizer": 8,
+    "payload_bytes_per_document": 16,
+    "alpha": 0.75,
+    "top_b": 40,
+    "baseline": "Faiss ProductQuantizer fit without labels on the same fold-training coefficients, seed, iterations, and payload",
+    "challenger": "one cutoff-weighted closed-form centroid update with the baseline assignments frozen during the update, followed by ordinary nearest-centroid re-encoding",
+    "basis_learning_allowed": false,
+    "query_adapter_allowed": false,
+    "hard_assignment_gradient_allowed": false,
+    "configuration_count": 1
+  },
+  "cutoff_pair_mining": {
+    "source_order": "frozen Base M32 Top-100 order",
+    "known_positive_treatment": "qrels relevance greater than zero",
+    "other_candidate_treatment": "unjudged challenger, never explicit non-relevant",
+    "promotion": "known positive at Base ranks 11..40 versus an unjudged Base Top-10 challenger when same-candidate exact prefers the positive",
+    "protection": "known positive in Base Top-10 versus an unjudged rank 11..26 challenger when same-candidate exact prefers the positive",
+    "protection_window": 16,
+    "maximum_challengers_per_positive": 4,
+    "margin_temperature": 0.02,
+    "damage_scale": 4.0,
+    "promotion_mass": 0.5
+  },
+  "cutoff_weighting": {
+    "block_sensitivity": "squared L2 norm of the PCA-projected query within each four-dimensional RPQ block, normalized to sum to one per pair",
+    "documents_receiving_pair_mass": "both the known-positive and unjudged-challenger residual rows",
+    "base_weight": 1.0,
+    "cutoff_boost": 8.0,
+    "protection_multiplier": 2.0,
+    "maximum_document_block_weight": 25.0,
+    "normalization": "within each block, active residual rows receive mean additive boost eight before clipping"
+  },
+  "centroid_update": {
+    "updates": 1,
+    "assignment_during_update": "frozen unsupervised RPQ assignment",
+    "anchor_pseudocount": 32.0,
+    "maximum_centroid_drift_fraction_of_training_block_rms": 0.25,
+    "empty_cell_policy": "remain byte-identical to the unsupervised centroid",
+    "objective": "weighted within-cell coefficient squared error plus anchor_pseudocount times squared centroid drift",
+    "objective_must_not_increase": true,
+    "post_update_encoding": "ordinary nearest updated centroid"
+  },
+  "rpq_training": {
+    "implementation": "Faiss ProductQuantizer on fixed PCA coefficients",
+    "iterations": 12,
+    "redos": 1,
+    "seeds": [20260901, 20260902, 20260903],
+    "primary_seed": 20260901,
+    "omp_threads": 1,
+    "minimum_points_per_centroid": 1,
+    "maximum_points_per_centroid": 64,
+    "all_seeds_run_in_all_folds": true
+  },
+  "cross_validation": {
+    "fold_count": 5,
+    "training_folds_per_run": 4,
+    "heldout_folds_per_run": 1,
+    "out_of_fold_primary_endpoint": true,
+    "final_all-development_fit_is_export_only": true,
+    "final_fit_cannot_change_the_oof_decision": true
+  },
+  "full_corpus_sidecar": {
+    "required": true,
+    "document_count": 1000000,
+    "code_dtype": "uint8",
+    "code_shape": [1000000, 16],
+    "payload_bytes": 16000000,
+    "minimum_occupied_centroids_per_block": 16,
+    "basis_and_codebook_overhead_reported_separately": true,
+    "materialization_occurs_only_after_oof_arrays_are_complete": true
+  },
+  "inference": {
+    "confidence": 0.95,
+    "bootstrap_replicates": 50000,
+    "randomization_replicates": 100000,
+    "primary_vs_unsupervised": {
+      "bootstrap_seed": 20260911,
+      "randomization_seed": 20260912
+    },
+    "primary_vs_base": {
+      "bootstrap_seed": 20260913,
+      "randomization_seed": 20260914
+    },
+    "seed_offsets": "none"
+  },
+  "development_gate": {
+    "minimum_recall_gain_over_unsupervised": 0.003,
+    "minimum_recall_gain_over_base": 0.01,
+    "bootstrap_lower_must_exceed": 0.0,
+    "maximum_randomization_p_value": 0.05,
+    "minimum_improved_queries": 20,
+    "minimum_net_improved_queries": 10,
+    "minimum_each_seed_gain": 0.0,
+    "minimum_median_seed_gain": 0.002,
+    "minimum_worst_fold_gain": 0.0,
+    "minimum_candidate_gap_recovery_fraction": 0.2,
+    "minimum_mrr_change": -0.002,
+    "minimum_ndcg_change": -0.002,
+    "maximum_centroid_drift_fraction": 0.25,
+    "go_decision": "GO_TO_FRESH_CA_RPQ_CONFIRMATION_PROTOCOL",
+    "stop_decision": "STOP_CA_RPQ_NO_STABLE_ADVANTAGE",
+    "go_authorizes_only_protocol_writing": true,
+    "old_holdout_reuse_authorized": false,
+    "fresh_confirmation_access_authorized": false
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_package": "faiss-gpu-cu12==1.12.0",
+    "faiss_version": "1.12.0",
+    "sentence_transformers_version": "3.4.1",
+    "gpu_name_must_contain": "T4",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_required": true,
+    "cudnn_benchmark": false
+  },
+  "self_audit_outputs": {
+    "query_ids_required": true,
+    "fold_ids_required": true,
+    "per_query_recall_mrr_ndcg_required_for_base_exact_unsupervised_and_challenger": true,
+    "per_seed_arrays_required": true,
+    "source_and_input_sha256_required": true,
+    "packet_verifier_required": true
+  },
+  "prohibited_actions": [
+    "reading a V9, V10, or V11 result packet from the V12 freezer or trainer",
+    "using any of the historical 6,980 MS MARCO dev qids",
+    "opening oracle_audit or future_method_holdout",
+    "using the held-out fold to fit PCA, RPQ, cutoff pairs, weights, centroids, alpha, Top-B, or gates",
+    "changing the method, weights, drift radius, seed list, or decision thresholds after outcomes appear",
+    "selecting the best seed or fold",
+    "calling an unjudged challenger explicitly non-relevant",
+    "claiming official MS MARCO performance from the restricted 1M corpus",
+    "claiming production efficiency from the Python development evaluator"
+  ]
+}

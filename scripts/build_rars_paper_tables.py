@@ -591,6 +591,73 @@ def build_significance_table() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def build_external_system_table() -> pd.DataFrame:
+    """Build the frozen external aggregate table without mixing protocols."""
+    root = (
+        ROOT
+        / "results"
+        / "external_confirmation"
+        / "trec_dl_2019_msmarco_1m_restricted"
+    )
+    metrics = load_json(root / "evaluation_v1" / "metrics.json")
+    manifest = load_json(root / "external_confirmation_manifest.json")
+
+    rows = []
+    for system_id, display_name in [
+        ("base_m32", "Base IVF-PQ M32"),
+        ("pca_r16_int8", "PCA rank-16 int8"),
+        ("rars_r16_int8", "RARS rank-16 int8"),
+    ]:
+        result = metrics[system_id]
+        rows.append(
+            {
+                "System": display_name,
+                "Queries": int(manifest["query_count"]),
+                "Recall@10": result["recall@10"],
+                "Success@10": result["success@10"],
+                "MRR@10": result["mrr@10"],
+                "nDCG@10": result["ndcg@10"],
+                "Evaluation": "TREC DL 2019 / frozen 1M corpus restriction",
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+
+def build_external_contrast_table() -> pd.DataFrame:
+    """Build the preregistered external RARS-minus-PCA contrast table."""
+    source = load_json(
+        ROOT
+        / "results"
+        / "external_confirmation"
+        / "trec_dl_2019_msmarco_1m_restricted"
+        / "evaluation_v1"
+        / "paired_bootstrap.json"
+    )["rars_minus_pca"]
+
+    rows = []
+    for metric in ["recall@10", "success@10", "mrr@10", "ndcg@10"]:
+        result = source[metric]
+        rows.append(
+            {
+                "Contrast": "RARS minus PCA",
+                "Metric": metric.replace("ndcg", "nDCG").replace(
+                    "recall", "Recall"
+                ).replace("success", "Success").replace("mrr", "MRR"),
+                "Mean difference": result["difference"],
+                "95% CI low": result["ci_low"],
+                "95% CI high": result["ci_high"],
+                "Bootstrap P(diff>0)": result[
+                    "probability_difference_gt_zero"
+                ],
+                "Bootstrap samples": result["replicates"],
+                "Seed": result["seed"],
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+
 def build_storage_table() -> pd.DataFrame:
     storage = load_json(
         ROOT
@@ -634,6 +701,105 @@ def build_storage_table() -> pd.DataFrame:
     )
 
 
+def build_v2_2_fp32_replication_table() -> pd.DataFrame:
+    result_root = ROOT / "results" / "rars_v2_2_fp32_replication"
+    aggregate = result_root / "aggregate-00a0dee30767"
+    summary = load_json(aggregate / "replication_summary.json")
+    decision = load_json(aggregate / "replication_decision.json")
+
+    assert summary["decision"] == "UNSTABLE_NO_QAT"
+    assert decision["decision"] == "UNSTABLE_NO_QAT"
+    assert decision["qat_protocol_definition_authorized"] is False
+    required_support = int(
+        decision[
+            "positive_support_queries_required_per_heldout_seed_and_contrast"
+        ]
+    )
+    comparators = summary["comparators"]
+    base = float(comparators["base_recall_at_10"])
+    pca = float(comparators["direct_pca_fp32_recall_at_10"])
+
+    rows: list[dict[str, Any]] = [
+        {
+            "System / seed": "Frozen Base",
+            "Role": "Comparator",
+            "Recall@10": base,
+            "Gain vs Base": 0.0,
+            "Gain vs PCA": np.nan,
+            "Improved vs PCA": np.nan,
+            "Harmed vs PCA": np.nan,
+            "Support gate": "N/A",
+        },
+        {
+            "System / seed": "Direct PCA FP32",
+            "Role": "Decision comparator",
+            "Recall@10": pca,
+            "Gain vs Base": pca - base,
+            "Gain vs PCA": 0.0,
+            "Improved vs PCA": np.nan,
+            "Harmed vs PCA": np.nan,
+            "Support gate": "N/A",
+        },
+    ]
+
+    for item in summary["per_seed"]:
+        seed = int(item["seed"])
+        improved = int(item["vs_pca_fp32"]["improved_queries"])
+        rows.append(
+            {
+                "System / seed": f"RARS-v2.2 seed {seed}",
+                "Role": (
+                    "Observed anchor" if seed == 42 else "Held-out optimizer seed"
+                ),
+                "Recall@10": float(item["v2_2_fp32_recall_at_10"]),
+                "Gain vs Base": float(item["gain_over_base"]),
+                "Gain vs PCA": float(item["gain_over_pca_fp32"]),
+                "Improved vs PCA": improved,
+                "Harmed vs PCA": int(item["vs_pca_fp32"]["harmed_queries"]),
+                "Support gate": (
+                    "N/A"
+                    if seed == 42
+                    else ("Pass" if improved >= required_support else "Fail")
+                ),
+            }
+        )
+
+    heldout = summary["groups"]["heldout_replication_seeds"]
+    all_seeds = summary["groups"]["all_seeds"]
+    rows.extend(
+        [
+            {
+                "System / seed": "RARS-v2.2 held-out mean",
+                "Role": "Seeds 43/44",
+                "Recall@10": float(
+                    heldout["v2_2_fp32_recall_at_10"]["mean"]
+                ),
+                "Gain vs Base": float(heldout["gain_over_base"]["mean"]),
+                "Gain vs PCA": float(heldout["gain_over_pca_fp32"]["mean"]),
+                "Improved vs PCA": np.nan,
+                "Harmed vs PCA": np.nan,
+                "Support gate": "Overall fail",
+            },
+            {
+                "System / seed": "RARS-v2.2 all-seed mean",
+                "Role": "Descriptive seeds 42/43/44",
+                "Recall@10": float(
+                    all_seeds["v2_2_fp32_recall_at_10"]["mean"]
+                ),
+                "Gain vs Base": float(all_seeds["gain_over_base"]["mean"]),
+                "Gain vs PCA": float(all_seeds["gain_over_pca_fp32"]["mean"]),
+                "Improved vs PCA": np.nan,
+                "Harmed vs PCA": np.nan,
+                "Support gate": "Descriptive",
+            },
+        ]
+    )
+    frame = pd.DataFrame(rows)
+    for column in ("Improved vs PCA", "Harmed vs PCA"):
+        frame[column] = frame[column].astype("Int64")
+    return frame
+
+
 def main() -> None:
     args = parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -666,13 +832,38 @@ def main() -> None:
         ),
         "paper_significance_table": (
             build_significance_table(),
-            "Paired bootstrap comparison of RARS and PCA.",
+            "Developmental paired bootstrap comparison of RARS and PCA.",
             "tab:rars-significance",
+        ),
+        "paper_external_system_table": (
+            build_external_system_table(),
+            (
+                "Frozen TREC DL 2019 evaluation restricted to the "
+                "MS MARCO 1M indexed corpus."
+            ),
+            "tab:rars-external-systems",
+        ),
+        "paper_external_contrast_table": (
+            build_external_contrast_table(),
+            (
+                "Frozen external RARS-minus-PCA paired-bootstrap "
+                "contrasts."
+            ),
+            "tab:rars-external-contrasts",
         ),
         "paper_storage_table": (
             build_storage_table(),
             "Serialized RARS storage accounting.",
             "tab:rars-storage",
+        ),
+        "paper_rars_v2_2_fp32_table": (
+            build_v2_2_fp32_replication_table(),
+            (
+                "RARS-v2.2 FP32 optimizer-seed replication on the same "
+                "1,019 development queries. Held-out refers to seeds, not "
+                "queries or datasets; the formal decision is UNSTABLE_NO_QAT."
+            ),
+            "tab:rars-v2-2-fp32",
         ),
     }
 
@@ -700,8 +891,14 @@ python scripts/build_rars_paper_tables.py
 - `paper_pca_transfer_table.*`: legacy PCA residual-sidecar transfer summary
 - `paper_system_table.*`: live Faiss latency and overhead
 - `paper_ablation_table.*`: alpha and Top-B ablations
-- `paper_significance_table.*`: paired bootstrap results
+- `paper_significance_table.*`: developmental paired-bootstrap results
+- `paper_external_system_table.*`: frozen external aggregate metrics
+- `paper_external_contrast_table.*`: frozen external RARS-minus-PCA contrasts
 - `paper_storage_table.*`: serialized storage accounting
+- `paper_rars_v2_2_fp32_table.*`: three-seed FP32 development replication
+- `paper_clean_rars_main.*`: static frozen clean-pipeline held-out metrics
+- `paper_clean_rars_significance.*`: static frozen clean-pipeline bootstrap
+- `paper_rars_overlap_sensitivity.*`: static project-history overlap audit
 
 ## Interpretation constraints
 
@@ -714,8 +911,17 @@ python scripts/build_rars_paper_tables.py
 - `Paired E2E overhead %` is reported separately because multi-threaded timing
   is sensitive to scheduling noise.
 - Small non-zero or negative Top0 deltas are timing noise.
-- The RARS-vs-PCA bootstrap confidence intervals cross zero, so the paper
-  should claim a positive point estimate rather than statistical superiority.
+- The developmental RARS-vs-PCA table uses the earlier MS MARCO query pool and
+  must not be presented as external confirmation.
+- The preregistered external Recall@10 contrast is negative and its confidence
+  interval crosses zero; the external primary hypothesis was not supported.
+- The external set contains 42 eligible queries and only the judgments covered
+  by the frozen 1M corpus. It is not an official full-corpus TREC result.
+- The clean-pipeline held-out split is not untouched across complete project
+  history; 137 queries overlapped with an earlier exploratory query set.
+- The v2.2 table is development-only optimizer-seed evidence. Seed 44 has 10
+  positive-support queries versus PCA, below the frozen requirement of 11, so
+  the formal decision is `UNSTABLE_NO_QAT` and QAT is not authorized.
 """
     (args.output_dir / "README.md").write_text(readme, encoding="utf-8")
 

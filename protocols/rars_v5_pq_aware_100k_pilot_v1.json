@@ -1,0 +1,209 @@
+{
+  "protocol_id": "rars_v5_pq_aware_100k_pilot_v1",
+  "schema_version": 1,
+  "status": "IMPLEMENTATION_FROZEN_BEFORE_FIRST_100K_PILOT_OUTCOME",
+  "research_question": "Can rank-8 query/document residual adapters trained through fixed-codebook hard-forward IVF residual-PQ recover end-to-end 100K Recall@100 without degrading Recall@10 or the adapted FP32 teacher, before any new RARS sidecar is fitted?",
+  "scope": "outcome-informed 100K development pilot only; no full-corpus, external, RARS-superiority, SIGIR-readiness, or deployment claim",
+  "positioning": {
+    "method_name": "stage-aligned PQ-aware adapter pilot",
+    "primary_contribution_claimed": false,
+    "plain_reconstruction_qat_is_novel": false,
+    "ranking_loss_through_pq_is_novel": false,
+    "eligible_later_contribution": "PQ-aware candidate-pool preservation followed by fixed-budget RARS cutoff recovery under a measured storage-latency frontier",
+    "rars_stage_authorized_by_this_protocol": false
+  },
+  "parent_lineage": {
+    "closed_v2_2_commit": "32291e2aed75a99999e83e5d168b1133b70cc866",
+    "v3_implementation_commit": "05c2ae43b7d11783460822d10c590240dab1a399",
+    "v3_observed_formal_decision": "STOP_NO_HEADROOM",
+    "v4_implementation_commit": "bbdf8656881fd32d1961610d1c0b5c6d989fcc7a",
+    "v4_protocol_id": "rars_v4_tristate_action_feasibility_v1",
+    "prior_negative_evidence_must_remain_disclosed": true
+  },
+  "data_policy": {
+    "dataset": "MS MARCO passage historical development data, deterministic 100K corpus pilot",
+    "evidence_status": "OBSERVED_DEVELOPMENT_ONLY_NOT_INDEPENDENT_CONFIRMATION",
+    "training_role": {
+      "source": "already-observed v3 oracle_design",
+      "source_query_count": 2307,
+      "allowed_use": "adapter fitting and fixed pair mining"
+    },
+    "selection_role": {
+      "source": "already-observed v3 oracle_audit",
+      "source_query_count": 851,
+      "allowed_use": "epoch selection and the frozen pilot decision"
+    },
+    "pilot_corpus": {
+      "source_corpus_document_count": 1000000,
+      "document_count": 100000,
+      "selection": "all judged-positive documents already observed inside source-role Top-100 candidates, followed by deterministic random fill from the frozen 1M corpus",
+      "seed": 20260720,
+      "known_positive_denominator": "only positive documents observed inside the two source candidate roles",
+      "selection_candidate_generation": "label-independent end-to-end IVF-PQ retrieval; missing positives are never appended to selection results",
+      "official_msmarco_recall_claim_allowed": false
+    },
+    "future_method_holdout": {
+      "query_count": 803,
+      "allowed_to_open": false,
+      "candidate_arrays_allowed": false,
+      "labels_allowed": false,
+      "metrics_allowed": false,
+      "claim_status": "identity-only development holdout; not independent confirmation"
+    },
+    "forbidden_outcome_sources": [
+      "future_method_holdout",
+      "MS MARCO outer validation",
+      "MS MARCO clean test",
+      "BEIR NQ",
+      "TREC DL 2019",
+      "FiQA",
+      "SciFact",
+      "any new external collection"
+    ],
+    "zero_label_semantics": "mined unjudged hard negative; never explicit non-relevant",
+    "raw_qrels_read_by_v5_builder": false
+  },
+  "pilot_index": {
+    "embedding_dimension": 384,
+    "metric": "inner_product",
+    "normalized_embeddings_required": true,
+    "index": "IVF-PQ",
+    "nlist": 256,
+    "nprobe": 16,
+    "subquantizers": 32,
+    "bits_per_subquantizer": 8,
+    "candidate_k": 200,
+    "candidate_pool_metric_k": 100,
+    "final_metric_k": 10,
+    "coarse_assignments_fixed_during_adapter_training": true,
+    "pq_codebooks_fixed_during_adapter_training": true,
+    "residual_pq_code_assignments": "recomputed by hard nearest-codeword assignment for adapted documents; a later deployment would require corpus re-encoding",
+    "hard_forward_required": true,
+    "soft_assignment_primary_result_allowed": false
+  },
+  "adapter": {
+    "encoder_frozen": true,
+    "query_adapter": "normalized residual rank-8 linear adapter",
+    "document_adapter": "normalized residual rank-8 linear adapter",
+    "rank": 8,
+    "bias": false,
+    "initialization": "down normal std 0.02; up zeros; exact identity at epoch 0",
+    "trainable_parameter_count": 12288,
+    "pq_centroid_updates_allowed": false,
+    "ivf_centroid_updates_allowed": false,
+    "full_encoder_updates_allowed": false
+  },
+  "objective": {
+    "pair_source": "judged-positive versus unjudged hard candidates around the fixed PQ rank-100 boundary",
+    "teacher": "original FP32 inner-product pair margin",
+    "student": "adapted query against hard reconstructed adapted document",
+    "losses": [
+      "weighted pairwise softplus on hard-PQ margin",
+      "SmoothL1 FP32 pair-margin distillation",
+      "adapted-document to detached hard-PQ reconstruction MSE",
+      "query/document cosine-drift guardrail"
+    ],
+    "recall_is_directly_differentiated": false,
+    "pq_induced_flip_weighting": true,
+    "training_pair_refresh": false,
+    "selection_evaluation": "end-to-end 100K IVF-PQ search at every epoch with nprobe=16 and no positive injection"
+  },
+  "frozen_training_configuration": {
+    "seed": 42,
+    "epochs": 8,
+    "batch_size": 1024,
+    "adapter_scale": 1.0,
+    "score_batch_size": 8192,
+    "retrieval_query_batch_size": 32,
+    "device": "cuda",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "negative_window": 16,
+    "negatives_per_positive": 4,
+    "mining_margin_temperature": 0.05,
+    "damage_scale": 8.0,
+    "flip_bonus": 2.0,
+    "rank_margin": 0.001,
+    "loss_temperature": 0.05,
+    "margin_loss_weight": 0.5,
+    "reconstruction_loss_weight": 0.01,
+    "drift_loss_weight": 0.01,
+    "maximum_gradient_norm": 1.0,
+    "checkpoint_selection": [
+      "maximum end-to-end hard-IVF-PQ known-positive Recall@100",
+      "maximum end-to-end hard-IVF-PQ known-positive Recall@10",
+      "maximum full-scan adapted-FP32 known-positive Recall@100",
+      "earliest epoch"
+    ]
+  },
+  "stage_a_gate": {
+    "minimum_hard_pq_recall_at_100_gain": 0.005,
+    "minimum_paired_bootstrap_lower": 0.0,
+    "minimum_teacher_gap_recovery_fraction": 0.15,
+    "minimum_improved_queries": 20,
+    "minimum_improved_query_fraction": 0.02,
+    "maximum_hard_pq_recall_at_10_drop": 0.002,
+    "maximum_adapted_fp32_recall_at_100_drop": 0.002,
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260720,
+    "go_decision": "GO_TO_THREE_SEED_100K_REPLICATION",
+    "stop_decision": "STOP_PQ_AWARE_100K_PILOT"
+  },
+  "later_stage_guards": {
+    "go_is_method_success": false,
+    "go_authorizes_only": "exact replication of this 100K pilot with seeds 43 and 44",
+    "one_million_document_rebuild_allowed": false,
+    "rars_training_allowed": false,
+    "future_holdout_open_allowed": false,
+    "external_evaluation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_later_baselines": [
+    "plain IVF-PQ M32",
+    "OPQ-IVF-PQ M32",
+    "global reconstruction-MSE adapter",
+    "PQ-aware adapter only",
+    "ordinary PCA sidecar only",
+    "current RARS only",
+    "PQ-aware adapter plus PCA sidecar",
+    "PQ-aware adapter plus RARS",
+    "rebuilt IVF-PQ M48 equal-storage baseline",
+    "FP32 exact and exact-within-candidate upper bounds"
+  ],
+  "artifact_policy": {
+    "implementation_source_commit_must_be_full_length": true,
+    "nonempty_output_reuse_allowed": false,
+    "bundle_and_role_file_hash_verification_required": true,
+    "epoch_zero_identity_evaluation_required": true,
+    "hard_pq_selection_required": true,
+    "epoch_zero_must_reproduce_builder_ivfpq_recall": true,
+    "adapter_matrices_exported_as_float32_npy": true,
+    "builder": "scripts/build_rars_v5_pq_aware_100k_bundle.py",
+    "core": "scripts/rars_v5_pq_aware_core.py",
+    "trainer": "scripts/train_rars_v5_pq_aware_adapter.py"
+  },
+  "execution_environment_contract": {
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "faiss_package": "faiss-gpu-cu12==1.12.0",
+    "gpu_name_must_contain": "T4",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_required": true,
+    "cudnn_benchmark": false
+  },
+  "prohibited_actions": [
+    "editing this protocol after the first 100K pilot metric is observed",
+    "opening or materializing future_method_holdout arrays or labels",
+    "calling an unjudged document explicit non-relevant",
+    "using official MS MARCO terminology for the known-positive pilot metric",
+    "selecting a checkpoint with soft or fake PQ scores",
+    "injecting missing relevant documents into selection retrieval results",
+    "updating the full encoder, IVF centroids, PQ codebooks, or IVF coarse assignments in Stage A",
+    "training RARS, rebuilding the 1M index, or opening an external collection after a single-seed GO",
+    "claiming that ranking-aware PQ training or pairwise cutoff loss is new"
+  ],
+  "method_revision_allowed": false,
+  "outcome_informed_revision_allowed": false
+}

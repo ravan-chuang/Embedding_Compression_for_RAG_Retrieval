@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v5_pq_aware_100k_pilot_v1",
+  "status": "TRAINING_COMPLETE",
+  "run_id": "3820883ba4aae9c5b58f815f9a42ec484d793f171bd22eb45d9f1c70df9b7dd9",
+  "source_commit": "93105ae1895974e28b34952c2dd777f037c6e0bf",
+  "formal_decision": "STOP_PQ_AWARE_100K_PILOT",
+  "started": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/training_started.json",
+    "bytes": 1556,
+    "sha256": "757e90b724c5fe826d376004784edd18c13c0b7dc1fe9f9927d9445dfa50f59f"
+  },
+  "history": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/training_history.json",
+    "bytes": 1719,
+    "sha256": "cb4b042581324ddff336e4c527bf1005f278883f3f2d160fdfd257a11feb095d"
+  },
+  "result": {
+    "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/pilot_result.json",
+    "bytes": 2055,
+    "sha256": "79b81e82ebb43b8c62ffa9e4b45de111a4f448c28c50513817b3d3b33f4789b9"
+  },
+  "outputs": {
+    "query_adapter_down.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/query_adapter_down.float32.npy",
+      "bytes": 12416,
+      "sha256": "3fe2103a983b0ef63a4c7197e1e3dad326af4d35e25e257ca7be5971f973652c"
+    },
+    "query_adapter_up.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/query_adapter_up.float32.npy",
+      "bytes": 12416,
+      "sha256": "661157272b1c480dfd8581dc796984ac7404348390651975eef372459c3bef2d"
+    },
+    "document_adapter_down.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/document_adapter_down.float32.npy",
+      "bytes": 12416,
+      "sha256": "cda6d8529221ed4b785e6a1a72ab6d65556431f257a4eccb14d7131de8cad9b5"
+    },
+    "document_adapter_up.float32.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/document_adapter_up.float32.npy",
+      "bytes": 12416,
+      "sha256": "17fd63f61e7a1ab5ada09ebdaace85bab9280bbbcca54f533cf3fcc97adbd2a9"
+    },
+    "selection_hard_pq_top_rows.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/selection_hard_pq_top_rows.int64.npy",
+      "bytes": 582528,
+      "sha256": "223d644a9a94207ffbaa5fb7418219edb54ebacd54ce1f1ea47c92b80b1c4ef4"
+    },
+    "selection_adapted_fp32_top_rows.int64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/selection_adapted_fp32_top_rows.int64.npy",
+      "bytes": 582528,
+      "sha256": "553d547d428e9d4e11002acfe9ebcb28618886f9dd489d322c7d43698df7c0ac"
+    },
+    "selection_base_recall_at_100.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/selection_base_recall_at_100.float64.npy",
+      "bytes": 5952,
+      "sha256": "d3f04406de2cfdb702b3af3fa2a4eaad4e7f34365113972fc971b95536b18c2f"
+    },
+    "selection_adapter_recall_at_100.float64.npy": {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v5-pq-aware-100k/93105ae18959/seed42/selection_adapter_recall_at_100.float64.npy",
+      "bytes": 5952,
+      "sha256": "3840af5576b62a1f3410de030a5b1dc5296729e7931f87c1737d8aaea38e4695"
+    }
+  }
+}

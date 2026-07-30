@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_fp32_replication_v1",
+  "training_source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+  "control_commit": "00a0dee30767b04b8c650c28d63f4f662ef61517",
+  "artifacts": [
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/heldout_batch_execution.json",
+      "bytes": 2467,
+      "sha256": "16892bd71ca1524b0bdc36150dfb44f65a6bf608a321ade24f2600586121fc4d"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/replication_environment.json",
+      "bytes": 1720,
+      "sha256": "4de4f768f0a921954bf58800218f68d6c1df8e2a2f2141cb65367b7b62187dc7"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/pip_freeze.txt",
+      "bytes": 14025,
+      "sha256": "8263d67870d6b514a24668758a70cca80d4f1581f6ddaf32cdcecf6bf4a86e06"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/input-audit-00a0dee30767/input_audit_manifest.json",
+      "bytes": 5684,
+      "sha256": "cb014e0e7209f2527fd01de5f56469153878d4a5d77e88846d84602c7c66112e"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/aggregate-00a0dee30767/replication_complete.json",
+      "bytes": 6433,
+      "sha256": "50fb0d968fa2dbcc6c195afa4241eddcc79366fc9571d44faec2cd65e25897dc"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/seed43-fp32/training_complete.json",
+      "bytes": 2642,
+      "sha256": "4bc3ea503db94c9b709dccd813210f28ede158f9d8d9eb0ea2f08f7110e8e89e"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/seed44-fp32/training_complete.json",
+      "bytes": 2642,
+      "sha256": "b877a4c17c7b2e23d70f5af0317f4f8adbbd9d2dd7f68664b90104973a6d19b3"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/runner-logs/seed43_20260718T172009429193Z_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/runner-logs/seed43_20260718T172009429193Z_stdout.txt",
+      "bytes": 4548,
+      "sha256": "b5c6787c6de54e73e3c9fae2a150e481a1d5df2a69a1b0e869cad272a6ca2f7f"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/runner-logs/seed44_20260718T172009429193Z_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/runner-logs/seed44_20260718T172009429193Z_stdout.txt",
+      "bytes": 4547,
+      "sha256": "606ac01a4ef47fc39db514aaba975f660cb89929ea7c8d345ba88e81891627e8"
+    },
+    {
+      "path": "/content/drive/MyDrive/rag-pq-checkpoints/rars-v2.2-fp32-msmarco/bb9b106e69b9/fp32-replication-v1/batch-history/heldout_batch_20260718T172009429193Z.json",
+      "bytes": 2467,
+      "sha256": "16892bd71ca1524b0bdc36150dfb44f65a6bf608a321ade24f2600586121fc4d"
+    }
+  ]
+}

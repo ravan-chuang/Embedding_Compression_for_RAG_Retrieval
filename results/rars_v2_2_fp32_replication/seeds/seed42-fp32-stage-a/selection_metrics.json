@@ -1,0 +1,17 @@
+{
+  "query_count": 1019,
+  "base_recall_at_10": 0.6933267909715407,
+  "pca_fp32_recall_at_10": 0.7067386326463853,
+  "pca_parameter_warm_start_bounded_recall_at_10": 0.7062479555119398,
+  "v2_2_fp32_recall_at_10": 0.7139352306182531,
+  "gain_over_base": 0.02060843964671244,
+  "gain_over_pca_fp32": 0.007196597971867891,
+  "improved_queries_vs_base": 36,
+  "harmed_queries_vs_base": 12,
+  "unchanged_queries_vs_base": 971,
+  "minimum_required_gain_over_base": 0.01135,
+  "minimum_required_gain_over_pca": 0.005,
+  "passes_base_gain_gate": true,
+  "passes_pca_gain_gate": true,
+  "decision": "GO_TO_THREE_SEED_FP32_REPLICATION"
+}

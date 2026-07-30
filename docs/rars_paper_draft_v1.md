@@ -1,5 +1,9 @@
 # RARS Paper Draft v1
 
+> Historical draft. It predates the storage-matched PCA comparator and the
+> preregistered external result. Use
+> [`rars_paper_draft_v2.md`](rars_paper_draft_v2.md) for the current framing.
+
 ## Working title
 
 **Retrieval-Aware Residual Sidecars for Frozen IVF-PQ Indexes**

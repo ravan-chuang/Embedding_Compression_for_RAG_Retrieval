@@ -1,0 +1,17 @@
+{
+  "total_pairs": 7534,
+  "promotion": {
+    "pairs": 962,
+    "queries": 261,
+    "positive_residual_rows": 265,
+    "challenger_residual_rows": 940,
+    "balanced_weight_sum": 0.5
+  },
+  "protection": {
+    "pairs": 6572,
+    "queries": 1595,
+    "positive_residual_rows": 1643,
+    "challenger_residual_rows": 5961,
+    "balanced_weight_sum": 0.5
+  }
+}

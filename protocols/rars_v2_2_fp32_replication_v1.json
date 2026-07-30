@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v2_2_fp32_replication_v1",
+  "status": "FROZEN_BEFORE_HELDOUT_SEED_43_AND_44_OUTCOMES",
+  "frozen_on": "2026-07-17",
+  "scope": "development-only FP32 optimizer-seed stability gate before any QAT stage",
+  "parent_protocol_id": "rars_v2_2_boundary_loss_development_v1",
+  "parent_protocol_mutated": false,
+  "metric_contract": {
+    "primary_metric": "Recall@10",
+    "mrr_is_used": false,
+    "query_count": 1019,
+    "aggregation": "arithmetic mean of the 1,019 per-query Recall@10 values, evaluated in float64 before any display rounding",
+    "comparators": [
+      "frozen Base retrieval",
+      "frozen rank-16 PCA FP32 sidecar"
+    ]
+  },
+  "outcome_knowledge_at_freeze": {
+    "seed_42": "KNOWN_AND_AUDITED",
+    "seed_43": "HELD_OUT_UNSEEN",
+    "seed_44": "HELD_OUT_UNSEEN",
+    "disclosure": "Seed 42 passed the original single-seed development gate before this replication protocol was frozen. The primary replication decision is therefore driven by the still-unseen seeds 43 and 44; this is not a fully outcome-blind three-seed preregistration."
+  },
+  "execution_lineage": {
+    "training_source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+    "clean_exact_detached_checkout_required": true,
+    "source_hashes": {
+      "aggregator_sha256": "64dab39bf6f5b7905552ced2994fa8247265df5ffc7df6c93a44f6a021c3741d",
+      "metric_helper_sha256": "b547ff5961a86917da1ed01ec7aceeab04e4140f14be626a595550fb1bede294",
+      "bundle_builder_sha256": "148470ddb115bcb9f9f6101924897293bc395b47297f00840450dbbe5dd6b175",
+      "bundle_freezer_sha256": "d416d769f005efe62bbcef8308beef25379c2f3a4c30ead5d42dda5e2b7357f2",
+      "parent_protocol_sha256": "dbe5914e7cf7c6cbc6c811bcf8846e74dc4bee41ff9878371a3f193c9bced23e",
+      "trainer_sha256": "61eb3c9cc10ef7032246f28671fdb59bea81ffc2fc29e866c53526fe4e13eae0",
+      "core_sha256": "1ee96d77dde59d365613b1d5b8726a56b05312500584e28cd49e41f7dbe61299",
+      "inner_train_manifest_sha256": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e",
+      "inner_validation_manifest_sha256": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d",
+      "pca_basis_sha256": "ffad7e9a65d87045edef7e8d96e5fb90f2a5cc2e213038db72392e65c9ed8fec",
+      "pca_config_sha256": "019170f80a085e1d3c57311b7fb504450351312be4ea7bb41e7f8c1de60f44d4"
+    },
+    "split_audit_sha256": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f",
+    "only_allowed_configuration_difference_between_runs": "seed"
+  },
+  "execution_environment_contract": {
+    "seed_42_training_started_environment_must_match_exactly_before_heldout_training": true,
+    "python_version": "3.12.13",
+    "numpy_version": "1.26.4",
+    "torch_version": "2.11.0+cu128",
+    "torch_cuda_version": "12.8",
+    "device": "cuda",
+    "gpu_name_must_contain": "T4",
+    "compute_capability": "7.5",
+    "deterministic_algorithms_supported_and_enabled": true,
+    "cudnn_benchmark": false,
+    "cublas_workspace_config": "UNSET",
+    "mismatch_action": "INVALID_BEFORE_HELDOUT_TRAINING"
+  },
+  "frozen_training_configuration": {
+    "rank": 16,
+    "top_b": 40,
+    "final_k": 10,
+    "epochs": 10,
+    "batch_size": 2048,
+    "score_batch_size": 256,
+    "max_negatives_per_positive": 8,
+    "promotion_mix": 0.8,
+    "minimum_margin": 0.0001,
+    "margin_multiplier": 1.0,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "correction_l2": 0.001,
+    "max_correction": 0.05,
+    "max_grad_norm": 5.0,
+    "minimum_gain_over_base": 0.01135,
+    "minimum_gain_over_pca": 0.005,
+    "device": "cuda",
+    "epoch_selection": "highest inner-validation FP32 Recall@10, with epoch 0 eligible and earliest epoch winning ties"
+  },
+  "seed_policy": {
+    "registered_seeds": [
+      42,
+      43,
+      44
+    ],
+    "heldout_primary_seeds": [
+      43,
+      44
+    ],
+    "extra_or_replacement_seeds_allowed": false,
+    "seed_43_or_44_metric_inspection_before_both_runs_are_complete_and_hashed": false,
+    "run_count_per_seed": 1,
+    "retry_policy": "A same-seed retry is allowed only after a documented exogenous interruption that produced no valid TRAINING_COMPLETE artifact. The failed attempt and logs must be retained. Numerical divergence, NaN, deterministic-runtime failure, or any completed poor outcome is not retryable and may not be replaced by another seed.",
+    "random_generators": [
+      "Python random",
+      "NumPy",
+      "Torch CPU",
+      "Torch CUDA"
+    ]
+  },
+  "data_access_policy": {
+    "fit_role_id": "inner_train",
+    "selection_and_replication_role_id": "inner_validation",
+    "bundle_materialization": {
+      "reason": "The seed-42 Colab run retained the exact bundle and split-manifest hashes but not the ephemeral bundle payloads. Seeds 43 and 44 therefore require one deterministic re-materialization before either held-out run starts.",
+      "allowed": true,
+      "builder_and_freezer_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+      "same_absolute_colab_paths_as_seed_42_required": true,
+      "inner_only_required": true,
+      "exact_inner_train_manifest_sha256_required": "3508ea77cc0b89344a2290c45f703a8eb13c08223c863e4745951a1ebdb42b0e",
+      "exact_inner_validation_manifest_sha256_required": "5daecd55de04c81e4b80b3307aea2ba1975ee3a77588b710b352f5a95accd26d",
+      "exact_split_audit_sha256_required": "8bb13030c2808f5036bb6395a0408bc105daec1e5db5254d8f011f8ba1c8df4f",
+      "mismatch_action": "INVALID",
+      "further_rebuild_or_bundle_revision_after_heldout_training_starts_allowed": false
+    },
+    "allowed_inputs": [
+      "the exact seed-42 MS MARCO 1M embeddings, document IDs, query vectors, M32 index, PCA sidecars, and RARS-v1 sidecars used to deterministically re-materialize the bound inner bundles",
+      "the shared 6,980-query qrels container solely for the inherited builder to construct inner-train and inner-validation labels",
+      "the original split identities solely for the freezer's disjointness audit",
+      "the re-materialized inner_train and inner_validation bundles only after every registered manifest and split-audit hash matches",
+      "the exact frozen PCA basis and PCA configuration bound above"
+    ],
+    "shared_qrels_container_opened_and_all_relevance_values_parsed_by_inherited_builder": true,
+    "only_inner_train_and_inner_validation_relevance_values_may_enter_bundles_loss_or_metrics": true,
+    "outer_and_clean_split_identities_read_for_overlap_audit": true,
+    "outer_validation_outcome_or_relevance_use_allowed": false,
+    "clean_msmarco_test_outcome_or_relevance_use_allowed": false,
+    "beir_nq_or_trec_access_allowed": false,
+    "disclosure": "Held-out means unseen optimizer seeds 43 and 44, not held-out queries. The inherited builder necessarily opens and parses the shared 6,980-query qrels payload, including values outside the inner roles, while the freezer reads outer and clean-test identities for overlap auditing. Those values and outcomes may not enter either held-out run, loss, checkpoint selection, comparator, or decision. All three seeds reuse the same 1,019-query development selection split, which also selected each run's epoch. This gate measures development stability and is not independent confirmatory evidence."
+  },
+  "per_seed_definitions": {
+    "base_recall": "B_s",
+    "pca_fp32_recall": "P_s",
+    "rars_v2_2_fp32_recall": "R_s",
+    "gain_over_base": "delta_base_s = R_s - B_s",
+    "gain_over_pca": "delta_pca_s = R_s - P_s",
+    "joint_pass": "delta_base_s >= 0.01135 AND delta_pca_s >= 0.005",
+    "positive_support_over_base": "count of queries i for which RARS Recall@10(s,i) > Base Recall@10(s,i)",
+    "positive_support_over_pca": "count of queries i for which RARS Recall@10(s,i) > PCA Recall@10(s,i)",
+    "minimum_positive_support_per_heldout_seed_per_comparator": 11
+  },
+  "aggregate_definitions": {
+    "heldout_mean_gain_over_base": "mean(delta_base_43, delta_base_44)",
+    "heldout_mean_gain_over_pca": "mean(delta_pca_43, delta_pca_44)",
+    "all_three_mean_gain_over_base": "mean(delta_base_42, delta_base_43, delta_base_44)",
+    "all_three_mean_gain_over_pca": "mean(delta_pca_42, delta_pca_43, delta_pca_44)"
+  },
+  "paired_joint_query_bootstrap": {
+    "population": "the 1,019 inner-validation query positions in the identical frozen query order",
+    "heldout_query_gain_over_base": "g_base_i = mean(RARS(43,i) - Base(43,i), RARS(44,i) - Base(44,i))",
+    "heldout_query_gain_over_pca": "g_pca_i = mean(RARS(43,i) - PCA(43,i), RARS(44,i) - PCA(44,i))",
+    "resamples": 20000,
+    "bootstrap_seed": 20260717,
+    "rng": "NumPy Generator with PCG64",
+    "draw_size": 1019,
+    "sampling": "query positions sampled with replacement",
+    "pairing": "For bootstrap replicate j, draw one index vector and use that same vector for both held-out seeds and both comparator gains.",
+    "replicate_statistic": "arithmetic mean of the sampled g_base_i values and arithmetic mean of the sampled g_pca_i values",
+    "interval": "two-sided 95% percentile interval",
+    "lower_bound": "NumPy quantile at 0.025 with method='linear' over the 20,000 replicate statistics",
+    "stability_requirement": "both the Base and PCA lower bounds are strictly greater than 0"
+  },
+  "decision_procedure": {
+    "evaluation_order": [
+      "Validate all lineage, configuration, query identity, environment, completion, and artifact hashes for seeds 42, 43, and 44.",
+      "If validation fails, return INVALID and do not compute a scientific result.",
+      "Compute the two held-out mean gains from seeds 43 and 44.",
+      "If either held-out mean gain misses its registered threshold, return STOP.",
+      "If both held-out mean thresholds pass, evaluate every remaining stability condition.",
+      "Return STABLE_GO_TO_QAT only if every stability condition passes; otherwise return UNSTABLE_NO_QAT."
+    ],
+    "heldout_primary_thresholds": {
+      "heldout_mean_gain_over_base_at_least": 0.01135,
+      "heldout_mean_gain_over_pca_at_least": 0.005,
+      "failure_decision": "STOP"
+    },
+    "stability_conditions_all_required": [
+      "delta_base_43 > 0",
+      "delta_pca_43 > 0",
+      "delta_base_44 > 0",
+      "delta_pca_44 > 0",
+      "heldout_mean_gain_over_base >= 0.01135",
+      "heldout_mean_gain_over_pca >= 0.005",
+      "all_three_mean_gain_over_base >= 0.01135",
+      "all_three_mean_gain_over_pca >= 0.005",
+      "all three seeds 42, 43, and 44 satisfy joint_pass, so neither held-out seed may be rescued by the known seed 42 or by the other held-out seed",
+      "the held-out paired joint-query bootstrap 95% lower bound over Base is > 0",
+      "the held-out paired joint-query bootstrap 95% lower bound over PCA is > 0",
+      "seed 43 has at least 11 positive-support queries over Base and at least 11 over PCA",
+      "seed 44 has at least 11 positive-support queries over Base and at least 11 over PCA"
+    ],
+    "decisions": {
+      "STABLE_GO_TO_QAT": "The held-out primary thresholds and every stability condition pass. This authorizes freezing a separate QAT protocol; it is not itself a QAT or external-validation result.",
+      "STOP": "At least one held-out mean gain is below its registered threshold. Do not enter QAT and do not add seeds or revise the method under this protocol.",
+      "UNSTABLE_NO_QAT": "Both held-out mean thresholds pass, but at least one other stability condition fails. Do not enter QAT under this protocol.",
+      "INVALID": "Lineage, configuration, data-access, completion, query-identity, environment, or artifact validation fails. INVALID is operational/provenance failure, not a scientific STOP or success."
+    }
+  },
+  "artifact_contract": {
+    "all_three_runs_required": true,
+    "per_seed_required_trainer_artifacts": [
+      "training_started.json",
+      "query_projection.float32.npy",
+      "document_projection.float32.npy",
+      "selection_base_per_query.float64.npy",
+      "selection_v2_2_per_query.float64.npy",
+      "training_history.json",
+      "selection_metrics.json",
+      "training_summary.json",
+      "training_complete.json"
+    ],
+    "additional_replication_artifacts_required": [
+      "copied bundle build summary, split audit, freeze summary, query manifests, and role manifests with a content-addressed audit manifest",
+      "the frozen PCA FP32 per-query Recall@10 array in the identical 1,019-query order",
+      "a query-identity manifest and SHA-256 shared by every per-query array",
+      "a replication environment manifest recording Python, NumPy, Torch, CUDA, Faiss, GPU, cuDNN, driver, determinism flags, CUBLAS_WORKSPACE_CONFIG, and a pip-freeze hash",
+      "per-seed positive-support counts over Base and PCA",
+      "the 20,000 paired joint-query bootstrap statistics or a content-addressed lossless artifact containing them",
+      "a replication manifest containing all three run IDs, all input/output hashes, environment records, computed gains, pass flags, confidence intervals, and final decision"
+    ],
+    "validation_rules": [
+      "Every training_complete output record must match both byte count and SHA-256.",
+      "The seed 43 and 44 fingerprint payloads must differ from the audited seed 42 payload only in configuration.seed.",
+      "Base and PCA per-query arrays must have identical query identity and values across seeds.",
+      "No decision may be emitted if a required per-query array, query manifest, environment record, or hash is missing.",
+      "The seed 43 and 44 metric payloads remain sealed until both runs and their artifact hashes are complete."
+    ]
+  },
+  "audited_seed_42": {
+    "knowledge_status": "KNOWN_AT_REPLICATION_FREEZE",
+    "audit_source": "read-only retrieval of the completed Google Drive run followed by byte-count and SHA-256 verification",
+    "run_id": "0956f2f51c2183020a9d68ecb6a89987f7bcef99e0587ceb507a05f303a03b83",
+    "source_commit": "bb9b106e69b9a453756fd800665f701614ce67b3",
+    "selected_epoch": 9,
+    "metrics": {
+      "query_count": 1019,
+      "base_recall_at_10": 0.6933267909715407,
+      "pca_fp32_recall_at_10": 0.7067386326463853,
+      "pca_parameter_warm_start_bounded_recall_at_10": 0.7062479555119398,
+      "v2_2_fp32_recall_at_10": 0.7139352306182531,
+      "gain_over_base": 0.02060843964671244,
+      "gain_over_pca_fp32": 0.007196597971867891,
+      "improved_queries_vs_base": 36,
+      "harmed_queries_vs_base": 12,
+      "unchanged_queries_vs_base": 971,
+      "minimum_required_gain_over_base": 0.01135,
+      "minimum_required_gain_over_pca": 0.005,
+      "passes_base_gain_gate": true,
+      "passes_pca_gain_gate": true,
+      "decision": "GO_TO_THREE_SEED_FP32_REPLICATION"
+    },
+    "verified_outputs": {
+      "training_started.json": {
+        "bytes": 1904,
+        "sha256": "25d23f02f175542a2779fe53a29a52c325eb5dcaa13c573f47310f9cef80cb44"
+      },
+      "query_projection.float32.npy": {
+        "bytes": 24704,
+        "sha256": "44f4c5f3f895eb3d84c159d4025a97bac4b7913085f272945f9d176d93777bb3"
+      },
+      "document_projection.float32.npy": {
+        "bytes": 24704,
+        "sha256": "d6c0f610163845418213239833213b3096a0f8d07c58265e15d0aa2e4c4c4f5a"
+      },
+      "selection_base_per_query.float64.npy": {
+        "bytes": 8280,
+        "sha256": "31dfd394a2f446848c649a7a3357664a10ff841975be9f31b1e83c0d96b803e8"
+      },
+      "selection_v2_2_per_query.float64.npy": {
+        "bytes": 8280,
+        "sha256": "64e80ae359b46dbd77555a5e32269341eecf149fad7d97fac53a21c8ae226059"
+      },
+      "training_history.json": {
+        "bytes": 5449,
+        "sha256": "2d0d8648b860135c8d95ed54317a45f0e83b7947316e0415a46946949c66fac9"
+      },
+      "selection_metrics.json": {
+        "bytes": 629,
+        "sha256": "eea4323e46354cf18f6413643e7c93fcb6a158b12773eb4d8cd06270f366a83a"
+      },
+      "training_summary.json": {
+        "bytes": 3776,
+        "sha256": "737798792297c3c042c12c869e646eb1864ee6240bb47d20599545299c346800"
+      }
+    }
+  },
+  "prohibited_actions": [
+    "viewing either held-out seed's metrics before both seeds are complete and hashed",
+    "adding seed 45 or any replacement seed",
+    "selecting the best seed or averaging only successful seeds",
+    "changing training, mining, epoch selection, threshold, bootstrap, support, or comparator rules after seeing seed 43 or 44",
+    "running QAT before STABLE_GO_TO_QAT",
+    "using this development-only replication as external confirmatory evidence"
+  ],
+  "method_revision_allowed": false,
+  "outcome_informed_revision_allowed": false
+}

@@ -13,8 +13,14 @@ python scripts/build_rars_paper_tables.py
 - `paper_pca_transfer_table.*`: legacy PCA residual-sidecar transfer summary
 - `paper_system_table.*`: live Faiss latency and overhead
 - `paper_ablation_table.*`: alpha and Top-B ablations
-- `paper_significance_table.*`: paired bootstrap results
+- `paper_significance_table.*`: developmental paired-bootstrap results
+- `paper_external_system_table.*`: frozen external aggregate metrics
+- `paper_external_contrast_table.*`: frozen external RARS-minus-PCA contrasts
 - `paper_storage_table.*`: serialized storage accounting
+- `paper_rars_v2_2_fp32_table.*`: three-seed FP32 development replication
+- `paper_clean_rars_main.*`: static frozen clean-pipeline held-out metrics
+- `paper_clean_rars_significance.*`: static frozen clean-pipeline bootstrap
+- `paper_rars_overlap_sensitivity.*`: static project-history overlap audit
 
 ## Interpretation constraints
 
@@ -27,5 +33,14 @@ python scripts/build_rars_paper_tables.py
 - `Paired E2E overhead %` is reported separately because multi-threaded timing
   is sensitive to scheduling noise.
 - Small non-zero or negative Top0 deltas are timing noise.
-- The RARS-vs-PCA bootstrap confidence intervals cross zero, so the paper
-  should claim a positive point estimate rather than statistical superiority.
+- The developmental RARS-vs-PCA table uses the earlier MS MARCO query pool and
+  must not be presented as external confirmation.
+- The preregistered external Recall@10 contrast is negative and its confidence
+  interval crosses zero; the external primary hypothesis was not supported.
+- The external set contains 42 eligible queries and only the judgments covered
+  by the frozen 1M corpus. It is not an official full-corpus TREC result.
+- The clean-pipeline held-out split is not untouched across complete project
+  history; 137 queries overlapped with an earlier exploratory query set.
+- The v2.2 table is development-only optimizer-seed evidence. Seed 44 has 10
+  positive-support queries versus PCA, below the frozen requirement of 11, so
+  the formal decision is `UNSTABLE_NO_QAT` and QAT is not authorized.

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v5_pq_aware_100k_pilot_v1",
+  "status": "TRAINING_STARTED",
+  "run_id": "3820883ba4aae9c5b58f815f9a42ec484d793f171bd22eb45d9f1c70df9b7dd9",
+  "run_payload": {
+    "protocol_sha256": "142c27d1d6ec5e6780000f8c2995a0ddec85b3684e6af47ad450f5c808c71d89",
+    "bundle_summary_sha256": "b932b23b4b11dcb609b2694c47851b90b3903e82d6dcd0a690a2634c1d4495e3",
+    "source_commit": "93105ae1895974e28b34952c2dd777f037c6e0bf",
+    "configuration": {
+      "seed": 42,
+      "epochs": 8,
+      "batch_size": 1024,
+      "adapter_rank": 8,
+      "adapter_scale": 1.0,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.0001,
+      "pool_k": 100,
+      "final_k": 10,
+      "negative_window": 16,
+      "negatives_per_positive": 4,
+      "mining_margin_temperature": 0.05,
+      "damage_scale": 8.0,
+      "flip_bonus": 2.0,
+      "rank_margin": 0.001,
+      "loss_temperature": 0.05,
+      "margin_loss_weight": 0.5,
+      "reconstruction_loss_weight": 0.01,
+      "drift_loss_weight": 0.01,
+      "max_grad_norm": 1.0,
+      "retrieval_query_batch_size": 32,
+      "nprobe": 16,
+      "device": "cuda"
+    }
+  },
+  "environment": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "numpy": "1.26.4",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "cuda",
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms": true,
+    "cudnn_benchmark": false
+  },
+  "pair_count": 8244,
+  "pq_induced_flip_pairs": 24,
+  "zero_label_semantics": "unjudged mined hard negative"
+}
