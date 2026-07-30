@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "protocol_id": "rars_v17_million_scale_setting_transfer_v1",
+  "status": "FROZEN_BEFORE_FIRST_V17_MILLION_SCALE_DIAGNOSTIC_RUN",
+  "method_revision_allowed": false,
+  "research_question": "On two already-built million-scale frozen IVF-PQ indexes, is weak learned-sidecar transport better explained by candidate headroom, rank capacity, coding loss, objective value, or corpus/index-setting interaction?",
+  "scope": "outcome-informed large-scale mechanism diagnostic using only previously opened development evidence; not an independent confirmation or a pure domain-causal experiment",
+  "supersedes": {
+    "protocol_id": "rars_v16_causal_generalization_diagnostic_v1",
+    "status": "ABORTED_PRE_METRIC_SMALL_CORPUS_DESIGN",
+    "reason": "FiQA has only 57,638 documents and SciFact only 5,183; both are below the required million-document scale, and SciFact also under-trains 256-way PQ codebooks."
+  },
+  "evidence_boundary": {
+    "tier": "OUTCOME_INFORMED_OPENED_ROLE_MILLION_SCALE_SETTING_DIAGNOSTIC",
+    "allowed_claim": "mechanism decomposition within the named MS MARCO 1M and full BEIR NQ frozen settings",
+    "forbidden_claims": [
+      "independent confirmation",
+      "pure domain-shift causality",
+      "universal dataset or encoder generalization",
+      "official benchmark state of the art",
+      "production QPS or latency",
+      "superiority over ScaNN or rebuild-allowed quantizers"
+    ]
+  },
+  "environment_contract": {
+    "python": "3.12",
+    "numpy": "1.26.4",
+    "faiss": "1.12.0",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8"
+  },
+  "data_policy": {
+    "setting_count": 2,
+    "allowed_development_settings": [
+      "msmarco_1m_bge_opened_development",
+      "beir_nq_2_68m_bge_opened_test_diagnostic"
+    ],
+    "allowed_development_domains": [
+      "msmarco_1m_bge_opened_development",
+      "beir_nq_2_68m_bge_opened_test_diagnostic"
+    ],
+    "required_roles": [
+      "fit",
+      "evaluation"
+    ],
+    "minimum_document_count_per_setting": 1000000,
+    "minimum_fit_queries_per_domain": 1000,
+    "minimum_evaluation_queries_per_domain": 800,
+    "fit_and_evaluation_query_ids_must_be_disjoint": true,
+    "same_encoder_family_and_dimension_required": true,
+    "exact_encoder_revision_match_not_claimed": true,
+    "source_domain_id": "msmarco_1m_bge_opened_development",
+    "source_setting_id": "msmarco_1m_bge_opened_development",
+    "source_setting_selected_before_v17_outcomes": true,
+    "msmarco_roles": {
+      "fit": "existing v2.2 inner_train development bundle",
+      "evaluation": "existing v2.2 inner_validation development bundle",
+      "closed_clean_test_opened": false
+    },
+    "nq_roles": {
+      "source": "previously opened 3,452-query BEIR NQ official test artifact",
+      "split_rule": "sort by sha256('rars-v17-nq-role-v1\\0' + qid); first 60 percent fit, remaining 40 percent evaluation",
+      "prior_confirmation_outcomes_known": true,
+      "independent_confirmation_claim_allowed": false,
+      "retuning_old_confirmation_claim_allowed": false
+    },
+    "evaluation_used_for_method_selection": false
+  },
+  "index_policy": {
+    "common": {
+      "metric": "inner_product",
+      "dimension": 384,
+      "subquantizers": 32,
+      "bits_per_subquantizer": 8,
+      "candidate_pool": 100
+    },
+    "msmarco_1m_bge_opened_development": {
+      "minimum_documents": 1000000,
+      "expected_documents": 1000000,
+      "nlist": 512,
+      "nprobe": 16
+    },
+    "beir_nq_2_68m_bge_opened_test_diagnostic": {
+      "minimum_documents": 2000000,
+      "expected_documents": 2681468,
+      "nlist": 2048,
+      "nprobe": 32
+    },
+    "different_nlist_and_nprobe_are_expected": true,
+    "cross_setting_not_pure_domain_contrast": true,
+    "report_each_setting_separately": true
+  },
+  "bundle_contract": {
+    "candidate_pool": 100,
+    "required_arrays": [
+      "query_vectors.float32.npy",
+      "ann_rows.int64.npy",
+      "ann_scores.float32.npy",
+      "ann_residual_rows.int64.npy",
+      "candidate_residuals.float32.npy",
+      "candidate_relevance.uint8.npy",
+      "relevant_counts.int32.npy",
+      "fold_ids.int64.npy"
+    ],
+    "every_file_hash_registered": true,
+    "full_corpus_not_opened_by_evaluator": true
+  },
+  "diagnostic_configuration": {
+    "alpha": 0.75,
+    "top_b": 40,
+    "final_k": 10,
+    "pca_ranks": [
+      16,
+      64
+    ],
+    "rars_rank": 16,
+    "coefficient_dtype": "int8",
+    "payload_bytes_per_document_at_rank16": 16,
+    "target_setting_int8_scales_are_label_free": true,
+    "pooled_fit_weighting": "query_role_balanced_after_setting_concatenation"
+  },
+  "pair_mining": {
+    "protection_window": 16,
+    "maximum_challengers_per_positive": 4,
+    "margin_temperature": 0.02,
+    "damage_scale": 4.0,
+    "promotion_total_loss_mass": 0.5
+  },
+  "basis_optimization": {
+    "steps": 160,
+    "learning_rate": 0.02,
+    "pca_anchor_weight": 0.1,
+    "huber_delta": 0.02,
+    "gradient_norm_clip": 5.0
+  },
+  "factor_matrix": {
+    "candidate_headroom": "same-candidate exact Recall@10 minus Base Recall@10",
+    "rank_capacity": "local PCA rank-64 FP32 minus local PCA rank-16 FP32",
+    "int8_coding": "local PCA rank-16 FP32 minus the same basis encoded as rank-16 int8",
+    "objective_value": "local cutoff-aware RARS rank-16 int8 minus local PCA rank-16 int8",
+    "fit_setting_interaction": "local cutoff-aware RARS rank-16 int8 minus source-setting RARS rank-16 int8",
+    "pooled_repair": "pooled cutoff-aware RARS rank-16 int8 minus source-setting RARS rank-16 int8",
+    "only_one_model_component_changes_within_each_named_setting_row": true
+  },
+  "diagnostic_thresholds": {
+    "min_headroom": 0.01,
+    "material_headroom": 0.02,
+    "min_capacity_gain": 0.005,
+    "min_coding_gap": 0.005,
+    "min_objective_gain": 0.005,
+    "min_domain_interaction": 0.005,
+    "min_pooled_recovery": 0.5,
+    "pooled_noninferiority": -0.002,
+    "min_improved_queries": 20,
+    "min_net_share": 0.005,
+    "min_gap_recovery": 0.15,
+    "worst_domain_floor": -0.002
+  },
+  "inference": {
+    "confidence": 0.95,
+    "bootstrap_replicates": 20000,
+    "randomization_replicates": 50000,
+    "seed_base": 20261700,
+    "resampling_unit": "query",
+    "setting_rows_reported_separately": true,
+    "equal_setting_summary_is_descriptive_only": true
+  },
+  "decision_order": [
+    "STOP_FROZEN_CANDIDATE_METHOD",
+    "OBJECTIVE_REPAIR_SUPPORTED",
+    "SETTING_INTERACTION_SUPPORTED",
+    "CODING_BOTTLENECK_SUPPORTED",
+    "CAPACITY_BOTTLENECK_SUPPORTED",
+    "STOP_LEARNING_CLAIM_KEEP_UNIFORM_RPQ",
+    "STOP_RARS_METHOD_EXPANSION"
+  ],
+  "reporting_contract": {
+    "absolute_base_and_same_candidate_exact_metrics_required": true,
+    "document_count_and_index_recipe_required_per_setting": true,
+    "all_factor_contrasts_require_point_interval_p_value_and_query_support": true,
+    "int8_saturation_required_for_every_encoded_arm": true,
+    "negative_outcomes_retained": true,
+    "nq_prior_outcome_reuse_disclosed": true
+  },
+  "prohibited_actions": [
+    "opening MS MARCO clean test or future method holdout",
+    "describing the reopened NQ role as a new confirmation",
+    "changing alpha rank Top-B pair mining optimization or split after V17 outcomes",
+    "pooling embeddings with different dimensions",
+    "claiming corpus causality while IVF settings also differ",
+    "using evaluation outcomes to revise V17"
+  ]
+}
