@@ -128,6 +128,104 @@ def test_document_id_mapping_rejects_missing_and_duplicate_ids(
         )
 
 
+def _write_doc_id_reconciliation_fixture(
+    tmp_path: Path,
+) -> tuple[Path, Path, Path]:
+    artifact = tmp_path / "artifact"
+    doc_ids_path = artifact / "stage1/corpus/doc_ids.utf8.memmap"
+    doc_ids_path.parent.mkdir(parents=True)
+    doc_ids_path.write_bytes(b"doc-0\0\0\0doc-1\0\0\0")
+    corpus_manifest_path = (
+        artifact / "stage1/corpus/corpus_artifacts_manifest.json"
+    )
+    stale_record = {
+        "path": str(doc_ids_path),
+        "bytes": doc_ids_path.stat().st_size,
+        "sha256": "0" * 64,
+    }
+    _write_json(
+        corpus_manifest_path,
+        {
+            "protocol_id": MODULE.SOURCE_PROTOCOL_ID,
+            "doc_ids": stale_record,
+        },
+    )
+    pre_qrels_path = artifact / MODULE.PRE_QRELS_MANIFEST
+    _write_json(
+        pre_qrels_path,
+        {
+            "protocol_id": MODULE.SOURCE_PROTOCOL_ID,
+            "status": "frozen_before_test_qrels_access",
+            "test_qrels_accessed": False,
+            "test_retrieval_performed": False,
+            "test_outcomes_observed": False,
+            "train_qrels_relevance_values_used": False,
+            "files": {
+                "corpus_manifest": _record(corpus_manifest_path),
+                "doc_ids": _record(doc_ids_path),
+            },
+        },
+    )
+    audit_path = artifact / MODULE.ELIGIBLE_QUERY_AUDIT
+    _write_json(
+        audit_path,
+        {
+            "protocol_id": MODULE.SOURCE_PROTOCOL_ID,
+            "status": "eligible_test_queries_frozen_before_retrieval",
+            "pre_qrels_manifest_sha256": MODULE.sha256_file(
+                pre_qrels_path
+            ),
+        },
+    )
+    return artifact, corpus_manifest_path, audit_path
+
+
+def test_pre_qrels_doc_ids_reconcile_a_stale_stage1_digest(
+    tmp_path: Path,
+) -> None:
+    artifact, corpus_manifest_path, _ = (
+        _write_doc_id_reconciliation_fixture(tmp_path)
+    )
+    corpus = json.loads(corpus_manifest_path.read_text(encoding="utf-8"))
+
+    path, lineage = MODULE._verify_pre_qrels_doc_id_reconciliation(
+        artifact,
+        corpus_manifest_path=corpus_manifest_path,
+        corpus_doc_ids_record=corpus["doc_ids"],
+        expected_bytes=16,
+    )
+
+    assert path == artifact / "stage1/corpus/doc_ids.utf8.memmap"
+    assert lineage["status"] == (
+        "PRE_QRELS_DOC_IDS_VERIFIED_AFTER_STAGE1_HASH_MISMATCH"
+    )
+    assert lineage["historical_artifacts_modified"] is False
+    assert (
+        lineage["authoritative_pre_qrels_doc_ids"]["sha256"]
+        == MODULE.sha256_file(path)
+    )
+
+
+def test_pre_qrels_doc_id_reconciliation_requires_audit_binding(
+    tmp_path: Path,
+) -> None:
+    artifact, corpus_manifest_path, audit_path = (
+        _write_doc_id_reconciliation_fixture(tmp_path)
+    )
+    corpus = json.loads(corpus_manifest_path.read_text(encoding="utf-8"))
+    audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    audit["pre_qrels_manifest_sha256"] = "f" * 64
+    _write_json(audit_path, audit)
+
+    with pytest.raises(ValueError, match="does not bind"):
+        MODULE._verify_pre_qrels_doc_id_reconciliation(
+            artifact,
+            corpus_manifest_path=corpus_manifest_path,
+            corpus_doc_ids_record=corpus["doc_ids"],
+            expected_bytes=16,
+        )
+
+
 def test_stage1_rejects_sub_two_million_corpus_before_opening_payloads(
     tmp_path: Path,
 ) -> None:

@@ -31,6 +31,10 @@ CANONICAL_PROTOCOL = Path(
 ROLE_NAMESPACE = b"rars-v17-nq-role-v1\0"
 MINIMUM_DOCUMENT_COUNT = 2_000_000
 DIMENSION = 384
+PRE_QRELS_MANIFEST = Path("stage2/pre_qrels_manifest.json")
+ELIGIBLE_QUERY_AUDIT = Path(
+    "stage3/audit/eligible_test_query_audit.json"
+)
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -154,6 +158,104 @@ def verify_record(
     if sha256_file(path) != record.get("sha256"):
         raise ValueError(f"Registered {label} hash changed")
     return path
+
+
+def _verify_pre_qrels_doc_id_reconciliation(
+    artifact_root: Path,
+    *,
+    corpus_manifest_path: Path,
+    corpus_doc_ids_record: dict[str, Any],
+    expected_bytes: int,
+) -> tuple[Path, dict[str, Any]]:
+    """Resolve a known Stage-1/pre-qrels document-ID lineage conflict.
+
+    The historical NQ packet may contain a stale document-ID digest inside
+    the Stage-1 corpus manifest.  The later pre-qrels manifest independently
+    hashed the exact file before test-qrels access, and the frozen query audit
+    binds that manifest into the one-shot evaluation.  A fallback is safe only
+    when all three links verify without changing any historical artifact.
+    """
+
+    pre_qrels_path = (
+        artifact_root / PRE_QRELS_MANIFEST
+    ).resolve(strict=True)
+    pre_qrels = read_json(pre_qrels_path)
+    if (
+        pre_qrels.get("protocol_id") != SOURCE_PROTOCOL_ID
+        or pre_qrels.get("status") != "frozen_before_test_qrels_access"
+    ):
+        raise ValueError("Unexpected NQ pre-qrels freeze manifest")
+    for key in (
+        "test_qrels_accessed",
+        "test_retrieval_performed",
+        "test_outcomes_observed",
+        "train_qrels_relevance_values_used",
+    ):
+        if pre_qrels.get(key) is not False:
+            raise ValueError(f"Unsafe NQ pre-qrels flag: {key}")
+
+    files = pre_qrels.get("files", {})
+    if not isinstance(files, dict):
+        raise ValueError("NQ pre-qrels freeze has no file registry")
+    verify_record(
+        files.get("corpus_manifest", {}),
+        artifact_root,
+        "pre-qrels corpus manifest",
+        expected_path=corpus_manifest_path,
+    )
+    frozen_doc_ids_record = files.get("doc_ids", {})
+    doc_ids = verify_record(
+        frozen_doc_ids_record,
+        artifact_root,
+        "pre-qrels document IDs",
+    )
+    stage1_doc_ids = _resolve_record_path(
+        corpus_doc_ids_record,
+        artifact_root,
+    )
+    if doc_ids != stage1_doc_ids:
+        raise ValueError(
+            "Stage-1 and pre-qrels document-ID paths do not identify "
+            "the same frozen file"
+        )
+    if (
+        doc_ids.stat().st_size != expected_bytes
+        or int(frozen_doc_ids_record.get("bytes", -1)) != expected_bytes
+    ):
+        raise ValueError(
+            "Pre-qrels document-ID byte count violates the corpus contract"
+        )
+
+    audit_path = (
+        artifact_root / ELIGIBLE_QUERY_AUDIT
+    ).resolve(strict=True)
+    audit = read_json(audit_path)
+    if (
+        audit.get("protocol_id") != SOURCE_PROTOCOL_ID
+        or audit.get("status")
+        != "eligible_test_queries_frozen_before_retrieval"
+        or audit.get("pre_qrels_manifest_sha256")
+        != sha256_file(pre_qrels_path)
+    ):
+        raise ValueError(
+            "Opened NQ query audit does not bind the pre-qrels manifest"
+        )
+
+    return doc_ids, {
+        "status": (
+            "PRE_QRELS_DOC_IDS_VERIFIED_AFTER_STAGE1_HASH_MISMATCH"
+        ),
+        "reason": (
+            "The Stage-1 corpus manifest carries an earlier document-ID "
+            "digest, while the later pre-qrels freeze independently "
+            "registered the exact file used by the one-shot evaluation."
+        ),
+        "historical_artifacts_modified": False,
+        "stage1_registered_doc_ids": corpus_doc_ids_record,
+        "authoritative_pre_qrels_doc_ids": frozen_doc_ids_record,
+        "pre_qrels_manifest": file_record(pre_qrels_path),
+        "binding_query_audit": file_record(audit_path),
+    }
 
 
 def deterministic_roles(query_ids: list[str]) -> dict[str, list[str]]:
@@ -312,17 +414,36 @@ def _validate_stage1(
         artifact_root,
         "document embeddings",
     )
-    doc_ids = verify_record(
-        corpus.get("doc_ids", {}),
-        artifact_root,
-        "document IDs",
-    )
     expected_embedding_bytes = document_count * DIMENSION * np.dtype(
         np.float16
     ).itemsize
+    expected_doc_id_bytes = document_count * width
+    corpus_doc_ids_record = corpus.get("doc_ids", {})
+    try:
+        doc_ids = verify_record(
+            corpus_doc_ids_record,
+            artifact_root,
+            "document IDs",
+        )
+        doc_id_lineage = {
+            "status": "STAGE1_DOCUMENT_IDS_VERIFIED",
+            "historical_artifacts_modified": False,
+            "authoritative_stage1_doc_ids": corpus_doc_ids_record,
+        }
+    except ValueError as error:
+        if str(error) != "Registered document IDs hash changed":
+            raise
+        doc_ids, doc_id_lineage = (
+            _verify_pre_qrels_doc_id_reconciliation(
+                artifact_root,
+                corpus_manifest_path=corpus_manifest_path,
+                corpus_doc_ids_record=corpus_doc_ids_record,
+                expected_bytes=expected_doc_id_bytes,
+            )
+        )
     if embeddings.stat().st_size != expected_embedding_bytes:
         raise ValueError("Document embedding memmap size is inconsistent")
-    if doc_ids.stat().st_size != document_count * width:
+    if doc_ids.stat().st_size != expected_doc_id_bytes:
         raise ValueError("Document-ID memmap size is inconsistent")
 
     expected_index = {
@@ -378,6 +499,7 @@ def _validate_stage1(
         "index_manifest": index_manifest_path,
         "corpus": corpus,
         "index_payload": index,
+        "doc_id_lineage": doc_id_lineage,
     }
 
 
@@ -657,6 +779,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
             "per_query_evaluation_artifact": file_record(
                 stage3["per_query_path"]
             ),
+            "document_id_lineage": stage1["doc_id_lineage"],
         },
         "source_blobs": source_blobs,
         "evidence_boundary": {

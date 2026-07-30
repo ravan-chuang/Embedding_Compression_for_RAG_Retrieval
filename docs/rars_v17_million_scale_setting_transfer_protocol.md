@@ -59,6 +59,16 @@ the public [BEIR Natural Questions corpus](https://github.com/beir-cellar/beir);
 the notebook expects the already completed local artifact root
 `/content/drive/MyDrive/rars-beir-nq-confirmation-v2`.
 
+The historical NQ packet contains one explicitly reconciled lineage
+inconsistency: the Stage-1 corpus manifest retains an earlier document-ID
+digest, while the later pre-qrels freeze records the document-ID file actually
+used by the frozen one-shot evaluation. V17 does not edit either historical
+artifact. It accepts the later record only after verifying the pre-qrels
+status and safety flags, its frozen corpus-manifest record, the exact
+document-ID bytes and digest, and the Stage-3 query-audit binding to the
+pre-qrels manifest. The reconciliation is written into the prepared-domain
+manifest and is not presented as independent confirmation evidence.
+
 ## Interpretation
 
 - Stable local improvement on both settings supports setting-specific
