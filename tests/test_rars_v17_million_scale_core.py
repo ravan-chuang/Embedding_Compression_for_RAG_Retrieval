@@ -61,4 +61,3 @@ def test_v17_core_retains_deterministic_query_level_inference() -> None:
     assert first == second
     assert first["improved_queries"] == 2
     assert first["harmed_queries"] == 1
-
