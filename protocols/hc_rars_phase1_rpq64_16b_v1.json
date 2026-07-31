@@ -1,0 +1,45 @@
+{
+  "protocol_id": "hc_rars_phase1_rpq64_16b_v1",
+  "status": "FROZEN_BEFORE_FIRST_PHASE1_RUN",
+  "research_question": "Under an exact 16-byte per-document sidecar budget, does a rank-64 residual product codec outperform the existing rank-16 int8 sidecars on a frozen IVF-PQ candidate set?",
+  "method": {
+    "name": "PCA64-RPQ-16B",
+    "ambient_dimension": 384,
+    "rank": 64,
+    "block_count": 16,
+    "block_dimension": 4,
+    "centroids_per_block": 256,
+    "code_dtype": "uint8",
+    "payload_bytes_per_document": 16,
+    "basis_fit": "uncentred_pca_on_train_residuals_only",
+    "codebook_fit": "deterministic_lloyd_on_train_projected_residuals_only",
+    "candidate_width": 100,
+    "correction_depth": 40
+  },
+  "comparators": [
+    "Base frozen IVF-PQ",
+    "PCA16-FP32 diagnostic ceiling",
+    "PCA16-int8 16B/document",
+    "RARS16-int8 16B/document",
+    "PCA64-FP32 diagnostic ceiling"
+  ],
+  "selection_policy": {
+    "alpha_grid": [0.0, 0.25, 0.5, 0.75, 1.0, 1.25],
+    "selection_split": "validation_only",
+    "primary_metric": "Recall@10",
+    "tie_breakers": ["nDCG@10", "MRR@10", "smaller_alpha"]
+  },
+  "test_policy": {
+    "one_shot": true,
+    "forbid_fit_on_test": true,
+    "forbid_alpha_sweep_on_test": true,
+    "forbid_codebook_update_on_test": true
+  },
+  "gates": {
+    "primary_recall_gain_over_rars16_int8": 0.005,
+    "paired_bootstrap_ci_lower_bound": 0.0,
+    "maximum_harmed_query_share_increase": 0.005,
+    "exact_payload_bytes_per_document": 16
+  },
+  "seed": 20260731
+}
